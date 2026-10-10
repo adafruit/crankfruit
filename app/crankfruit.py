@@ -61,12 +61,13 @@ def run_scene(hardware, item=None, items=None, selected=0, message='', duration=
             if not released and buttons == 0: released = True
             active = buttons if released else 0
             before = player.metrics['frames']
-            player.tick(active)
+            player.tick(active & 63)
             if player.metrics['frames'] != before:
                 if items is not None:
                     route = runtime.action
                 elif scene != 'splash':
-                    if active & 32:
+                    if active & 64: route = 'library'  # gamepad Options
+                    elif active & 32:
                         if held is None: held = hardware.clock.now()
                         elif hardware.clock.now()-held >= 1200: route = 'library'
                     else: held = None
@@ -99,6 +100,7 @@ def run_scene(hardware, item=None, items=None, selected=0, message='', duration=
 def main(test=False, endurance=0):
     from direct_hardware import DirectHardware
     from crank_input import CrankInput, load_config
+    from gamepad_input import GamepadInput, load_config as load_gamepad_config
     hardware = DirectHardware()
     crank = None
     try:
@@ -109,6 +111,12 @@ def main(test=False, endurance=0):
             config=None
         crank=CrankInput(config)
         print('CRANK_INPUT',crank.kind,'enabled',crank.enabled)
+        try: config=load_gamepad_config('/gamepad.json')
+        except OSError as exc:
+            if exc.args[0] != 2: raise
+            config=None
+        hardware.gamepad=GamepadInput(config)
+        print('GAMEPAD_INPUT',hardware.gamepad.kind,'enabled',hardware.gamepad.enabled)
         run_scene(hardware,dict(slug='splash'),duration=2500,name='splash',scripted=test)
         selected = 0; message = ''
         if test:
@@ -137,6 +145,8 @@ def main(test=False, endurance=0):
     finally:
         try:
             if crank is not None: crank.close()
+            gamepad = getattr(hardware, 'gamepad', None)
+            if gamepad is not None: gamepad.close()
         finally:
             closed = hardware.close()
             print('CLEANUP',closed,hardware.cleanup_error)

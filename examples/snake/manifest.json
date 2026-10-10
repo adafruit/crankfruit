@@ -1,0 +1,11 @@
+{
+  "kind": "lua",
+  "profile": "crankfruit-lua-v1",
+  "title": "Simple Snake",
+  "author": "Mocchi Mochi; Crankfruit source adaptation",
+  "description": "Classic snake, adapted from the MIT Playdate source game. Eat, grow, speed up.",
+  "controls": "Gamepad d-pad/stick move (4 ways); A (cross/B3) restart; options library",
+  "target_fps": 30,
+  "heap_cap": 65536,
+  "entry": "main.lua"
+}

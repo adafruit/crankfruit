@@ -53,6 +53,7 @@ class Hardware:
         self.fb = None
         self.display = None
         self.buttons = []  # fixed three entries, constructed before playback
+        self.gamepad = None  # optional GamepadInput, owned and closed by the app
         self.displayio = None
         self.supervisor = None
         self.autoreload = None
@@ -108,7 +109,10 @@ class Hardware:
         for i in range(3):
             if not self.buttons[i].value:
                 raw |= 1 << i
-        return self.debounce.update(raw)
+        bits = self.debounce.update(raw)
+        if self.gamepad is not None:
+            bits |= self.gamepad.poll(self.clock.now())
+        return bits
 
     def present(self, runtime):
         # Never gate this on audio_pending: that would freeze continuous games.
