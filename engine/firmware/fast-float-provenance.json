@@ -1,0 +1,19 @@
+{
+  "url": "https://codeload.github.com/fastfloat/fast_float/tar.gz/50a80a73ab2ab256ba1c3bf86923ddd8b4202bc7",
+  "commit": "50a80a73ab2ab256ba1c3bf86923ddd8b4202bc7",
+  "archive_sha256": "74224e92a52544d8496c6e2ac066703f6a4ae0ecd4421159bdd9d17ea91d925e",
+  "files": {
+    "fast_float.h": "2427cd297f5b4d524e696ab9c69f957ffb9f851e59262f5d0b07930ba7dae016",
+    "parse_number.h": "8bb35524d9b52107ac28215e932307a5a1765de8cb099599a7412f429cfb7e33",
+    "LICENSE-APACHE": "097a889aa954d04e088b790b10a4014d6189561d0a6013935a73ce3d4ddaaf06",
+    "float_common.h": "c09daa98e482d9a068c4174f208227741a64f82c7cd1b9cf0db0e8b96fee5562",
+    "constexpr_feature_detect.h": "2dd2dc5f98a8f1a78813e62d47e82a19ebe42af726356723d60f6eb387c6dd38",
+    "decimal_to_binary.h": "82fad8134c272a3f1bc545b3ef367a2e9e3c7464b9dcef75640c37e325dfb973",
+    "LICENSE-BOOST": "8d8291caf1cee26d23acf3eb67c9f9a2d58f1c681b16a4fbe8cbfb9e3c0b5a9b",
+    "ascii_number.h": "a034d44ff5b945a51c4797ecf4be7ef50c3a9730d50f5a26a6dc75a2c02d5b11",
+    "fast_table.h": "c18e0a0a2513215730557cc1dd53541cacd72855ddc0287934e78b364f989edb",
+    "digit_comparison.h": "941d18ff89a9164f6ad447542a7b369252cdd5d63d289f1064a71641bd9c99b6",
+    "bigint.h": "1ed0b598da0b522613399897ddc748792dee6f804debf9fee131359252f80763",
+    "LICENSE-MIT": "e562f3f974ced7e69dd1db77b820b36bcf8f30377f1aa105723fba449c53c4e6"
+  }
+}

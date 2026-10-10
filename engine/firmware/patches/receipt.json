@@ -1,0 +1,207 @@
+{
+  "source_head": "eb49ac414192f75a81316906e78937e654f3f56e",
+  "groups": [
+    {
+      "name": "circuitpython",
+      "repository": "https://github.com/adafruit/circuitpython",
+      "commit": "eb49ac414192f75a81316906e78937e654f3f56e",
+      "root": "."
+    },
+    {
+      "name": "pio-usb",
+      "repository": "https://github.com/sekigon-gonnoc/Pico-PIO-USB",
+      "commit": "a5a2f5ae91988449ba576ec9d237e806d5cd4416",
+      "root": "ports/raspberrypi/lib/Pico-PIO-USB"
+    },
+    {
+      "name": "tinyusb",
+      "repository": "https://github.com/hathach/tinyusb",
+      "commit": "5453ed09f19af010b6a361562d967cfa30aaadc6",
+      "root": "lib/tinyusb"
+    }
+  ],
+  "patches": {
+    "circuitpython.patch": {
+      "sha256": "ab09298fa1e94af79ef215f6be61ca8ee04ff8c69fcf487ab537e3598e7dc3c4",
+      "bytes": 88003
+    },
+    "pio-usb.patch": {
+      "sha256": "42c8e5ed962e1ee2ce183580cd10ebfc262900bb2fbb37d98fb0c22612bc7db1",
+      "bytes": 23113
+    },
+    "tinyusb.patch": {
+      "sha256": "0b3e98ebc72512c7166869d4295df9ca19772c995056e0122d0959e89cb4acf5",
+      "bytes": 1035
+    }
+  },
+  "records": [
+    {
+      "root": "circuitpython",
+      "path": "lib/tjpgd/src/tjpgd.c",
+      "bytes": 48142,
+      "sha256": "fd0c1df63a46d5ed6c4f71260eb0771df9bafc034e376bb4bc56c4d76815f771"
+    },
+    {
+      "root": "circuitpython",
+      "path": "lib/tjpgd/src/tjpgd.h",
+      "bytes": 3677,
+      "sha256": "d3aaff6a0eebddfc96a93c3ad335a1e2a0cf15ce2ab36b638277770239495307"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/bindings/picodvi/Framebuffer.c",
+      "bytes": 16129,
+      "sha256": "bb1ab657db24b551d755189cd5d6776764f281d28789f3c5d8023bf6450d0962"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/bindings/picodvi/Framebuffer.h",
+      "bytes": 2183,
+      "sha256": "e61531beb34c88c366a38851dc4a4d3638e4596dbbbc300d945a447be7394097"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/boards/adafruit_fruit_jam/mpconfigboard.mk",
+      "bytes": 772,
+      "sha256": "e0b3a9c26c536f23d56d101496185ee017095a4a3e9ad21edbfcda1e6d538465"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/common-hal/picodvi/Framebuffer_RP2350.c",
+      "bytes": 28346,
+      "sha256": "d1c6ee7f6c9412091cbbf90c2b046e04450184adb90e86b3970a07027d184f20"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/common-hal/picodvi/Framebuffer_RP2350.h",
+      "bytes": 1754,
+      "sha256": "d4e5792c2b703f40277ac3b731ef77a81348d568f7a382e5122aafdc916aded1"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/supervisor/port.c",
+      "bytes": 24991,
+      "sha256": "bd0f2c969b66f0a78d52651bee61e9b5fb4891b4b40cd976317df7fed7db32b5"
+    },
+    {
+      "root": "circuitpython",
+      "path": "shared-bindings/jpegio/JpegDecoder.c",
+      "bytes": 10127,
+      "sha256": "9a685e81d4453f6b7ffeb454de01d5bce082aa4182b3a519eed3a9de8200a809"
+    },
+    {
+      "root": "circuitpython",
+      "path": "shared-bindings/jpegio/JpegDecoder.h",
+      "bytes": 1157,
+      "sha256": "9316867d15e027e67dbb1511177f225663cb7e744aa7ed39c42e018988d04e65"
+    },
+    {
+      "root": "circuitpython",
+      "path": "shared-bindings/usb/core/Device.c",
+      "bytes": 23925,
+      "sha256": "c70fedd6dee816d881cf57cb67bf3ebc88dffee0698b3d8c83dc29b6f803d29d"
+    },
+    {
+      "root": "circuitpython",
+      "path": "shared-bindings/usb/core/Device.h",
+      "bytes": 2596,
+      "sha256": "b160ee6058f344b2a8170f6b50aad2d897b37564ec4f86dc067d13e1f235a732"
+    },
+    {
+      "root": "circuitpython",
+      "path": "shared-module/displayio/__init__.c",
+      "bytes": 21566,
+      "sha256": "a7751310d471b526a86d26890c0912ee7166812f5e4fa806d0c20027216c5cc2"
+    },
+    {
+      "root": "circuitpython",
+      "path": "shared-module/jpegio/JpegDecoder.c",
+      "bytes": 7659,
+      "sha256": "d8bb2d7a706234480d04b3a498d850d78c5531382767452a1c5a29145fcccbf5"
+    },
+    {
+      "root": "circuitpython",
+      "path": "shared-module/usb/core/Device.c",
+      "bytes": 34890,
+      "sha256": "d51e068cccecd4e7da5d902f3c726463cfd30a4273b9daf700625b20decd46a6"
+    },
+    {
+      "root": "circuitpython",
+      "path": "shared-module/usb/core/Device.h",
+      "bytes": 851,
+      "sha256": "503813bc9f7c3255f70946c59c5a20f9ed74d2f00f9769e8dc62d47f70e18f03"
+    },
+    {
+      "root": "circuitpython",
+      "path": "shared/libc/string0.c",
+      "bytes": 7673,
+      "sha256": "a02bdaa7ea1d44497237ab55fc2252d52a335777df537ea455f4f5cd7eb9f806"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/boards/adafruit_fruit_jam/link.ld",
+      "bytes": 23,
+      "sha256": "c80a970533f1134a632e545f68f3e1587a249ea5c1d9e732027712bb0eb73c3f"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/common-hal/picodvi/LICENSE-pico-hdmi.txt",
+      "bytes": 1211,
+      "sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/common-hal/picodvi/hdmi_audio.c.inc",
+      "bytes": 10402,
+      "sha256": "55460b38d6383678a4fdaf43ebb899f67dfe314c32c93ed36391ba11e45f17ca"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/common-hal/picodvi/hdmi_packet.c.inc",
+      "bytes": 12083,
+      "sha256": "ab4d258ed9f1333a0a280fb83dfd283cc774c7391473c535c8f79e7957a3c202"
+    },
+    {
+      "root": "circuitpython",
+      "path": "ports/raspberrypi/common-hal/picodvi/hdmi_packet.h",
+      "bytes": 2211,
+      "sha256": "c94a4d4abd1b05e6f63bdb29456b2bf664c7fdfc5af1f62a21fbece600a7f090"
+    },
+    {
+      "root": "pio-usb",
+      "path": "src/pio_usb.c",
+      "bytes": 23061,
+      "sha256": "7c4d5875cbe085051813fb873c974b31fe1107d614f2d75c626bd46d7f7b4780"
+    },
+    {
+      "root": "pio-usb",
+      "path": "src/pio_usb_host.c",
+      "bytes": 36014,
+      "sha256": "fb06863b28c4ad2284b37ce38a744a5b67ef7036c7bf223592a5961055719bfc"
+    },
+    {
+      "root": "pio-usb",
+      "path": "src/pio_usb_ll.h",
+      "bytes": 8864,
+      "sha256": "694db45e0763d56e94a6895596bab13574549b2fcd65538721a3598d3542d917"
+    },
+    {
+      "root": "pio-usb",
+      "path": "src/usb_definitions.h",
+      "bytes": 8679,
+      "sha256": "63f07c764ae15f1db65d5eb95cba484f1839ab69948ebc74f125ded05fdd93eb"
+    },
+    {
+      "root": "pio-usb",
+      "path": "src/pio_usb_iso.h",
+      "bytes": 2188,
+      "sha256": "a535edcee02635d694d0871cc493581471f52768444aeddaff5567bf879939ad"
+    },
+    {
+      "root": "tinyusb",
+      "path": "src/tusb.c",
+      "bytes": 15861,
+      "sha256": "9e3a7b5599a8c6fe0978204b42e352e09eb9b67528dc5ed299a6741c32a87879"
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+"""Host sensor fixtures only. SPDX-License-Identifier: MIT."""
+import builtins
+import json
+import pathlib
+import sys
+import tempfile
+import types
+import unittest
+from unittest.mock import patch
+from crank_input import CrankInput, load_config
+
+
+class Sensor:
+    def __init__(self):
+        self.raw = 0
+        self.reads = 0
+        self.closes = 0
+    @property
+    def position(self):
+        self.reads += 1
+        return self.raw
+    @property
+    def value(self):
+        self.reads += 1
+        return self.raw
+    def deinit(self):
+        self.closes += 1
+
+
+class CrankTests(unittest.TestCase):
+    def setUp(self):
+        self.sensor = Sensor()
+        self.bus = Sensor()
+        self.events = []
+        def bus_factory():
+            self.events.append('bus')
+            return self.bus
+        def seesaw(bus, addr, reset):
+            self.events.append((bus,addr,reset))
+            return 'seesaw-fixture'
+        def encoder(device, encoder):
+            self.events.append((device,encoder))
+            return self.sensor
+        self.patch = patch.dict(sys.modules, {
+            'board': types.SimpleNamespace(TEST_BUS=bus_factory, VERIFIED_PIN='pin-fixture'),
+            'analogio': types.SimpleNamespace(AnalogIn=lambda pin: self.sensor),
+            'adafruit_seesaw': types.ModuleType('adafruit_seesaw'),
+            'adafruit_seesaw.seesaw': types.SimpleNamespace(Seesaw=seesaw),
+            'adafruit_seesaw.rotaryio': types.SimpleNamespace(IncrementalEncoder=encoder),
+        })
+        self.patch.start()
+    def tearDown(self):
+        self.patch.stop()
+    def encoder(self, **kw):
+        config = dict(enabled=True,kind='seesaw',bus_factory='TEST_BUS',address=54,
+                      counts_per_revolution=24)
+        config.update(kw)
+        return CrankInput(config)
+    def analog(self, **kw):
+        config = dict(enabled=True,kind='analog',pin='VERIFIED_PIN',adc_min=1000,
+                      adc_max=61000,deadband=100,travel_degrees=270)
+        config.update(kw)
+        return CrankInput(config)
+    def test_disabled_no_imports_or_io(self):
+        with patch.object(builtins, '__import__', side_effect=AssertionError('hardware import')):
+            for config in (None,{},dict(enabled=False,kind='analog',pin='NOT_A_PIN')):
+                crank = CrankInput(config)
+                self.assertEqual(crank.read(), (0,0))
+                crank.close()
+        self.assertEqual(self.events, [])
+    def test_encoder_detents_wrap_and_signed_delta(self):
+        crank = self.encoder()
+        self.sensor.raw = 100
+        self.assertEqual(crank.read(), (0,0))
+        self.sensor.raw = 123
+        self.assertEqual(crank.read(), (345,345))
+        self.sensor.raw = 124
+        self.assertEqual(crank.read(), (0,15))
+        self.sensor.raw = 123
+        self.assertEqual(crank.read(), (345,-15))
+        self.assertEqual(self.events[1], (self.bus,54,False))
+    def test_encoder_direction_and_more_than_half_turn(self):
+        crank = self.encoder(direction=-1,zero_degrees=20)
+        crank.read()
+        self.sensor.raw = 16
+        self.assertEqual(crank.read(), (140,-240))
+    def test_signed32_rollover_both_directions(self):
+        crank = self.encoder(counts_per_revolution=360)
+        self.sensor.raw = 2147483647
+        crank.read()
+        self.sensor.raw = -2147483648
+        self.assertEqual(crank.read(), (1,1))
+        self.sensor.raw = 2147483647
+        self.assertEqual(crank.read(), (0,-1))
+    def test_optional_frame_token_does_not_double_read(self):
+        crank = self.encoder()
+        crank.read(0)
+        self.sensor.raw = 2
+        self.assertEqual(crank.read(0), (0,0))
+        self.assertEqual(self.sensor.reads, 1)
+        self.assertEqual(crank.read(1), (30,30))
+        self.sensor.raw = 3
+        self.assertEqual(crank.read(1), (30,30))
+        self.assertEqual(crank.read(2), (45,15))
+        with self.assertRaises(ValueError):
+            crank.read(1)
+    def test_once_per_admitted_frame_preserves_accounting(self):
+        crank = self.encoder()
+        crank.read()
+        total = 0
+        for target in (1,3,2,24,25,-2,0):
+            self.sensor.raw = target
+            angle, delta = crank.read()
+            total += delta
+            self.assertAlmostEqual(angle, total % 360)
+        self.assertEqual(total, 0)
+        self.assertEqual(self.sensor.reads, 8)
+    def test_analog_calibration_clamp_and_direction(self):
+        crank = self.analog(zero_degrees=350)
+        self.assertEqual(crank.read(), (350,0))
+        self.sensor.raw = 31000
+        self.assertEqual(crank.read(), (125,135))
+        self.sensor.raw = 65535
+        self.assertEqual(crank.read(), (260,135))
+        self.sensor.raw = 0
+        self.assertEqual(crank.read(), (350,-270))
+    def test_analog_reverse_and_full_turn_not_shortest_arc(self):
+        crank = self.analog(direction=-1,travel_degrees=360)
+        crank.read()
+        self.sensor.raw = 61000
+        self.assertEqual(crank.read(), (0,-360))
+    def test_noise_holds_baseline_slow_motion_accumulates(self):
+        self.sensor.raw = 30000
+        crank = self.analog()
+        initial = crank.read()[0]
+        for value in (30050,29950,30099,30100):
+            self.sensor.raw = value
+            self.assertEqual(crank.read(), (initial,0))
+        self.sensor.raw = 30101
+        angle, delta = crank.read()
+        self.assertAlmostEqual(delta, 101*270/60000)
+        self.assertAlmostEqual(angle-initial, delta)
+    def test_invalid_configuration_before_hardware(self):
+        cases = [dict(enabled='yes'), dict(enabled=True,kind='other'),
+                 dict(enabled=True,kind='analog',pin='__bad'),
+                 dict(enabled=True,kind='seesaw',bus_factory='TEST_BUS',address=None),
+                 dict(enabled=True,kind='analog',pin='VERIFIED_PIN',adc_min=2000,adc_max=1000)]
+        for config in cases:
+            with self.assertRaises(ValueError):
+                CrankInput(config)
+        self.assertEqual(self.events, [])
+    def test_bad_read_does_not_advance_baseline(self):
+        crank = self.encoder()
+        crank.read()
+        self.sensor.raw = None
+        with self.assertRaises(ValueError):
+            crank.read()
+        self.sensor.raw = 1
+        self.assertEqual(crank.read(), (15,15))
+    def test_cleanup_owned_adc_but_not_shared_i2c(self):
+        crank = self.analog()
+        crank.close()
+        crank.close()
+        self.assertEqual(self.sensor.closes, 1)
+        with self.assertRaises(RuntimeError):
+            crank.read()
+        crank = self.encoder()
+        crank.close()
+        self.assertEqual(self.bus.closes, 0)
+    def test_bounded_explicit_json_load(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = pathlib.Path(directory)/'crank.json'
+            path.write_text('{"enabled":false}')
+            self.assertEqual(load_config(path), {'enabled':False})
+            for bad in ('[]', '{bad', ' '*4097):
+                path.write_text(bad)
+                with self.assertRaises(ValueError):
+                    load_config(path)
+
+
+if __name__ == '__main__':
+    unittest.main()

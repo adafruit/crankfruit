@@ -1,0 +1,8 @@
+{
+  "description": "approved 2.5-second Crankfruit startup, matching the standalone player clip",
+  "frames": 75,
+  "unique_frames": 62,
+  "boot.frames": {"bytes": 773760, "sha256": "6161b45a8ac37e5ccb75bb1673b95e3840be55aad3934008e2226a7a66dbae27"},
+  "boot.index": {"bytes": 75, "sha256": "7c29c68081572f8f8f83f64babdc78f3a4ba216c1b495ac9065c55e35115e152"},
+  "boot.pcm": {"bytes": 160000, "sha256": "3b6eaea7d2f1000a6f46ec69113877c5fa2d9848ab96c30063cddd19a7cb6454"}
+}

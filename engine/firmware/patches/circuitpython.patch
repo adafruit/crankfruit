@@ -1,0 +1,1942 @@
+diff --git a/lib/tjpgd/src/tjpgd.c b/lib/tjpgd/src/tjpgd.c
+index 968a6e23d9101fcda904db17fe884b9b70099f82..160e97a59ebd1ade8b72100bfe47511b065c873a 100644
+--- a/lib/tjpgd/src/tjpgd.c
++++ b/lib/tjpgd/src/tjpgd.c
+@@ -208,6 +208,14 @@ static JRESULT create_huffman_tbl (	/* 0:OK, !0:Failed */
+ 		ndata -= 17;
+ 		d = *data++;						/* Get table number and class */
+ 		if (d & 0xEE) return JDR_FMT1;		/* Err: invalid class/number */
++		unsigned int symbols = 0, slots = 1;
++		for (i = 0; i < 16; i++) {
++			slots <<= 1;
++			if (data[i] >= slots) return JDR_FMT1; /* Over-subscribed or all-ones code */
++			slots -= data[i];
++			symbols += data[i];
++		}
++		if (!symbols || symbols > 256 || ndata < symbols) return JDR_FMT1;
+ 		cls = d >> 4; num = d & 0x0F;		/* class = dc(0)/ac(1), table number = 0/1 */
+ 		pb = alloc_pool(jd, 16);			/* Allocate a memory block for the bit distribution table */
+ 		if (!pb) return JDR_MEM1;			/* Err: not enough memory */
+@@ -233,6 +241,7 @@ static JRESULT create_huffman_tbl (	/* 0:OK, !0:Failed */
+ 		for (i = 0; i < np; i++) {			/* Load decoded data corresponds to each code word */
+ 			d = *data++;
+ 			if (!cls && d > 11) return JDR_FMT1;
++			if (cls && ((d & 15) > 10 || (!(d & 15) && d != 0 && d != 0xF0))) return JDR_FMT1;
+ 			pd[i] = d;
+ 		}
+ #if JD_FASTDECODE == 2
+@@ -275,6 +284,65 @@ static JRESULT create_huffman_tbl (	/* 0:OK, !0:Failed */
+ 
+ 
+ 
++/* JPEG Annex K default Huffman tables, used only with explicit MJPEG opt-in.
++ * Existing DHT tables are never replaced. Table bytes match the application
++ * reference normalizer, tested against captured C270 frames. */
++static const uint8_t default_huffman_00[] = {
++	0x00, 0x00, 0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
++	0x07, 0x08, 0x09, 0x0a, 0x0b,
++};
++static const uint8_t default_huffman_01[] = {
++	0x01, 0x00, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
++	0x07, 0x08, 0x09, 0x0a, 0x0b,
++};
++static const uint8_t default_huffman_10[] = {
++	0x10, 0x00, 0x02, 0x01, 0x03, 0x03, 0x02, 0x04, 0x03, 0x05, 0x05, 0x04,
++	0x04, 0x00, 0x00, 0x01, 0x7d, 0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05,
++	0x12, 0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07, 0x22, 0x71, 0x14,
++	0x32, 0x81, 0x91, 0xa1, 0x08, 0x23, 0x42, 0xb1, 0xc1, 0x15, 0x52, 0xd1,
++	0xf0, 0x24, 0x33, 0x62, 0x72, 0x82, 0x09, 0x0a, 0x16, 0x17, 0x18, 0x19,
++	0x1a, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x34, 0x35, 0x36, 0x37, 0x38,
++	0x39, 0x3a, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x53, 0x54,
++	0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68,
++	0x69, 0x6a, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7a, 0x83, 0x84,
++	0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97,
++	0x98, 0x99, 0x9a, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa,
++	0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7, 0xb8, 0xb9, 0xba, 0xc2, 0xc3, 0xc4,
++	0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7,
++	0xd8, 0xd9, 0xda, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9,
++	0xea, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa,
++};
++static const uint8_t default_huffman_11[] = {
++	0x11, 0x00, 0x02, 0x01, 0x02, 0x04, 0x04, 0x03, 0x04, 0x07, 0x05, 0x04,
++	0x04, 0x00, 0x01, 0x02, 0x77, 0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05,
++	0x21, 0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61, 0x71, 0x13, 0x22, 0x32,
++	0x81, 0x08, 0x14, 0x42, 0x91, 0xa1, 0xb1, 0xc1, 0x09, 0x23, 0x33, 0x52,
++	0xf0, 0x15, 0x62, 0x72, 0xd1, 0x0a, 0x16, 0x24, 0x34, 0xe1, 0x25, 0xf1,
++	0x17, 0x18, 0x19, 0x1a, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x35, 0x36, 0x37,
++	0x38, 0x39, 0x3a, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x53,
++	0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x63, 0x64, 0x65, 0x66, 0x67,
++	0x68, 0x69, 0x6a, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7a, 0x82,
++	0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x92, 0x93, 0x94, 0x95,
++	0x96, 0x97, 0x98, 0x99, 0x9a, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8,
++	0xa9, 0xaa, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7, 0xb8, 0xb9, 0xba, 0xc2,
++	0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xd2, 0xd3, 0xd4, 0xd5,
++	0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8,
++	0xe9, 0xea, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa,
++};
++
++static JRESULT create_default_huffman_tbl (JDEC *jd, unsigned int num, unsigned int cls)
++{
++	const uint8_t *data;
++	size_t size;
++	if (num == 0 && cls == 0) { data = default_huffman_00; size = sizeof(default_huffman_00); }
++	else if (num == 0 && cls == 1) { data = default_huffman_10; size = sizeof(default_huffman_10); }
++	else if (num == 1 && cls == 0) { data = default_huffman_01; size = sizeof(default_huffman_01); }
++	else { data = default_huffman_11; size = sizeof(default_huffman_11); }
++	return create_huffman_tbl(jd, data, size);
++}
++
+ /*-----------------------------------------------------------------------*/
+ /* Extract a huffman decoded data from input stream                      */
+ /*-----------------------------------------------------------------------*/
+@@ -963,21 +1031,29 @@ static JRESULT mcu_output (
+ #define	LDB_WORD(ptr)		(uint16_t)(((uint16_t)*((uint8_t*)(ptr))<<8)|(uint16_t)*(uint8_t*)((ptr)+1))
+ 
+ 
+-JRESULT jd_prepare (
++JRESULT jd_prepare (JDEC *jd, size_t (*infunc)(JDEC*, uint8_t*, size_t),
++	void *pool, size_t sz_pool, void *dev)
++{
++	return jd_prepare_ex(jd, infunc, pool, sz_pool, dev, 0);
++}
++
++JRESULT jd_prepare_ex (
+ 	JDEC* jd,				/* Blank decompressor object */
+ 	size_t (*infunc)(JDEC*, uint8_t*, size_t),	/* JPEG strem input function */
+ 	void* pool,				/* Working buffer for the decompression session */
+ 	size_t sz_pool,			/* Size of working buffer */
+-	void* dev				/* I/O device identifier for the session */
++	void* dev,				/* I/O device identifier for the session */
++	uint8_t flags			/* JD_PREPARE_MJPEG enables absent default tables */
+ )
+ {
+-	uint8_t *seg, b;
++	uint8_t *seg, b, component_ids[3] = {0};
+ 	uint16_t marker;
+ 	unsigned int n, i, ofs;
+ 	size_t len;
+ 	JRESULT rc;
+ 
+ 
++	if (flags & ~JD_PREPARE_MJPEG) return JDR_PAR;
+ 	memset(jd, 0, sizeof (JDEC));	/* Clear decompression object (this might be a problem if machine's null pointer is not all bits zero) */
+ 	jd->pool = pool;		/* Work memroy */
+ 	jd->sz_pool = sz_pool;	/* Size of given work memory */
+@@ -1008,13 +1084,19 @@ JRESULT jd_prepare (
+ 			if (len > JD_SZBUF) return JDR_MEM2;
+ 			if (jd->infunc(jd, seg, len) != len) return JDR_INP;	/* Load segment data */
+ 
++			if (len < 6 || seg[0] != 8 || jd->ncomp) return JDR_FMT1;
+ 			jd->width = LDB_WORD(&seg[3]);		/* Image width in unit of pixel */
+ 			jd->height = LDB_WORD(&seg[1]);		/* Image height in unit of pixel */
+ 			jd->ncomp = seg[5];					/* Number of color components */
+ 			if (jd->ncomp != 3 && jd->ncomp != 1) return JDR_FMT3;	/* Err: Supports only Grayscale and Y/Cb/Cr */
+ 
++			if (len != 6u + 3u * jd->ncomp) return JDR_FMT1;
+ 			/* Check each image component */
+ 			for (i = 0; i < jd->ncomp; i++) {
++				component_ids[i] = seg[6 + 3 * i];
++				for (n = 0; n < i; n++) {
++					if (component_ids[n] == component_ids[i]) return JDR_FMT1;
++				}
+ 				b = seg[7 + 3 * i];							/* Get sampling factor */
+ 				if (i == 0) {	/* Y component */
+ 					if (b != 0x11 && b != 0x22 && b != 0x21) {	/* Check sampling factor */
+@@ -1033,6 +1115,7 @@ JRESULT jd_prepare (
+ 			if (len > JD_SZBUF) return JDR_MEM2;
+ 			if (jd->infunc(jd, seg, len) != len) return JDR_INP;	/* Load segment data */
+ 
++			if (len != 2) return JDR_FMT1;
+ 			jd->nrst = LDB_WORD(seg);	/* Get restart interval (MCUs) */
+ 			break;
+ 
+@@ -1057,13 +1140,25 @@ JRESULT jd_prepare (
+ 			if (jd->infunc(jd, seg, len) != len) return JDR_INP;	/* Load segment data */
+ 
+ 			if (!jd->width || !jd->height) return JDR_FMT1;	/* Err: Invalid image size */
++			if (len != 4u + 2u * jd->ncomp) return JDR_FMT1;
++			if (seg[len - 3] != 0 || seg[len - 2] != 63 || seg[len - 1] != 0) return JDR_FMT3;
+ 			if (seg[0] != jd->ncomp) return JDR_FMT3;		/* Err: Wrong color components */
+ 
+ 			/* Check if all tables corresponding to each components have been loaded */
+ 			for (i = 0; i < jd->ncomp; i++) {
++				if (seg[1 + 2 * i] != component_ids[i]) return JDR_FMT3;
+ 				b = seg[2 + 2 * i];	/* Get huffman table ID */
+ 				if (b != 0x00 && b != 0x11)	return JDR_FMT3;	/* Err: Different table number for DC/AC element */
+ 				n = i ? 1 : 0;							/* Component class */
++				if (b != (n ? 0x11 : 0x00)) return JDR_FMT3; /* Decoder uses Y=0, C=1 */
++				if (flags & JD_PREPARE_MJPEG) {
++					for (unsigned int cls = 0; cls < 2; cls++) {
++						if (!jd->huffbits[n][cls]) {
++							rc = create_default_huffman_tbl(jd, n, cls);
++							if (rc) return rc;
++						}
++					}
++				}
+ 				if (!jd->huffbits[n][0] || !jd->huffbits[n][1]) {	/* Check huffman table for this component */
+ 					return JDR_FMT1;					/* Err: Nnot loaded */
+ 				}
+diff --git a/lib/tjpgd/src/tjpgd.h b/lib/tjpgd/src/tjpgd.h
+index 4983ac7271a8e11e888b6a9e8ce17140d0213a46..8867ed2939029786b169346cd35d771b5c33eff7 100644
+--- a/lib/tjpgd/src/tjpgd.h
++++ b/lib/tjpgd/src/tjpgd.h
+@@ -92,6 +92,8 @@ struct JDEC {
+ 
+ /* TJpgDec API functions */
+ JRESULT jd_prepare (JDEC* jd, size_t (*infunc)(JDEC*,uint8_t*,size_t), void* pool, size_t sz_pool, void* dev);
++#define JD_PREPARE_MJPEG 1u
++JRESULT jd_prepare_ex (JDEC* jd, size_t (*infunc)(JDEC*,uint8_t*,size_t), void* pool, size_t sz_pool, void* dev, uint8_t flags);
+ JRESULT jd_decomp (JDEC* jd, int (*outfunc)(JDEC*,void*,JRECT*), uint8_t scale);
+ 
+ 
+diff --git a/ports/raspberrypi/bindings/picodvi/Framebuffer.c b/ports/raspberrypi/bindings/picodvi/Framebuffer.c
+index e80ffea470c72ce55f5478101c11128e169bb2b6..bce0cf801103245eb240607a1c46c55b853a3933 100644
+--- a/ports/raspberrypi/bindings/picodvi/Framebuffer.c
++++ b/ports/raspberrypi/bindings/picodvi/Framebuffer.c
+@@ -207,7 +207,48 @@ static mp_obj_t picodvi_framebuffer_wait_for_vblank(mp_obj_t self_in) {
+ static MP_DEFINE_CONST_FUN_OBJ_1(picodvi_framebuffer_wait_for_vblank_obj, picodvi_framebuffer_wait_for_vblank);
+ 
+ 
++
++#if defined(PICO_RP2350) && PICO_RP2350
++// Experimental fixed-rate API. Return bytes accepted; zero means both frame banks are busy.
++static mp_obj_t picodvi_framebuffer_audio_write(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
++    picodvi_framebuffer_obj_t *self = MP_OBJ_TO_PTR(pos_args[0]);
++    check_for_deinit(self);
++    enum { ARG_pcm, ARG_sample_rate };
++    static const mp_arg_t allowed_args[] = {
++        { MP_QSTR_pcm, MP_ARG_REQUIRED | MP_ARG_OBJ },
++        { MP_QSTR_sample_rate, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = 32000} },
++    };
++    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
++    mp_arg_parse_all(n_args - 1, pos_args + 1, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
++    mp_buffer_info_t buffer;
++    mp_get_buffer_raise(args[ARG_pcm].u_obj, &buffer, MP_BUFFER_READ);
++    return mp_obj_new_int_from_uint(common_hal_picodvi_framebuffer_audio_write(self, buffer.buf, buffer.len, args[ARG_sample_rate].u_int));
++}
++static MP_DEFINE_CONST_FUN_OBJ_KW(picodvi_framebuffer_audio_write_obj, 2, picodvi_framebuffer_audio_write);
++
++static mp_obj_t picodvi_framebuffer_get_audio_pending(mp_obj_t self_in) {
++    picodvi_framebuffer_obj_t *self = MP_OBJ_TO_PTR(self_in);
++    check_for_deinit(self);
++    return mp_obj_new_int_from_uint(common_hal_picodvi_framebuffer_get_audio_pending(self));
++}
++static MP_DEFINE_CONST_FUN_OBJ_1(picodvi_framebuffer_get_audio_pending_obj, picodvi_framebuffer_get_audio_pending);
++MP_PROPERTY_GETTER(picodvi_framebuffer_audio_pending_obj, (mp_obj_t)&picodvi_framebuffer_get_audio_pending_obj);
++
++static mp_obj_t picodvi_framebuffer_audio_stop(mp_obj_t self_in) {
++    picodvi_framebuffer_obj_t *self = MP_OBJ_TO_PTR(self_in);
++    check_for_deinit(self);
++    common_hal_picodvi_framebuffer_audio_stop(self);
++    return mp_const_none;
++}
++static MP_DEFINE_CONST_FUN_OBJ_1(picodvi_framebuffer_audio_stop_obj, picodvi_framebuffer_audio_stop);
++#endif
++
+ static const mp_rom_map_elem_t picodvi_framebuffer_locals_dict_table[] = {
++#if defined(PICO_RP2350) && PICO_RP2350
++    { MP_ROM_QSTR(MP_QSTR_audio_write), MP_ROM_PTR(&picodvi_framebuffer_audio_write_obj) },
++    { MP_ROM_QSTR(MP_QSTR_audio_pending), MP_ROM_PTR(&picodvi_framebuffer_audio_pending_obj) },
++    { MP_ROM_QSTR(MP_QSTR_audio_stop), MP_ROM_PTR(&picodvi_framebuffer_audio_stop_obj) },
++#endif
+     { MP_ROM_QSTR(MP_QSTR_deinit), MP_ROM_PTR(&picodvi_framebuffer_deinit_obj) },
+     { MP_ROM_QSTR(MP_QSTR_wait_for_vblank), MP_ROM_PTR(&picodvi_framebuffer_wait_for_vblank_obj) },
+ 
+diff --git a/ports/raspberrypi/bindings/picodvi/Framebuffer.h b/ports/raspberrypi/bindings/picodvi/Framebuffer.h
+index d5f59fe84c3660df805361eb2b5b6b1895f2a595..00f3ea0794bdc0b152d96334729aa0ce47074221 100644
+--- a/ports/raspberrypi/bindings/picodvi/Framebuffer.h
++++ b/ports/raspberrypi/bindings/picodvi/Framebuffer.h
+@@ -33,3 +33,9 @@ int common_hal_picodvi_framebuffer_get_color_depth(picodvi_framebuffer_obj_t *se
+ int common_hal_picodvi_framebuffer_get_native_frames_per_second(picodvi_framebuffer_obj_t *self);
+ bool common_hal_picodvi_framebuffer_get_grayscale(picodvi_framebuffer_obj_t *self);
+ mp_int_t common_hal_picodvi_framebuffer_get_buffer(mp_obj_t self_in, mp_buffer_info_t *bufinfo, mp_uint_t flags);
++
++#if defined(PICO_RP2350) && PICO_RP2350
++size_t common_hal_picodvi_framebuffer_audio_write(picodvi_framebuffer_obj_t *self, const uint8_t *pcm, size_t length, uint32_t sample_rate);
++size_t common_hal_picodvi_framebuffer_get_audio_pending(picodvi_framebuffer_obj_t *self);
++void common_hal_picodvi_framebuffer_audio_stop(picodvi_framebuffer_obj_t *self);
++#endif
+diff --git a/ports/raspberrypi/boards/adafruit_fruit_jam/mpconfigboard.mk b/ports/raspberrypi/boards/adafruit_fruit_jam/mpconfigboard.mk
+index 8c46cc0713bc93d0c81ebe9695c73a651bfddb60..687e13d2f9d41f4d10b679d205c9a6f37436e940 100644
+--- a/ports/raspberrypi/boards/adafruit_fruit_jam/mpconfigboard.mk
++++ b/ports/raspberrypi/boards/adafruit_fruit_jam/mpconfigboard.mk
+@@ -16,3 +16,12 @@ CIRCUITPY_PICOGAME_FRAMEBUFFER = 1
+ 
+ # CIRCUITPY_DISPLAY_FONT = $(TOP)/tools/fonts/unifont-16.0.02-all.bdf
+ # CIRCUITPY_FONT_EXTRA_CHARACTERS = "🖮🖱️"
++
++# Bounded space for composite UVC camera configuration descriptors.
++CFLAGS += -DCFG_TUH_ENUMERATION_BUFSIZE=4096
++CIRCUITPY_PICOGAME = 0
++CIRCUITPY_PICOGAME_FRAMEBUFFER = 0
++CIRCUITPY_ENABLE_MPY_NATIVE = 1
++# Preserve this board's deployed firmware/filesystem partition boundary.
++CFLAGS += -DCIRCUITPY_FIRMWARE_SIZE='(2048 * 1024)'
++CFLAGS += -DTOTAL_FLASH_MINIMUM='(16 * 1024 * 1024)'
+diff --git a/ports/raspberrypi/common-hal/picodvi/Framebuffer_RP2350.c b/ports/raspberrypi/common-hal/picodvi/Framebuffer_RP2350.c
+index 8c846ffc44042b94bd943be3e855b7a9c6a01256..8f56a2cfb226d0002ff883089bc4105bbf9928a6 100644
+--- a/ports/raspberrypi/common-hal/picodvi/Framebuffer_RP2350.c
++++ b/ports/raspberrypi/common-hal/picodvi/Framebuffer_RP2350.c
+@@ -97,7 +97,7 @@
+ // HSTX command lists
+ 
+ #define VSYNC_LEN 6
+-#define VACTIVE_LEN 9
++#define VACTIVE_LEN 15
+ 
+ static uint32_t vblank_line640_vsync_off[VSYNC_LEN] = {
+     HSTX_CMD_RAW_REPEAT | MODE_640_H_FRONT_PORCH,
+@@ -124,8 +124,14 @@ static uint32_t vactive_line640[VACTIVE_LEN] = {
+     HSTX_CMD_RAW_REPEAT | MODE_640_H_SYNC_WIDTH,
+     SYNC_V1_H0,
+     HSTX_CMD_NOP,
+-    HSTX_CMD_RAW_REPEAT | MODE_640_H_BACK_PORCH,
++    HSTX_CMD_RAW_REPEAT | (MODE_640_H_BACK_PORCH - 10),
+     SYNC_V1_H1,
++    HSTX_CMD_NOP,
++    HSTX_CMD_RAW_REPEAT | 8,
++    TMDS_CTRL_11 | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_00 << 20),
++    HSTX_CMD_NOP,
++    HSTX_CMD_RAW_REPEAT | 2,
++    0x2ccu | (0x133u << 10) | (0x2ccu << 20),
+     HSTX_CMD_TMDS | MODE_640_H_ACTIVE_PIXELS
+ };
+ 
+@@ -147,7 +153,7 @@ static uint32_t vblank_line720_vsync_on[VSYNC_LEN] = {
+     SYNC_V0_H1
+ };
+ 
+-static uint32_t vactive_line720[VACTIVE_LEN] = {
++static uint32_t vactive_line720[9] = {
+     HSTX_CMD_RAW_REPEAT | MODE_720_H_FRONT_PORCH,
+     SYNC_V1_H1,
+     HSTX_CMD_NOP,
+@@ -159,6 +165,8 @@ static uint32_t vactive_line720[VACTIVE_LEN] = {
+     HSTX_CMD_TMDS | MODE_720_H_ACTIVE_PIXELS
+ };
+ 
++#include "common-hal/picodvi/hdmi_audio.c.inc"
++
+ picodvi_framebuffer_obj_t *active_picodvi = NULL;
+ 
+ // Incremented once per completed frame by the DMA frame-boundary IRQ, so refresh() can block
+@@ -176,7 +184,7 @@ static void __not_in_flash_func(dma_irq_handler)(void) {
+     // Set the read_addr back to the start and trigger the first transfer (which
+     // will trigger the pixel channel).
+     dma_channel_hw_t *ch = &dma_hw->ch[active_picodvi->dma_command_channel];
+-    ch->al3_read_addr_trig = (uintptr_t)active_picodvi->dma_commands;
++    ch->al3_read_addr_trig = (uintptr_t)hdmi_next_frame(active_picodvi);
+     framebuffer_frame_count++;    // frame boundary: scanout has wrapped back to the top
+ }
+ 
+@@ -230,6 +238,7 @@ void common_hal_picodvi_framebuffer_construct(picodvi_framebuffer_obj_t *self,
+         mp_raise_ValueError_varg(MP_ERROR_TEXT("Invalid %q and %q"), MP_QSTR_width, MP_QSTR_height);
+     }
+ 
++    self->hdmi_audio = NULL;
+     self->dma_command_channel = -1;
+     self->dma_pixel_channel = -1;
+ 
+@@ -320,6 +329,10 @@ void common_hal_picodvi_framebuffer_construct(picodvi_framebuffer_obj_t *self,
+         return;
+     }
+ 
++    if (self->output_width == 640) {
++        hdmi_init_headers();
++    }
++
+     size_t command_word = 0;
+     size_t frontporch_start;
+     if (self->output_width == 640) {
+@@ -398,7 +411,11 @@ void common_hal_picodvi_framebuffer_construct(picodvi_framebuffer_obj_t *self,
+             self->dma_commands[command_word++] = dma_ctrl;
+             self->dma_commands[command_word++] = dma_write_addr;
+         }
+-        if (vsync_start <= v_scanline && v_scanline < vsync_end) {
++        if (self->output_width == 640 && v_scanline < 3) {
++            static uint32_t *headers[] = {hdmi_acr_line, hdmi_info_line, hdmi_avi_line};
++            self->dma_commands[command_word++] = hdmi_header_lengths[v_scanline];
++            self->dma_commands[command_word++] = (uintptr_t)headers[v_scanline];
++        } else if (vsync_start <= v_scanline && v_scanline < vsync_end) {
+             self->dma_commands[command_word++] = VSYNC_LEN;
+             self->dma_commands[command_word++] = (uintptr_t)vblank_line_vsync_on;
+         } else if (backporch_start <= v_scanline && v_scanline < backporch_end) {
+@@ -408,7 +425,7 @@ void common_hal_picodvi_framebuffer_construct(picodvi_framebuffer_obj_t *self,
+             self->dma_commands[command_word++] = VSYNC_LEN;
+             self->dma_commands[command_word++] = (uintptr_t)vblank_line_vsync_off;
+         } else {
+-            self->dma_commands[command_word++] = VACTIVE_LEN;
++            self->dma_commands[command_word++] = self->output_width == 640 ? VACTIVE_LEN : 9;
+             self->dma_commands[command_word++] = (uintptr_t)vactive_line;
+             size_t row = v_scanline - active_start;
+             size_t transfer_count = self->pitch;
+@@ -605,6 +622,16 @@ void common_hal_picodvi_framebuffer_deinit(picodvi_framebuffer_obj_t *self) {
+         return;
+     }
+ 
++    // Stop frame restarts before aborting either channel. An already pending
++    // frame IRQ must not repoint the command DMA during teardown.
++    uint32_t irq_state = save_and_disable_interrupts();
++    active_picodvi = NULL;
++    if (self->dma_pixel_channel >= 0) {
++        dma_channel_set_irq1_enabled(self->dma_pixel_channel, false);
++        dma_hw->ints1 = 1u << self->dma_pixel_channel;
++    }
++    restore_interrupts(irq_state);
++
+     for (int i = 12; i <= 19; ++i) {
+         reset_pin_number(i);
+     }
+@@ -615,6 +642,7 @@ void common_hal_picodvi_framebuffer_deinit(picodvi_framebuffer_obj_t *self) {
+     self->dma_command_channel = -1;
+ 
+     active_picodvi = NULL;
++    hdmi_free_audio(self);
+ 
+     port_free(self->framebuffer);
+     self->framebuffer = NULL;
+diff --git a/ports/raspberrypi/common-hal/picodvi/Framebuffer_RP2350.h b/ports/raspberrypi/common-hal/picodvi/Framebuffer_RP2350.h
+index fa08bc77d93c3621eb13bca157307907c2b2b511..df8774a977e9e08a4839b8e35e8528ca86ae90e4 100644
+--- a/ports/raspberrypi/common-hal/picodvi/Framebuffer_RP2350.h
++++ b/ports/raspberrypi/common-hal/picodvi/Framebuffer_RP2350.h
+@@ -30,6 +30,7 @@
+ 
+ typedef struct {
+     mp_obj_base_t base;
++    void *hdmi_audio;
+     uint32_t *framebuffer;
+     size_t framebuffer_len; // in words
+     uint32_t *dma_commands;
+diff --git a/ports/raspberrypi/supervisor/port.c b/ports/raspberrypi/supervisor/port.c
+index 34e9fc159fd279c771e59611d4789be811168108..152097cd149560bf3402b60019ef57c23f2f2ace 100644
+--- a/ports/raspberrypi/supervisor/port.c
++++ b/ports/raspberrypi/supervisor/port.c
+@@ -23,6 +23,10 @@
+ #include "shared-bindings/microcontroller/__init__.h"
+ #include "shared-bindings/rtc/__init__.h"
+ 
++#if CIRCUITPY_USB_HOST
++#include "shared-bindings/usb/core/Device.h"
++#endif
++
+ #if CIRCUITPY_AUDIOCORE
+ #include "audio_dma.h"
+ #endif
+@@ -476,6 +480,9 @@ safe_mode_t port_init(void) {
+ }
+ 
+ void reset_port(void) {
++    #if CIRCUITPY_USB_HOST
++    usb_core_device_reset();
++    #endif
+     #if CIRCUITPY_BUSIO
+     reset_uart();
+     #endif
+diff --git a/shared-bindings/jpegio/JpegDecoder.c b/shared-bindings/jpegio/JpegDecoder.c
+index d55de7b67e00a616e623e768df40947d1b1c6a19..12200686ecad4f7f039b464292ac8afd1d04659c 100644
+--- a/shared-bindings/jpegio/JpegDecoder.c
++++ b/shared-bindings/jpegio/JpegDecoder.c
+@@ -55,23 +55,35 @@ static mp_obj_t jpegio_jpegdecoder_make_new(const mp_obj_type_t *type, size_t n_
+ 
+ //|
+ //|     @overload
+-//|     def open(self, filename: str) -> Tuple[int, int]: ...
++//|     def open(self, filename: str, *, mjpeg: bool = False) -> Tuple[int, int]: ...
+ //|     @overload
+-//|     def open(self, buffer: ReadableBuffer) -> Tuple[int, int]: ...
++//|     def open(self, buffer: ReadableBuffer, *, mjpeg: bool = False) -> Tuple[int, int]: ...
+ //|     @overload
+-//|     def open(self, bytesio: io.BytesIO) -> Tuple[int, int]:
++//|     def open(self, bytesio: io.BytesIO, *, mjpeg: bool = False) -> Tuple[int, int]:
+ //|         """Use the specified object  as the JPEG data source.
+ //|
+ //|         The source may be a filename, a binary buffer in memory, or an opened binary stream.
+ //|
+-//|         The single parameter is positional-only (write ``open(f)``, not
++//|         With ``mjpeg=True``, absent baseline Huffman tables use the standard
++//|         JPEG defaults used by MJPEG cameras. Supplied tables are preserved.
++//|         The default remains strict and requires tables in the input.
++//|
++//|         The source parameter is positional-only (write ``open(f)``, not
+ //|         ``open(filename=f)`` but due to technical limitations this is
+ //|         not shown in the function signature in the documentation.
+ //|
+ //|         Returns the image size as the tuple ``(width, height)``."""
+ //|
+-static mp_obj_t jpegio_jpegdecoder_open(mp_obj_t self_in, mp_obj_t arg) {
+-    jpegio_jpegdecoder_obj_t *self = MP_OBJ_TO_PTR(self_in);
++static mp_obj_t jpegio_jpegdecoder_open(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
++    mp_arg_check_num(n_args, kw_args->used, 2, 2, true);
++    enum { ARG_mjpeg };
++    static const mp_arg_t allowed_args[] = {
++        { MP_QSTR_mjpeg, MP_ARG_KW_ONLY | MP_ARG_BOOL, {.u_bool = false} },
++    };
++    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
++    mp_arg_parse_all(n_args - 2, pos_args + 2, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
++    jpegio_jpegdecoder_obj_t *self = MP_OBJ_TO_PTR(pos_args[0]);
++    mp_obj_t arg = pos_args[1];
+     if (mp_obj_is_str(arg)) {
+         arg = mp_call_function_2(
+             MP_OBJ_FROM_PTR(&mp_builtin_open_obj),
+@@ -83,13 +95,13 @@ static mp_obj_t jpegio_jpegdecoder_open(mp_obj_t self_in, mp_obj_t arg) {
+     const mp_stream_p_t *proto = mp_get_stream(arg);
+ 
+     if (proto && proto->read && !proto->is_text) {
+-        return common_hal_jpegio_jpegdecoder_set_source_file(self, arg);
++        return common_hal_jpegio_jpegdecoder_set_source_file(self, arg, args[ARG_mjpeg].u_bool);
+     } else if (mp_get_buffer(arg, &bufinfo, MP_BUFFER_READ)) {
+-        return common_hal_jpegio_jpegdecoder_set_source_buffer(self, arg);
++        return common_hal_jpegio_jpegdecoder_set_source_buffer(self, arg, args[ARG_mjpeg].u_bool);
+     }
+     mp_raise_TypeError_varg(MP_ERROR_TEXT("%q must be of type %q, %q, or %q, not %q"), MP_QSTR_data_source, MP_QSTR_str, MP_QSTR_BytesIO, MP_QSTR_ReadableBuffer);
+ }
+-MP_DEFINE_CONST_FUN_OBJ_2(jpegio_jpegdecoder_open_obj, jpegio_jpegdecoder_open);
++MP_DEFINE_CONST_FUN_OBJ_KW(jpegio_jpegdecoder_open_obj, 2, jpegio_jpegdecoder_open);
+ 
+ //|     def decode(
+ //|         self,
+diff --git a/shared-bindings/jpegio/JpegDecoder.h b/shared-bindings/jpegio/JpegDecoder.h
+index 560586a871efc182392ceef33cbd9c07ecb480fb..275a6bfc18f904ba69062687a367bb503a21ca1d 100644
+--- a/shared-bindings/jpegio/JpegDecoder.h
++++ b/shared-bindings/jpegio/JpegDecoder.h
+@@ -17,8 +17,8 @@ typedef struct jpegio_jpegdecoder_obj jpegio_jpegdecoder_obj_t;
+ 
+ void common_hal_jpegio_jpegdecoder_construct(jpegio_jpegdecoder_obj_t *self);
+ void common_hal_jpegio_jpegdecoder_close(jpegio_jpegdecoder_obj_t *self);
+-mp_obj_t common_hal_jpegio_jpegdecoder_set_source_buffer(jpegio_jpegdecoder_obj_t *self, mp_obj_t jpeg_data);
+-mp_obj_t common_hal_jpegio_jpegdecoder_set_source_file(jpegio_jpegdecoder_obj_t *self, mp_obj_t file_obj);
++mp_obj_t common_hal_jpegio_jpegdecoder_set_source_buffer(jpegio_jpegdecoder_obj_t *self, mp_obj_t jpeg_data, bool mjpeg);
++mp_obj_t common_hal_jpegio_jpegdecoder_set_source_file(jpegio_jpegdecoder_obj_t *self, mp_obj_t file_obj, bool mjpeg);
+ void common_hal_jpegio_jpegdecoder_decode_into(
+     jpegio_jpegdecoder_obj_t *self,
+     displayio_bitmap_t *bitmap, int scale, int16_t x, int16_t y,
+diff --git a/shared-bindings/usb/core/Device.c b/shared-bindings/usb/core/Device.c
+index bc6c6296899af8bc6e4e1e54f95d5d120cd71e00..aa0e8010f838e70dffb0877137cd9bb909d0d8e8 100644
+--- a/shared-bindings/usb/core/Device.c
++++ b/shared-bindings/usb/core/Device.c
+@@ -195,6 +195,90 @@ static mp_obj_t usb_core_device_set_configuration(size_t n_args, const mp_obj_t
+ }
+ MP_DEFINE_CONST_FUN_OBJ_KW(usb_core_device_set_configuration_obj, 1, usb_core_device_set_configuration);
+ 
++//|     def start_iso_in(self, endpoint: int, buffer_size: int = 32768, *, interval_frames: int = 0) -> None:
++//|         """Start continuous full-speed isochronous IN capture on the PIO USB host.
++//|
++//|         Select the interface alternate setting first. ``buffer_size`` must be
++//|         a power of two from 4096 through 65536 and is allocated in internal
++//|         SRAM. Only one continuous capture may run at a time. Capture keeps
++//|         this Device alive until stopped, disconnected, deinitialized or reset.
++//|
++//|         ``interval_frames=0`` uses the endpoint descriptor. ``1`` explicitly
++//|         selects one transaction per 1 ms USB frame for full-speed USB audio.
++//|         An overrun discards a whole incoming packet and increments counters;
++//|         no silence is inserted. Packet boundaries are not exposed to Python.
++//|         """
++//|         ...
++//|
++static mp_obj_t usb_core_device_start_iso_in(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
++    enum { ARG_endpoint, ARG_buffer_size, ARG_interval_frames };
++    static const mp_arg_t allowed_args[] = {
++        { MP_QSTR_endpoint, MP_ARG_REQUIRED | MP_ARG_INT },
++        { MP_QSTR_buffer_size, MP_ARG_INT, {.u_int = 32768} },
++        { MP_QSTR_interval_frames, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = 0} },
++    };
++    usb_core_device_obj_t *self = MP_OBJ_TO_PTR(pos_args[0]);
++    check_for_deinit(self);
++    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
++    mp_arg_parse_all(n_args - 1, pos_args + 1, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
++    common_hal_usb_core_device_start_iso_in(self, args[ARG_endpoint].u_int,
++        args[ARG_buffer_size].u_int, args[ARG_interval_frames].u_int);
++    return mp_const_none;
++}
++MP_DEFINE_CONST_FUN_OBJ_KW(usb_core_device_start_iso_in_obj, 2, usb_core_device_start_iso_in);
++
++//|     def read_iso_into(self, buffer: WriteableBuffer) -> int:
++//|         """Copy available captured bytes into ``buffer`` without waiting.
++//|
++//|         Returns the number of bytes copied, possibly zero. For PCM audio,
++//|         pass a buffer whose length is a multiple of the audio sample size.
++//|         """
++//|         ...
++//|
++static mp_obj_t usb_core_device_read_iso_into(mp_obj_t self_in, mp_obj_t buffer_in) {
++    usb_core_device_obj_t *self = MP_OBJ_TO_PTR(self_in);
++    check_for_deinit(self);
++    mp_buffer_info_t buffer;
++    mp_get_buffer_raise(buffer_in, &buffer, MP_BUFFER_WRITE);
++    return mp_obj_new_int(common_hal_usb_core_device_read_iso_into(self, buffer.buf, buffer.len));
++}
++MP_DEFINE_CONST_FUN_OBJ_2(usb_core_device_read_iso_into_obj, usb_core_device_read_iso_into);
++
++//|     def iso_in_stats(self) -> dict:
++//|         """Return capture counters, including packets, bytes and overrun bytes.
++//|
++//|         Native counters wrap modulo 2**32. ``available_bytes`` is a concurrent
++//|         estimate; the other counters use a consistent producer snapshot.
++//|         ``read_bytes`` counts copies to Python. On stop,
++//|         ``discarded_buffered_bytes`` records the final unread bytes freed;
++//|         ``available_bytes`` retains that same final snapshot, not live storage.
++//|         ``elapsed_us`` measures binding lifetime with 1 ms resolution.
++//|         Final counters remain available after stop or disconnect until the
++//|         next capture starts. These counters do not measure analog fidelity.
++//|         """
++//|         ...
++//|
++static mp_obj_t usb_core_device_iso_in_stats(mp_obj_t self_in) {
++    usb_core_device_obj_t *self = MP_OBJ_TO_PTR(self_in);
++    return common_hal_usb_core_device_iso_in_stats(self);
++}
++MP_DEFINE_CONST_FUN_OBJ_1(usb_core_device_iso_in_stats_obj, usb_core_device_iso_in_stats);
++
++//|     def stop_iso_in(self) -> None:
++//|         """Stop capture and free its SRAM buffers after the host acknowledges.
++//|
++//|         If stopping times out, buffers remain allocated and this method raises
++//|         `USBError`; call it again to retry. Calling after a completed stop is
++//|         harmless. Interface/configuration changes also stop affected capture.
++//|         """
++//|         ...
++//|
++static mp_obj_t usb_core_device_stop_iso_in(mp_obj_t self_in) {
++    common_hal_usb_core_device_stop_iso_in(MP_OBJ_TO_PTR(self_in));
++    return mp_const_none;
++}
++MP_DEFINE_CONST_FUN_OBJ_1(usb_core_device_stop_iso_in_obj, usb_core_device_stop_iso_in);
++
+ //|     def write(self, endpoint: int, data: ReadableBuffer, timeout: Optional[int] = None) -> int:
+ //|         """Write data to a specific endpoint on the device.
+ //|
+@@ -397,6 +481,10 @@ static const mp_rom_map_elem_t usb_core_device_locals_dict_table[] = {
+     { MP_ROM_QSTR(MP_QSTR_speed),            MP_ROM_PTR(&usb_core_device_speed_obj) },
+ 
+     { MP_ROM_QSTR(MP_QSTR_set_configuration), MP_ROM_PTR(&usb_core_device_set_configuration_obj) },
++    { MP_ROM_QSTR(MP_QSTR_start_iso_in),     MP_ROM_PTR(&usb_core_device_start_iso_in_obj) },
++    { MP_ROM_QSTR(MP_QSTR_read_iso_into),    MP_ROM_PTR(&usb_core_device_read_iso_into_obj) },
++    { MP_ROM_QSTR(MP_QSTR_iso_in_stats),     MP_ROM_PTR(&usb_core_device_iso_in_stats_obj) },
++    { MP_ROM_QSTR(MP_QSTR_stop_iso_in),      MP_ROM_PTR(&usb_core_device_stop_iso_in_obj) },
+     { MP_ROM_QSTR(MP_QSTR_write),            MP_ROM_PTR(&usb_core_device_write_obj) },
+     { MP_ROM_QSTR(MP_QSTR_read),             MP_ROM_PTR(&usb_core_device_read_obj) },
+     { MP_ROM_QSTR(MP_QSTR_ctrl_transfer),    MP_ROM_PTR(&usb_core_device_ctrl_transfer_obj) },
+diff --git a/shared-bindings/usb/core/Device.h b/shared-bindings/usb/core/Device.h
+index 51338f61228dcb987c2a5c8d12e55cfcb1fa6025..8a9875711f5973ba43e9dd1bc6913384f2f5cea9 100644
+--- a/shared-bindings/usb/core/Device.h
++++ b/shared-bindings/usb/core/Device.h
+@@ -35,3 +35,9 @@ mp_int_t common_hal_usb_core_device_ctrl_transfer(usb_core_device_obj_t *self,
+ bool common_hal_usb_core_device_is_kernel_driver_active(usb_core_device_obj_t *self, mp_int_t interface);
+ void common_hal_usb_core_device_detach_kernel_driver(usb_core_device_obj_t *self, mp_int_t interface);
+ void common_hal_usb_core_device_attach_kernel_driver(usb_core_device_obj_t *self, mp_int_t interface);
++
++void usb_core_device_reset(void);
++void common_hal_usb_core_device_start_iso_in(usb_core_device_obj_t *self, mp_int_t endpoint, mp_int_t buffer_size, mp_int_t interval_frames);
++mp_int_t common_hal_usb_core_device_read_iso_into(usb_core_device_obj_t *self, uint8_t *buffer, mp_int_t length);
++mp_obj_t common_hal_usb_core_device_iso_in_stats(usb_core_device_obj_t *self);
++void common_hal_usb_core_device_stop_iso_in(usb_core_device_obj_t *self);
+diff --git a/shared-module/displayio/__init__.c b/shared-module/displayio/__init__.c
+index c1309ee09723d536f6eeded6da6b86629810762e..539463eb62047eb33f8e16ab856b94fc07577962 100644
+--- a/shared-module/displayio/__init__.c
++++ b/shared-module/displayio/__init__.c
+@@ -328,6 +328,9 @@ void reset_displays(void) {
+         #if CIRCUITPY_PICODVI
+         } else if (display_bus_type == &picodvi_framebuffer_type) {
+             picodvi_framebuffer_obj_t *vc = &display_buses[i].picodvi;
++            #if defined(PICO_RP2350) && PICO_RP2350
++            common_hal_picodvi_framebuffer_audio_stop(vc);
++            #endif
+             if (!any_display_uses_this_framebuffer(&vc->base)) {
+                 common_hal_picodvi_framebuffer_deinit(vc);
+             }
+diff --git a/shared-module/jpegio/JpegDecoder.c b/shared-module/jpegio/JpegDecoder.c
+index 89cb624a8d03f0cbfe9a3fe0d6edd49cdd79f54a..6238019904428a5f3c96e754abd1d84a063d8cec 100644
+--- a/shared-module/jpegio/JpegDecoder.c
++++ b/shared-module/jpegio/JpegDecoder.c
+@@ -61,8 +61,8 @@ void common_hal_jpegio_jpegdecoder_close(jpegio_jpegdecoder_obj_t *self) {
+     memset(&self->bufinfo, 0, sizeof(self->bufinfo));
+ }
+ 
+-static mp_obj_t common_hal_jpegio_jpegdecoder_decode_common(jpegio_jpegdecoder_obj_t *self, input_func fun) {
+-    JRESULT result = jd_prepare(&self->decoder, fun, &self->workspace, sizeof(self->workspace), NULL);
++static mp_obj_t common_hal_jpegio_jpegdecoder_decode_common(jpegio_jpegdecoder_obj_t *self, input_func fun, bool mjpeg) {
++    JRESULT result = jd_prepare_ex(&self->decoder, fun, &self->workspace, sizeof(self->workspace), NULL, mjpeg ? JD_PREPARE_MJPEG : 0);
+     if (result != JDR_OK) {
+         common_hal_jpegio_jpegdecoder_close(self);
+     }
+@@ -89,7 +89,7 @@ static size_t file_input(JDEC *jd, uint8_t *dest, size_t len) {
+             read = file_input(jd, buf, to_discard);
+             total += read;
+         } while (read != 0 && total != len);
+-        return len;
++        return total;
+     }
+ 
+     int errcode = 0;
+@@ -100,9 +100,9 @@ static size_t file_input(JDEC *jd, uint8_t *dest, size_t len) {
+     return result;
+ }
+ 
+-mp_obj_t common_hal_jpegio_jpegdecoder_set_source_file(jpegio_jpegdecoder_obj_t *self, mp_obj_t file_obj) {
++mp_obj_t common_hal_jpegio_jpegdecoder_set_source_file(jpegio_jpegdecoder_obj_t *self, mp_obj_t file_obj, bool mjpeg) {
+     self->data_obj = file_obj;
+-    return common_hal_jpegio_jpegdecoder_decode_common(self, file_input);
++    return common_hal_jpegio_jpegdecoder_decode_common(self, file_input, mjpeg);
+ }
+ 
+ static size_t buffer_input(JDEC *jd, uint8_t *dest, size_t len) {
+@@ -117,10 +117,10 @@ static size_t buffer_input(JDEC *jd, uint8_t *dest, size_t len) {
+     return to_copy;
+ }
+ 
+-mp_obj_t common_hal_jpegio_jpegdecoder_set_source_buffer(jpegio_jpegdecoder_obj_t *self, mp_obj_t buffer_obj) {
++mp_obj_t common_hal_jpegio_jpegdecoder_set_source_buffer(jpegio_jpegdecoder_obj_t *self, mp_obj_t buffer_obj, bool mjpeg) {
+     self->data_obj = buffer_obj;
+     mp_get_buffer_raise(buffer_obj, &self->bufinfo, MP_BUFFER_READ);
+-    return common_hal_jpegio_jpegdecoder_decode_common(self, buffer_input);
++    return common_hal_jpegio_jpegdecoder_decode_common(self, buffer_input, mjpeg);
+ }
+ 
+ #define DECODER_CONTINUE (1)
+diff --git a/shared-module/usb/core/Device.c b/shared-module/usb/core/Device.c
+index a3bb449e87ec7c9a50ffc4fa65c39abb8fadb556..79e4f4fa51940a101a611cd0bb5273aa4dcd1c88 100644
+--- a/shared-module/usb/core/Device.c
++++ b/shared-module/usb/core/Device.c
+@@ -21,6 +21,87 @@
+ #include "supervisor/shared/tick.h"
+ #include "supervisor/usb.h"
+ 
++// Continuous capture is currently supported only by the RP2 PIO host backend.
++#if CFG_TUH_RPI_PIO_USB && (CFG_TUSB_MCU == OPT_MCU_RP2040)
++#define USB_CORE_ISO_CAPTURE (1)
++#include "pio_usb_iso.h"
++#else
++#define USB_CORE_ISO_CAPTURE (0)
++#endif
++
++#if USB_CORE_ISO_CAPTURE
++MP_REGISTER_ROOT_POINTER(mp_obj_t usb_iso_in_owner);
++static pio_usb_iso_ring_t *_iso_ring;
++static uint8_t *_iso_storage;
++static uint8_t _iso_device_address;
++static uint8_t _iso_endpoint;
++static uint8_t _iso_interface;
++
++static usb_core_device_obj_t *_iso_owner(void) {
++    return MP_STATE_VM(usb_iso_in_owner) == MP_OBJ_NULL ? NULL : MP_OBJ_TO_PTR(MP_STATE_VM(usb_iso_in_owner));
++}
++
++static bool _iso_snapshot(usb_core_device_obj_t *owner) {
++    pio_usb_iso_stats_t stats;
++    _Static_assert(sizeof(stats) == sizeof(owner->iso_in_stats), "ISO stats layout mismatch");
++    if (!pio_usb_host_iso_stats(_iso_ring, &stats)) {
++        return false;
++    }
++    memcpy(owner->iso_in_stats, &stats, sizeof(stats));
++    owner->iso_in_has_stats = true;
++    owner->iso_in_elapsed_ms = supervisor_ticks_ms32() - owner->iso_in_start_ms;
++    return true;
++}
++
++// No Python allocation here: also called by detach and VM reset. A timeout must
++// retain BOTH SRAM allocations until core1 acknowledges that it detached them.
++static bool _iso_stop(bool abandon_owner) {
++    if (_iso_ring == NULL) {
++        return true;
++    }
++    usb_core_device_obj_t *owner = _iso_owner();
++    bool stopped = pio_usb_host_iso_stop(_iso_ring, 100000);
++    if (owner != NULL) {
++        _iso_snapshot(owner);
++    }
++    if (stopped) {
++        if (owner != NULL) {
++            // The final unread bytes cannot be drained once SRAM is freed.
++            owner->iso_in_discarded_bytes = owner->iso_in_stats[15];
++        }
++        port_free(_iso_storage);
++        port_free(_iso_ring);
++        _iso_storage = NULL;
++        _iso_ring = NULL;
++    }
++    if (stopped || abandon_owner) {
++        // On a reset timeout native pointers remain valid in the port heap, but
++        // no pointer into the disappearing GC heap may be kept. A later start
++        // retries the stop before allocating another capture.
++        MP_STATE_VM(usb_iso_in_owner) = MP_OBJ_NULL;
++    }
++    return stopped;
++}
++
++static void _iso_stop_matching(uint8_t device_address, int interface) {
++    if (_iso_ring != NULL && _iso_device_address == device_address &&
++        (interface < 0 || _iso_interface == interface) && !_iso_stop(false)) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("Isochronous capture did not stop"));
++    }
++}
++#else
++static void _iso_stop_matching(uint8_t device_address, int interface) {
++    (void)device_address;
++    (void)interface;
++}
++#endif
++
++void usb_core_device_reset(void) {
++    #if USB_CORE_ISO_CAPTURE
++    _iso_stop(true);
++    #endif
++}
++
+ // Track what device numbers are mounted. We can't use tuh_ready() because it is
+ // true before enumeration completes and TinyUSB drivers are started.
+ static size_t _mounted_devices = 0;
+@@ -31,6 +112,11 @@ void tuh_mount_cb(uint8_t dev_addr) {
+ 
+ void tuh_umount_cb(uint8_t dev_addr) {
+     _mounted_devices &= ~(1 << dev_addr);
++    #if USB_CORE_ISO_CAPTURE
++    if (_iso_ring != NULL && _iso_device_address == dev_addr) {
++        _iso_stop(true);
++    }
++    #endif
+ }
+ 
+ static xfer_result_t _xfer_result;
+@@ -70,6 +156,16 @@ bool common_hal_usb_core_device_construct(usb_core_device_obj_t *self, uint8_t d
+     }
+     self->device_address = device_address;
+     self->first_langid = 0;
++    self->configuration_descriptor = NULL;
++    self->configuration_descriptor_length = 0;
++    self->iso_in_has_stats = false;
++    self->iso_in_read_bytes = 0;
++    self->iso_in_discarded_bytes = 0;
++    self->iso_in_start_ms = 0;
++    self->iso_in_elapsed_ms = 0;
++    memset(self->iso_in_stats, 0, sizeof(self->iso_in_stats));
++    memset(self->open_endpoints, 0, sizeof(self->open_endpoints));
++    memset(self->interface_altsettings, 0, sizeof(self->interface_altsettings));
+     _xfer_result = XFER_RESULT_INVALID;
+     return true;
+ }
+@@ -78,17 +174,23 @@ bool common_hal_usb_core_device_deinited(usb_core_device_obj_t *self) {
+     return self->device_address == 0;
+ }
+ 
+-void common_hal_usb_core_device_deinit(usb_core_device_obj_t *self) {
+-    if (common_hal_usb_core_device_deinited(self)) {
+-        return;
+-    }
+-    size_t open_size = sizeof(self->open_endpoints);
+-    for (size_t i = 0; i < open_size; i++) {
+-        if (self->open_endpoints[i] != 0) {
++// A negative interface closes all endpoints owned by this Device object.
++static void _close_endpoints(usb_core_device_obj_t *self, int interface) {
++    _iso_stop_matching(self->device_address, interface);
++    for (size_t i = 0; i < MP_ARRAY_SIZE(self->open_endpoints); i++) {
++        if (self->open_endpoints[i] != 0 &&
++            (interface < 0 || self->open_endpoint_interfaces[i] == interface)) {
+             tuh_edpt_close(self->device_address, self->open_endpoints[i]);
+             self->open_endpoints[i] = 0;
+         }
+     }
++}
++
++void common_hal_usb_core_device_deinit(usb_core_device_obj_t *self) {
++    if (common_hal_usb_core_device_deinited(self)) {
++        return;
++    }
++    _close_endpoints(self, -1);
+     self->device_address = 0;
+ }
+ 
+@@ -377,24 +479,40 @@ mp_int_t common_hal_usb_core_device_get_speed(usb_core_device_obj_t *self) {
+ void common_hal_usb_core_device_set_configuration(usb_core_device_obj_t *self, mp_int_t configuration) {
+     // We assume that the config index is one less than the value.
+     uint8_t config_index = configuration - 1;
+-    // Get the configuration descriptor and cache it. We'll use it later to open
+-    // endpoints.
+-
+-    // Get only the config descriptor first.
+-    tusb_desc_configuration_t desc;
+-    if (!tuh_descriptor_get_configuration(self->device_address, config_index, &desc, sizeof(desc), _transfer_done_cb, 0) ||
+-        !_wait_for_callback()) {
++    // Fetch a complete descriptor before replacing the active cached one. Use
++    // ctrl_transfer so buffers in PSRAM are bounced through DMA-capable memory:
++    // the PIO host's second core cannot access the GC heap there.
++    tusb_desc_configuration_t desc = {0};
++    mp_int_t received = common_hal_usb_core_device_ctrl_transfer(self, 0x80,
++        TUSB_REQ_GET_DESCRIPTOR, (TUSB_DESC_CONFIGURATION << 8) | config_index,
++        0, (uint8_t *)&desc, sizeof(desc), 1000);
++    if (mp_hal_is_interrupted()) {
+         return;
+     }
+-
+-    // Get the config descriptor plus interfaces and endpoints.
+-    self->configuration_descriptor = m_realloc(self->configuration_descriptor, desc.wTotalLength);
+-    if (!tuh_descriptor_get_configuration(self->device_address, config_index, self->configuration_descriptor, desc.wTotalLength, _transfer_done_cb, 0) ||
+-        !_wait_for_callback()) {
++    uint16_t total_length = tu_le16toh(desc.wTotalLength);
++    if (received != sizeof(desc) || desc.bLength < sizeof(desc) ||
++        desc.bDescriptorType != TUSB_DESC_CONFIGURATION || total_length < desc.bLength) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("Invalid configuration descriptor"));
++    }
++    uint8_t *descriptor = m_malloc(total_length);
++    received = common_hal_usb_core_device_ctrl_transfer(self, 0x80,
++        TUSB_REQ_GET_DESCRIPTOR, (TUSB_DESC_CONFIGURATION << 8) | config_index,
++        0, descriptor, total_length, 1000);
++    if (mp_hal_is_interrupted()) {
++        return;
++    }
++    if (received != total_length || memcmp(descriptor, &desc, sizeof(desc)) != 0) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("Invalid configuration descriptor"));
++    }
++    // This also closes old endpoints and resets alternate settings on success.
++    common_hal_usb_core_device_ctrl_transfer(self, 0x00,
++        TUSB_REQ_SET_CONFIGURATION, configuration, 0, NULL, 0, 1000);
++    if (mp_hal_is_interrupted()) {
+         return;
+     }
+-    tuh_configuration_set(self->device_address, configuration, _transfer_done_cb, 0);
+-    _wait_for_callback();
++    self->configuration_index = config_index;
++    self->configuration_descriptor = descriptor;
++    self->configuration_descriptor_length = total_length;
+ }
+ 
+ // Raises an exception on failure. Returns the number of bytes transferred (maybe zero) on success.
+@@ -412,55 +530,187 @@ static size_t _xfer(tuh_xfer_t *xfer, mp_int_t timeout, bool our_buffer, bool ra
+ }
+ 
+ static bool _open_endpoint(usb_core_device_obj_t *self, mp_int_t endpoint) {
+-    bool endpoint_open = false;
+-    size_t open_size = sizeof(self->open_endpoints);
++    // Endpoint zero is reserved for control transfers and also marks free slots.
++    if (endpoint <= 0 || endpoint > 0xff || (endpoint & 0x70) != 0 || (endpoint & 0x0f) == 0) {
++        return false;
++    }
++    size_t open_size = MP_ARRAY_SIZE(self->open_endpoints);
+     size_t first_free = open_size;
+     for (size_t i = 0; i < open_size; i++) {
+         if (self->open_endpoints[i] == endpoint) {
+-            endpoint_open = true;
+-        } else if (first_free == open_size && self->open_endpoints[i] == 0) {
++            return true;
++        }
++        if (first_free == open_size && self->open_endpoints[i] == 0) {
+             first_free = i;
+         }
+     }
+-    if (endpoint_open) {
+-        return true;
++    if (first_free == open_size) {
++        return false;
+     }
+-
+     if (self->configuration_descriptor == NULL) {
+         mp_raise_usb_core_USBError(MP_ERROR_TEXT("No configuration set"));
+         return false;
+     }
+ 
+-    tusb_desc_configuration_t *desc_cfg = (tusb_desc_configuration_t *)self->configuration_descriptor;
+-
+-    uint32_t total_length = tu_le16toh(desc_cfg->wTotalLength);
+-    uint8_t const *desc_end = ((uint8_t const *)desc_cfg) + total_length;
+-    uint8_t const *p_desc = tu_desc_next(desc_cfg);
+-
+-    // parse each interfaces
++    const uint8_t *p_desc = self->configuration_descriptor;
++    const uint8_t *desc_end = p_desc + self->configuration_descriptor_length;
++    bool active_interface = false;
++    uint8_t interface = 0;
+     while (p_desc < desc_end) {
+-        if (TUSB_DESC_ENDPOINT == tu_desc_type(p_desc)) {
+-            tusb_desc_endpoint_t const *desc_ep = (tusb_desc_endpoint_t const *)p_desc;
++        // A USB descriptor is untrusted input. Do not advance on zero length or
++        // inspect fields beyond either the descriptor or the received buffer.
++        if (desc_end - p_desc < 2 || p_desc[0] < 2 || p_desc[0] > desc_end - p_desc) {
++            return false;
++        }
++        if (p_desc[1] == TUSB_DESC_INTERFACE) {
++            if (p_desc[0] < sizeof(tusb_desc_interface_t)) {
++                return false;
++            }
++            const tusb_desc_interface_t *desc_itf = (const tusb_desc_interface_t *)p_desc;
++            interface = desc_itf->bInterfaceNumber;
++            active_interface = desc_itf->bAlternateSetting == self->interface_altsettings[interface];
++        } else if (p_desc[1] == TUSB_DESC_ENDPOINT && active_interface) {
++            if (p_desc[0] < sizeof(tusb_desc_endpoint_t)) {
++                return false;
++            }
++            const tusb_desc_endpoint_t *desc_ep = (const tusb_desc_endpoint_t *)p_desc;
+             if (desc_ep->bEndpointAddress == endpoint) {
+-                break;
++                if (!tuh_edpt_open(self->device_address, desc_ep)) {
++                    return false;
++                }
++                self->open_endpoints[first_free] = endpoint;
++                self->open_endpoint_interfaces[first_free] = interface;
++                return true;
+             }
+         }
++        p_desc += p_desc[0];
++    }
++    return false;
++}
+ 
+-        p_desc = tu_desc_next(p_desc);
++void common_hal_usb_core_device_start_iso_in(usb_core_device_obj_t *self, mp_int_t endpoint, mp_int_t buffer_size, mp_int_t interval_frames) {
++    #if USB_CORE_ISO_CAPTURE
++    if (buffer_size < 4096 || buffer_size > 65536 || (buffer_size & (buffer_size - 1)) != 0) {
++        mp_raise_ValueError(MP_ERROR_TEXT("buffer_size must be a power of two from 4096 to 65536"));
+     }
+-    if (p_desc >= desc_end) {
+-        return false;
++    if (interval_frames != 0 && interval_frames != 1) {
++        mp_raise_ValueError(MP_ERROR_TEXT("interval_frames must be 0 or 1"));
++    }
++    if (_iso_ring != NULL) {
++        if (_iso_owner() != NULL) {
++            mp_raise_usb_core_USBError(MP_ERROR_TEXT("An isochronous capture is already running"));
++        }
++        if (!_iso_stop(true)) {
++            mp_raise_usb_core_USBError(MP_ERROR_TEXT("Previous isochronous capture is still stopping"));
++        }
+     }
+-    tusb_desc_endpoint_t const *desc_ep = (tusb_desc_endpoint_t const *)p_desc;
++    tuh_bus_info_t bus_info;
++    if (!tuh_bus_info_get(self->device_address, &bus_info) || bus_info.rhport < 1 || bus_info.speed != TUSB_SPEED_FULL) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("Full-speed PIO USB host required"));
++    }
++    if (!_open_endpoint(self, endpoint)) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("Unable to open isochronous endpoint"));
++    }
++    uint8_t interface = 0;
++    for (size_t i = 0; i < MP_ARRAY_SIZE(self->open_endpoints); i++) {
++        if (self->open_endpoints[i] == endpoint) {
++            interface = self->open_endpoint_interfaces[i];
++            break;
++        }
++    }
++    pio_usb_iso_ring_t *ring = port_malloc(sizeof(*ring), true);
++    if (ring == NULL) {
++        mp_raise_msg(&mp_type_MemoryError, MP_ERROR_TEXT("Could not allocate DMA capable buffer"));
++    }
++    memset(ring, 0, sizeof(*ring));
++    uint8_t *storage = port_malloc(buffer_size, true);
++    if (storage == NULL) {
++        port_free(ring);
++        mp_raise_msg(&mp_type_MemoryError, MP_ERROR_TEXT("Could not allocate DMA capable buffer"));
++    }
++    self->iso_in_start_ms = supervisor_ticks_ms32();
++    if (!pio_usb_host_iso_start(bus_info.rhport - 1, self->device_address, endpoint,
++        ring, storage, buffer_size, interval_frames)) {
++        port_free(storage);
++        port_free(ring);
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("Unable to start isochronous capture"));
++    }
++    _iso_ring = ring;
++    _iso_storage = storage;
++    _iso_device_address = self->device_address;
++    _iso_endpoint = endpoint;
++    _iso_interface = interface;
++    memset(self->iso_in_stats, 0, sizeof(self->iso_in_stats));
++    self->iso_in_has_stats = true;
++    self->iso_in_read_bytes = 0;
++    self->iso_in_discarded_bytes = 0;
++    self->iso_in_elapsed_ms = 0;
++    // Keep the Device alive until explicit stop, detach, deinit or VM reset.
++    MP_STATE_VM(usb_iso_in_owner) = MP_OBJ_FROM_PTR(self);
++    #else
++    mp_raise_NotImplementedError(MP_ERROR_TEXT("Continuous isochronous capture requires the PIO USB host"));
++    #endif
++}
+ 
+-    bool open = tuh_edpt_open(self->device_address, desc_ep);
+-    if (open) {
+-        self->open_endpoints[first_free] = endpoint;
++mp_int_t common_hal_usb_core_device_read_iso_into(usb_core_device_obj_t *self, uint8_t *buffer, mp_int_t length) {
++    #if USB_CORE_ISO_CAPTURE
++    if (_iso_ring == NULL || _iso_owner() != self) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("No isochronous capture running"));
+     }
+-    return open;
++    uint32_t count = pio_usb_host_iso_read(_iso_ring, buffer, length);
++    self->iso_in_read_bytes += count;
++    return count;
++    #else
++    mp_raise_NotImplementedError(MP_ERROR_TEXT("Continuous isochronous capture requires the PIO USB host"));
++    #endif
++}
++
++mp_obj_t common_hal_usb_core_device_iso_in_stats(usb_core_device_obj_t *self) {
++    #if USB_CORE_ISO_CAPTURE
++    if (_iso_ring != NULL && _iso_owner() == self && !_iso_snapshot(self)) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("Unable to snapshot isochronous capture"));
++    }
++    if (!self->iso_in_has_stats) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("No isochronous capture statistics"));
++    }
++    static const qstr names[] = {
++        MP_QSTR_polls, MP_QSTR_packets, MP_QSTR_bytes, MP_QSTR_zero_packets,
++        MP_QSTR_error_packets, MP_QSTR_overrun_packets, MP_QSTR_overrun_bytes,
++        MP_QSTR_unarmed_frames, MP_QSTR_active_frames, MP_QSTR_total_transaction_us,
++        MP_QSTR_max_transaction_us, MP_QSTR_max_poll_gap_us, MP_QSTR_high_water_bytes,
++        MP_QSTR_max_frame_us, MP_QSTR_frame_overruns, MP_QSTR_available_bytes,
++        MP_QSTR_active, MP_QSTR_disconnected,
++    };
++    _Static_assert(MP_ARRAY_SIZE(names) == MP_ARRAY_SIZE(self->iso_in_stats), "ISO stats names mismatch");
++    mp_obj_t result = mp_obj_new_dict(MP_ARRAY_SIZE(names) + 3);
++    for (size_t i = 0; i < MP_ARRAY_SIZE(names); i++) {
++        mp_obj_dict_store(result, MP_OBJ_NEW_QSTR(names[i]), mp_obj_new_int_from_uint(self->iso_in_stats[i]));
++    }
++    mp_obj_dict_store(result, MP_OBJ_NEW_QSTR(MP_QSTR_read_bytes), mp_obj_new_int_from_ull(self->iso_in_read_bytes));
++    mp_obj_dict_store(result, MP_OBJ_NEW_QSTR(MP_QSTR_discarded_buffered_bytes), mp_obj_new_int_from_uint(self->iso_in_discarded_bytes));
++    mp_obj_dict_store(result, MP_OBJ_NEW_QSTR(MP_QSTR_elapsed_us), mp_obj_new_int_from_ull((uint64_t)self->iso_in_elapsed_ms * 1000));
++    return result;
++    #else
++    mp_raise_NotImplementedError(MP_ERROR_TEXT("Continuous isochronous capture requires the PIO USB host"));
++    #endif
++}
++
++void common_hal_usb_core_device_stop_iso_in(usb_core_device_obj_t *self) {
++    #if USB_CORE_ISO_CAPTURE
++    if (_iso_ring != NULL && _iso_owner() == self && !_iso_stop(false)) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("Isochronous capture did not stop"));
++    }
++    #else
++    mp_raise_NotImplementedError(MP_ERROR_TEXT("Continuous isochronous capture requires the PIO USB host"));
++    #endif
+ }
+ 
+ mp_int_t common_hal_usb_core_device_write(usb_core_device_obj_t *self, mp_int_t endpoint, const uint8_t *buffer, mp_int_t len, mp_int_t timeout) {
++    #if USB_CORE_ISO_CAPTURE
++    if (_iso_ring != NULL && _iso_device_address == self->device_address && _iso_endpoint == endpoint) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("Endpoint has continuous isochronous capture"));
++    }
++    #endif
+     if (!_open_endpoint(self, endpoint)) {
+         mp_raise_usb_core_USBError(NULL);
+         return 0;
+@@ -492,6 +742,11 @@ mp_int_t common_hal_usb_core_device_write(usb_core_device_obj_t *self, mp_int_t
+ }
+ 
+ mp_int_t common_hal_usb_core_device_read(usb_core_device_obj_t *self, mp_int_t endpoint, uint8_t *buffer, mp_int_t len, mp_int_t timeout, bool raise_on_timeout) {
++    #if USB_CORE_ISO_CAPTURE
++    if (_iso_ring != NULL && _iso_device_address == self->device_address && _iso_endpoint == endpoint) {
++        mp_raise_usb_core_USBError(MP_ERROR_TEXT("Endpoint has continuous isochronous capture"));
++    }
++    #endif
+     if (!_open_endpoint(self, endpoint)) {
+         mp_raise_usb_core_USBError(NULL);
+         return 0;
+@@ -530,6 +785,14 @@ mp_int_t common_hal_usb_core_device_ctrl_transfer(usb_core_device_obj_t *self,
+     mp_int_t bmRequestType, mp_int_t bRequest,
+     mp_int_t wValue, mp_int_t wIndex,
+     uint8_t *buffer, mp_int_t len, mp_int_t timeout) {
++    // Stop capture before a device changes or disables its streaming endpoint.
++    if (len == 0 && bmRequestType == 0x01 && bRequest == TUSB_REQ_SET_INTERFACE &&
++        wIndex >= 0 && wIndex <= 0xff && wValue >= 0 && wValue <= 0xff) {
++        _iso_stop_matching(self->device_address, wIndex);
++    } else if (len == 0 && bmRequestType == 0x00 && bRequest == TUSB_REQ_SET_CONFIGURATION &&
++        wIndex == 0 && wValue >= 0 && wValue <= 0xff) {
++        _iso_stop_matching(self->device_address, -1);
++    }
+     // Timeout is in ms.
+ 
+     #if !CIRCUITPY_ALL_MEMORY_DMA_CAPABLE
+@@ -566,6 +829,9 @@ mp_int_t common_hal_usb_core_device_ctrl_transfer(usb_core_device_obj_t *self,
+ 
+     _prepare_for_transfer();
+     if (!tuh_control_xfer(&xfer)) {
++        if (dma_buffer != buffer) {
++            port_free(dma_buffer);
++        }
+         mp_raise_usb_core_USBError(NULL);
+         return 0;
+     }
+@@ -581,7 +847,28 @@ mp_int_t common_hal_usb_core_device_ctrl_transfer(usb_core_device_obj_t *self,
+     }
+     #endif
+ 
+-    return result;
++    // Keep the endpoint cache coherent with standard requests made through the
++    // PyUSB-compatible control API. Interrupted/failed requests do not select an
++    // alternate setting. Class/vendor requests using these numbers are unrelated.
++    if (!mp_hal_is_interrupted() && request.wLength == 0) {
++        if (request.bmRequestType == 0x01 && request.bRequest == TUSB_REQ_SET_INTERFACE &&
++            request.wIndex <= 0xff && request.wValue <= 0xff) {
++            _close_endpoints(self, request.wIndex);
++            self->interface_altsettings[request.wIndex] = request.wValue;
++        } else if (request.bmRequestType == 0x00 && request.bRequest == TUSB_REQ_SET_CONFIGURATION &&
++            request.wIndex == 0 && request.wValue <= 0xff) {
++            _close_endpoints(self, -1);
++            memset(self->interface_altsettings, 0, sizeof(self->interface_altsettings));
++            const tusb_desc_configuration_t *desc = (const tusb_desc_configuration_t *)self->configuration_descriptor;
++            if (desc != NULL && (request.wValue == 0 || request.wValue != desc->bConfigurationValue)) {
++                self->configuration_descriptor = NULL;
++                self->configuration_descriptor_length = 0;
++            }
++        }
++    }
++    // Some host controllers report the eight SETUP bytes for a request without
++    // a data stage. PyUSB counts data bytes only, so that request returns zero.
++    return request.wLength == 0 ? 0 : result;
+ }
+ 
+ bool common_hal_usb_core_device_is_kernel_driver_active(usb_core_device_obj_t *self, mp_int_t interface) {
+diff --git a/shared-module/usb/core/Device.h b/shared-module/usb/core/Device.h
+index c7392a04ba7bc44ca0593fbd5342ba504dceddb3..591819efac5e6958970ac04c532032319960870e 100644
+--- a/shared-module/usb/core/Device.h
++++ b/shared-module/usb/core/Device.h
+@@ -14,5 +14,14 @@ typedef struct {
+     uint8_t configuration_index; // not bConfigurationValue
+     uint8_t *configuration_descriptor; // Contains the length of the all descriptors.
+     uint8_t open_endpoints[8];
++    uint8_t open_endpoint_interfaces[8];
++    uint8_t interface_altsettings[256];
++    uint16_t configuration_descriptor_length;
+     uint16_t first_langid;
++    uint32_t iso_in_stats[18];
++    bool iso_in_has_stats;
++    uint64_t iso_in_read_bytes;
++    uint32_t iso_in_discarded_bytes;
++    uint32_t iso_in_start_ms;
++    uint32_t iso_in_elapsed_ms;
+ } usb_core_device_obj_t;
+diff --git a/shared/libc/string0.c b/shared/libc/string0.c
+index 5a9e0ff853a52201842cf271c4496b9575827cea..607e162784f0efe24845cf32ab629f9b6c987259 100644
+--- a/shared/libc/string0.c
++++ b/shared/libc/string0.c
+@@ -88,6 +88,9 @@ void *__memcpy_chk(void *dest, const void *src, size_t len, size_t slen) {
+ }
+ 
+ void *memmove(void *dest, const void *src, size_t n) {
++    if (dest == src) {
++        return dest;
++    }
+     if (src < dest && (uint8_t*)dest < (const uint8_t*)src + n) {
+         // need to copy backwards
+         uint8_t *d = (uint8_t*)dest + n - 1;
+diff --git a/ports/raspberrypi/boards/adafruit_fruit_jam/link.ld b/ports/raspberrypi/boards/adafruit_fruit_jam/link.ld
+new file mode 100644
+index 0000000000000000000000000000000000000000..b5c4637ceadf9d6084ad43047a344b8b2d7270ce
+--- /dev/null
++++ b/ports/raspberrypi/boards/adafruit_fruit_jam/link.ld
+@@ -0,0 +1 @@
++firmware_size = 2048k;
+diff --git a/ports/raspberrypi/common-hal/picodvi/LICENSE-pico-hdmi.txt b/ports/raspberrypi/common-hal/picodvi/LICENSE-pico-hdmi.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..fdddb29aa445bf3d6a5d843d6dd77e10a9f99657
+--- /dev/null
++++ b/ports/raspberrypi/common-hal/picodvi/LICENSE-pico-hdmi.txt
+@@ -0,0 +1,24 @@
++This is free and unencumbered software released into the public domain.
++
++Anyone is free to copy, modify, publish, use, compile, sell, or
++distribute this software, either in source code form or as a compiled
++binary, for any purpose, commercial or non-commercial, and by any
++means.
++
++In jurisdictions that recognize copyright laws, the author or authors
++of this software dedicate any and all copyright interest in the
++software to the public domain. We make this dedication for the benefit
++of the public at large and to the detriment of our heirs and
++successors. We intend this dedication to be an overt act of
++relinquishment in perpetuity of all present and future rights to this
++software under copyright law.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
++IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
++OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
++ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++OTHER DEALINGS IN THE SOFTWARE.
++
++For more information, please refer to <https://unlicense.org>
+diff --git a/ports/raspberrypi/common-hal/picodvi/hdmi_audio.c.inc b/ports/raspberrypi/common-hal/picodvi/hdmi_audio.c.inc
+new file mode 100644
+index 0000000000000000000000000000000000000000..34ce0b620ff6c38cf44195c17db62d4baeca561d
+--- /dev/null
++++ b/ports/raspberrypi/common-hal/picodvi/hdmi_audio.c.inc
+@@ -0,0 +1,272 @@
++// Experimental fixed-32-kHz mono HDMI PCM transport for the RP2350 picodvi owner.
++// No interrupt-time allocation, sample conversion, packet encoding, or Python callbacks.
++// SPDX-License-Identifier: MIT
++#include "hardware/clocks.h"
++#include "hardware/sync.h"
++#include "common-hal/picodvi/hdmi_packet.c.inc"
++
++#define HDMI_RATE 32000u
++#define HDMI_MAX_PACKETS 180u
++#define HDMI_LINE_WORDS 60u
++#define HDMI_AUDIO_BANKS 2
++
++typedef struct {
++    uint32_t *commands;
++    uint32_t (*lines)[HDMI_LINE_WORDS];
++    volatile uint32_t samples;
++    volatile uint32_t order;
++    volatile bool ready;
++} hdmi_audio_bank_t;
++
++typedef struct {
++    hdmi_audio_bank_t bank[HDMI_AUDIO_BANKS];
++    volatile int active;
++    uint32_t next_order;
++    uint32_t pixel_clock;
++    uint64_t phase;
++    int channel_frame;
++} hdmi_audio_state_t;
++
++static uint32_t hdmi_acr_line[HDMI_LINE_WORDS];
++static uint32_t hdmi_info_line[HDMI_LINE_WORDS];
++static uint32_t hdmi_avi_line[HDMI_LINE_WORDS];
++static uint32_t hdmi_header_lengths[3];
++
++static uint32_t hdmi_build_line(uint32_t *p, const hstx_data_island_t *island, bool vsync, bool active) {
++    uint32_t *start = p;
++    uint32_t h0 = vsync ? SYNC_V0_H0 : SYNC_V1_H0;
++    uint32_t h1 = vsync ? SYNC_V0_H1 : SYNC_V1_H1;
++    uint32_t preamble = (h0 & 0x3ff) | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_01 << 20);
++    *p++ = HSTX_CMD_RAW_REPEAT | MODE_640_H_FRONT_PORCH;
++    *p++ = h1;
++    *p++ = HSTX_CMD_NOP;
++    *p++ = HSTX_CMD_RAW_REPEAT | 8;
++    *p++ = preamble;
++    *p++ = HSTX_CMD_NOP;
++    *p++ = HSTX_CMD_RAW | HSTX_DATA_ISLAND_WORDS;
++    memcpy(p, island->words, sizeof(island->words));
++    p += HSTX_DATA_ISLAND_WORDS;
++    *p++ = HSTX_CMD_NOP;
++    *p++ = HSTX_CMD_RAW_REPEAT | (MODE_640_H_SYNC_WIDTH - 8 - HSTX_DATA_ISLAND_WORDS);
++    *p++ = h0;
++    *p++ = HSTX_CMD_NOP;
++    if (active) {
++        *p++ = HSTX_CMD_RAW_REPEAT | (MODE_640_H_BACK_PORCH - 10);
++        *p++ = h1;
++        *p++ = HSTX_CMD_NOP;
++        *p++ = HSTX_CMD_RAW_REPEAT | 8;
++        *p++ = (h1 & 0x3ff) | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_00 << 20);
++        *p++ = HSTX_CMD_NOP;
++        *p++ = HSTX_CMD_RAW_REPEAT | 2;
++        *p++ = 0x2ccu | (0x133u << 10) | (0x2ccu << 20);
++        *p++ = HSTX_CMD_TMDS | MODE_640_H_ACTIVE_PIXELS;
++    } else {
++        *p++ = HSTX_CMD_RAW_REPEAT | (MODE_640_H_BACK_PORCH + MODE_640_H_ACTIVE_PIXELS);
++        *p++ = h1;
++        *p++ = HSTX_CMD_NOP;
++    }
++    return p - start;
++}
++
++static void hdmi_init_headers(void) {
++    hstx_packet_t packet;
++    hstx_data_island_t island;
++    uint32_t pixel_clock = clock_get_hz(clk_hstx) / 5;
++    uint32_t cts = ((uint64_t)pixel_clock * 4096 + (128 * HDMI_RATE / 2)) / (128 * HDMI_RATE);
++    hstx_packet_set_acr(&packet, 4096, cts);
++    hstx_encode_data_island(&island, &packet, true, true);
++    hdmi_header_lengths[0] = hdmi_build_line(hdmi_acr_line, &island, true, false);
++    hstx_packet_set_audio_infoframe(&packet, HDMI_RATE, 2, 16);
++    hstx_encode_data_island(&island, &packet, true, true);
++    hdmi_header_lengths[1] = hdmi_build_line(hdmi_info_line, &island, true, false);
++    // Unspecified VIC: preserve CircuitPython's existing 625-line timing.
++    hstx_packet_set_avi_infoframe(&packet, 0, 0);
++    hstx_encode_data_island(&island, &packet, false, true);
++    hdmi_header_lengths[2] = hdmi_build_line(hdmi_avi_line, &island, false, false);
++}
++
++static void hdmi_free_audio(picodvi_framebuffer_obj_t *self) {
++    hdmi_audio_state_t *audio = self->hdmi_audio;
++    if (!audio) {
++        return;
++    }
++    self->hdmi_audio = NULL;
++    for (int i = 0; i < HDMI_AUDIO_BANKS; i++) {
++        if (audio->bank[i].commands) {
++            port_free(audio->bank[i].commands);
++        }
++        if (audio->bank[i].lines) {
++            port_free(audio->bank[i].lines);
++        }
++    }
++    port_free(audio);
++}
++
++static bool hdmi_internal(const void *ptr) {
++    return ptr && (((uintptr_t)ptr & 0xf0000000) == 0x20000000);
++}
++
++static void hdmi_allocate_audio(picodvi_framebuffer_obj_t *self) {
++    if (self->hdmi_audio) {
++        return;
++    }
++    hdmi_audio_state_t *audio = port_malloc(sizeof(*audio), true);
++    if (!audio) {
++        m_malloc_fail(sizeof(*audio));
++    }
++    memset(audio, 0, sizeof(*audio));
++    audio->active = -1;
++    audio->pixel_clock = clock_get_hz(clk_hstx) / 5;
++    // No state is published to the ISR until every DMA source is ready.
++    for (int i = 0; i < HDMI_AUDIO_BANKS; i++) {
++        audio->bank[i].commands = port_malloc(self->dma_commands_len * sizeof(uint32_t), true);
++        audio->bank[i].lines = port_malloc(HDMI_MAX_PACKETS * HDMI_LINE_WORDS * sizeof(uint32_t), true);
++        if (!hdmi_internal(audio->bank[i].commands) || !hdmi_internal(audio->bank[i].lines)) {
++            // Temporarily attach only for common cleanup. No bank is ready.
++            self->hdmi_audio = audio;
++            hdmi_free_audio(self);
++            m_malloc_fail(HDMI_MAX_PACKETS * HDMI_LINE_WORDS * sizeof(uint32_t));
++        }
++    }
++    __dmb();
++    self->hdmi_audio = audio;
++}
++
++// Called at frame boundary only; old DMA frame has completed.
++static uint32_t *hdmi_next_frame(picodvi_framebuffer_obj_t *self) {
++    hdmi_audio_state_t *audio = self->hdmi_audio;
++    if (!audio) {
++        return self->dma_commands;
++    }
++    if (audio->active >= 0) {
++        audio->bank[audio->active].samples = 0;
++        audio->active = -1;
++    }
++    int next = -1;
++    for (int i = 0; i < HDMI_AUDIO_BANKS; i++) {
++        if (audio->bank[i].ready && (next < 0 ||
++            (int32_t)(audio->bank[i].order - audio->bank[next].order) < 0)) {
++            next = i;
++        }
++    }
++    if (next >= 0) {
++        audio->active = next;
++        audio->bank[next].ready = false;
++        return audio->bank[next].commands;
++    }
++    // Empty means null intervals, never repeat the previous speech frame.
++    return self->dma_commands;
++}
++
++size_t common_hal_picodvi_framebuffer_audio_write(picodvi_framebuffer_obj_t *self, const uint8_t *pcm, size_t length, uint32_t sample_rate) {
++    if (sample_rate != HDMI_RATE || self->output_width != 640) {
++        mp_raise_ValueError(MP_ERROR_TEXT("HDMI audio needs 640-wide output and 32000 Hz PCM"));
++    }
++    if (length & 1) {
++        mp_raise_ValueError(MP_ERROR_TEXT("PCM16 needs an even byte count"));
++    }
++    if (!length) {
++        return 0;
++    }
++    hdmi_allocate_audio(self);
++    hdmi_audio_state_t *audio = self->hdmi_audio;
++    if (clock_get_hz(clk_hstx) / 5 != audio->pixel_clock) {
++        mp_raise_RuntimeError(MP_ERROR_TEXT("HSTX clock changed during audio"));
++    }
++    int bank_index = -1;
++    // Read active + ready atomically: an IRQ can promote a ready bank to active
++    // between these two observations. Once selected, an unready bank cannot be
++    // taken by the ISR until this writer publishes it below.
++    uint32_t irq_state = save_and_disable_interrupts();
++    for (int i = 0; i < HDMI_AUDIO_BANKS; i++) {
++        if (audio->active != i && !audio->bank[i].ready) {
++            bank_index = i;
++            break;
++        }
++    }
++    restore_interrupts(irq_state);
++    if (bank_index < 0) {
++        return 0;
++    }
++    hdmi_audio_bank_t *bank = &audio->bank[bank_index];
++    memcpy(bank->commands, self->dma_commands, self->dma_commands_len * sizeof(uint32_t));
++    size_t command_word = 0;
++    size_t samples_read = 0;
++    unsigned packets = 0;
++    size_t available = length / 2;
++    bool doubled = self->output_width != self->width;
++    size_t command_size = doubled ? 4 : 2;
++    const size_t active_start = MODE_640_V_SYNC_WIDTH + MODE_640_V_BACK_PORCH;
++    const size_t active_end = active_start + MODE_640_V_ACTIVE_LINES;
++    const uint64_t packet_period = (uint64_t)audio->pixel_clock * 4;
++    for (size_t line = 0; line < MODE_640_V_TOTAL_LINES; line++) {
++        bool active = line >= active_start && line < active_end;
++        audio->phase += (uint64_t)HDMI_RATE * 800;
++        if (line >= 3 && audio->phase >= packet_period) {
++            audio->phase -= packet_period;
++            if (samples_read < available) {
++                if (packets >= HDMI_MAX_PACKETS) {
++                    mp_raise_RuntimeError(MP_ERROR_TEXT("HDMI audio timing exceeds bank capacity"));
++                }
++                audio_sample_t samples[4] = {{0}};
++                size_t count = available - samples_read;
++                if (count > 4) {
++                    count = 4;
++                }
++                for (size_t j = 0; j < count; j++) {
++                    size_t offset = (samples_read + j) * 2;
++                    int16_t sample = (int16_t)((uint16_t)pcm[offset] | ((uint16_t)pcm[offset + 1] << 8));
++                    samples[j].left = sample;
++                    samples[j].right = sample;
++                }
++                hstx_packet_t packet;
++                hstx_data_island_t island;
++                audio->channel_frame = hstx_packet_set_audio_samples(&packet, samples, count, audio->channel_frame);
++                hstx_encode_data_island(&island, &packet, false, true);
++                uint32_t words = hdmi_build_line(bank->lines[packets], &island, false, active);
++                size_t entry = command_word + (doubled ? 2 : 0);
++                bank->commands[entry] = words;
++                bank->commands[entry + 1] = (uintptr_t)bank->lines[packets];
++                packets++;
++                samples_read += count;
++            }
++        }
++        command_word += command_size * (active ? 2 : 1);
++    }
++    bank->samples = samples_read;
++    bank->order = audio->next_order++;
++    __dmb();
++    bank->ready = true;
++    return samples_read * 2;
++}
++
++size_t common_hal_picodvi_framebuffer_get_audio_pending(picodvi_framebuffer_obj_t *self) {
++    hdmi_audio_state_t *audio = self->hdmi_audio;
++    if (!audio) {
++        return 0;
++    }
++    uint32_t irq_state = save_and_disable_interrupts();
++    size_t count = 0;
++    for (int i = 0; i < HDMI_AUDIO_BANKS; i++) {
++        if (audio->bank[i].ready || audio->active == i) {
++            count += audio->bank[i].samples;
++        }
++    }
++    restore_interrupts(irq_state);
++    return count;
++}
++
++void common_hal_picodvi_framebuffer_audio_stop(picodvi_framebuffer_obj_t *self) {
++    hdmi_audio_state_t *audio = self->hdmi_audio;
++    if (!audio) {
++        return;
++    }
++    uint32_t irq_state = save_and_disable_interrupts();
++    for (int i = 0; i < HDMI_AUDIO_BANKS; i++) {
++        audio->bank[i].ready = false;
++        if (audio->active != i) {
++            audio->bank[i].samples = 0;
++        }
++    }
++    restore_interrupts(irq_state);
++}
+diff --git a/ports/raspberrypi/common-hal/picodvi/hdmi_packet.c.inc b/ports/raspberrypi/common-hal/picodvi/hdmi_packet.c.inc
+new file mode 100644
+index 0000000000000000000000000000000000000000..270cc735374fc56aed4e2a885ab416645291ef84
+--- /dev/null
++++ b/ports/raspberrypi/common-hal/picodvi/hdmi_packet.c.inc
+@@ -0,0 +1,345 @@
++#include "common-hal/picodvi/hdmi_packet.h"
++
++// CircuitPython uses negative H/V sync at the 640-wide timings.
++// Packet encoder from pico_hdmi v0.0.6, see LICENSE-pico-hdmi.txt.
++
++#include <string.h>
++
++// ============================================================================
++// TERC4 Symbol Table (4-bit to 10-bit encoding)
++// ============================================================================
++
++static const uint16_t ter_c4[16] = {
++    0b1010011100, // 0
++    0b1001100011, // 1
++    0b1011100100, // 2
++    0b1011100010, // 3
++    0b0101110001, // 4
++    0b0100011110, // 5
++    0b0110001110, // 6
++    0b0100111100, // 7
++    0b1011001100, // 8
++    0b0100111001, // 9
++    0b0110011100, // 10
++    0b1011000110, // 11
++    0b1010001110, // 12
++    0b1001110001, // 13
++    0b0101100011, // 14
++    0b1011000011, // 15
++};
++
++#define GUARD_BAND_SYMBOL 0x133u // 0b0100110011
++
++// ============================================================================
++// BCH Encoding
++// ============================================================================
++
++static const uint8_t bch_table[256] = {
++    0x00, 0xd9, 0xb5, 0x6c, 0x6d, 0xb4, 0xd8, 0x01, 0xda, 0x03, 0x6f, 0xb6, 0xb7, 0x6e, 0x02, 0xdb, 0xb3, 0x6a, 0x06,
++    0xdf, 0xde, 0x07, 0x6b, 0xb2, 0x69, 0xb0, 0xdc, 0x05, 0x04, 0xdd, 0xb1, 0x68, 0x61, 0xb8, 0xd4, 0x0d, 0x0c, 0xd5,
++    0xb9, 0x60, 0xbb, 0x62, 0x0e, 0xd7, 0xd6, 0x0f, 0x63, 0xba, 0xd2, 0x0b, 0x67, 0xbe, 0xbf, 0x66, 0x0a, 0xd3, 0x08,
++    0xd1, 0xbd, 0x64, 0x65, 0xbc, 0xd0, 0x09, 0xc2, 0x1b, 0x77, 0xae, 0xaf, 0x76, 0x1a, 0xc3, 0x18, 0xc1, 0xad, 0x74,
++    0x75, 0xac, 0xc0, 0x19, 0x71, 0xa8, 0xc4, 0x1d, 0x1c, 0xc5, 0xa9, 0x70, 0xab, 0x72, 0x1e, 0xc7, 0xc6, 0x1f, 0x73,
++    0xaa, 0xa3, 0x7a, 0x16, 0xcf, 0xce, 0x17, 0x7b, 0xa2, 0x79, 0xa0, 0xcc, 0x15, 0x14, 0xcd, 0xa1, 0x78, 0x10, 0xc9,
++    0xa5, 0x7c, 0x7d, 0xa4, 0xc8, 0x11, 0xca, 0x13, 0x7f, 0xa6, 0xa7, 0x7e, 0x12, 0xcb, 0x83, 0x5a, 0x36, 0xef, 0xee,
++    0x37, 0x5b, 0x82, 0x59, 0x80, 0xec, 0x35, 0x34, 0xed, 0x81, 0x58, 0x30, 0xe9, 0x85, 0x5c, 0x5d, 0x84, 0xe8, 0x31,
++    0xea, 0x33, 0x5f, 0x86, 0x87, 0x5e, 0x32, 0xeb, 0xe2, 0x3b, 0x57, 0x8e, 0x8f, 0x56, 0x3a, 0xe3, 0x38, 0xe1, 0x8d,
++    0x54, 0x55, 0x8c, 0xe0, 0x39, 0x51, 0x88, 0xe4, 0x3d, 0x3c, 0xe5, 0x89, 0x50, 0x8b, 0x52, 0x3e, 0xe7, 0xe6, 0x3f,
++    0x53, 0x8a, 0x41, 0x98, 0xf4, 0x2d, 0x2c, 0xf5, 0x99, 0x40, 0x9b, 0x42, 0x2e, 0xf7, 0xf6, 0x2f, 0x43, 0x9a, 0xf2,
++    0x2b, 0x47, 0x9e, 0x9f, 0x46, 0x2a, 0xf3, 0x28, 0xf1, 0x9d, 0x44, 0x45, 0x9c, 0xf0, 0x29, 0x20, 0xf9, 0x95, 0x4c,
++    0x4d, 0x94, 0xf8, 0x21, 0xfa, 0x23, 0x4f, 0x96, 0x97, 0x4e, 0x22, 0xfb, 0x93, 0x4a, 0x26, 0xff, 0xfe, 0x27, 0x4b,
++    0x92, 0x49, 0x90, 0xfc, 0x25, 0x24, 0xfd, 0x91, 0x48,
++};
++
++static const uint8_t parity_table[32] = {0x96, 0x69, 0x69, 0x96, 0x69, 0x96, 0x96, 0x69, 0x69, 0x96, 0x96,
++                                         0x69, 0x96, 0x69, 0x69, 0x96, 0x69, 0x96, 0x96, 0x69, 0x96, 0x69,
++                                         0x69, 0x96, 0x96, 0x69, 0x69, 0x96, 0x69, 0x96, 0x96, 0x69};
++
++static inline bool compute_parity(uint8_t v)
++{
++    return (parity_table[v / 8] >> (v % 8)) & 1;
++}
++
++static inline bool compute_parity3(uint8_t a, uint8_t b, uint8_t c)
++{
++    return compute_parity(a) ^ compute_parity(b) ^ compute_parity(c);
++}
++
++static uint8_t encode_bch_3(const uint8_t *p)
++{
++    uint8_t v = bch_table[p[0]];
++    v = bch_table[p[1] ^ v];
++    v = bch_table[p[2] ^ v];
++    return v;
++}
++
++static uint8_t encode_bch_7(const uint8_t *p)
++{
++    uint8_t v = bch_table[p[0]];
++    v = bch_table[p[1] ^ v];
++    v = bch_table[p[2] ^ v];
++    v = bch_table[p[3] ^ v];
++    v = bch_table[p[4] ^ v];
++    v = bch_table[p[5] ^ v];
++    v = bch_table[p[6] ^ v];
++    return v;
++}
++
++static void compute_header_parity(hstx_packet_t *p)
++{
++    p->header[3] = encode_bch_3(p->header);
++}
++
++static void compute_subpacket_parity(hstx_packet_t *p, int idx)
++{
++    p->subpacket[idx][7] = encode_bch_7(p->subpacket[idx]);
++}
++
++static void compute_all_parity(hstx_packet_t *p)
++{
++    compute_header_parity(p);
++    for (int i = 0; i < 4; i++) {
++        compute_subpacket_parity(p, i);
++    }
++}
++
++static void compute_infoframe_checksum(hstx_packet_t *p)
++{
++    int sum = 0;
++    for (int i = 0; i < 3; i++) {
++        sum += p->header[i];
++    }
++    int len = p->header[2] + 1;
++    for (int j = 0; j < 4 && len > 0; j++) {
++        for (int i = 0; i < 7 && len > 0; i++, len--) {
++            sum += p->subpacket[j][i];
++        }
++    }
++    p->subpacket[0][0] = (uint8_t)(-sum);
++}
++
++// ============================================================================
++// Public API
++// ============================================================================
++
++void hstx_packet_init(hstx_packet_t *packet)
++{
++    memset(packet, 0, sizeof(hstx_packet_t));
++}
++
++void hstx_packet_set_null(hstx_packet_t *packet)
++{
++    hstx_packet_init(packet);
++    compute_all_parity(packet);
++}
++
++void hstx_packet_set_acr(hstx_packet_t *packet, uint32_t n, uint32_t cts)
++{
++    hstx_packet_init(packet);
++    packet->header[0] = 0x01;
++    packet->header[1] = 0x00;
++    packet->header[2] = 0x00;
++    compute_header_parity(packet);
++
++    packet->subpacket[0][0] = 0;
++    packet->subpacket[0][1] = (cts >> 16) & 0x0F;
++    packet->subpacket[0][2] = (cts >> 8) & 0xFF;
++    packet->subpacket[0][3] = cts & 0xFF;
++    packet->subpacket[0][4] = (n >> 16) & 0x0F;
++    packet->subpacket[0][5] = (n >> 8) & 0xFF;
++    packet->subpacket[0][6] = n & 0xFF;
++    compute_subpacket_parity(packet, 0);
++
++    memcpy(packet->subpacket[1], packet->subpacket[0], 8);
++    memcpy(packet->subpacket[2], packet->subpacket[0], 8);
++    memcpy(packet->subpacket[3], packet->subpacket[0], 8);
++}
++
++void hstx_packet_set_audio_infoframe(hstx_packet_t *packet, uint32_t sample_rate, uint8_t channels,
++                                     uint8_t bits_per_sample)
++{
++    hstx_packet_init(packet);
++    packet->header[0] = 0x84;
++    packet->header[1] = 0x01;
++    packet->header[2] = 0x0A;
++
++    uint8_t cc = (channels - 1) & 0x07;
++    uint8_t ct = 0x01;
++    uint8_t ss =
++        (bits_per_sample == 16) ? 0x01 : (bits_per_sample == 20 ? 0x02 : (bits_per_sample == 24 ? 0x03 : 0x00));
++    uint8_t sf = (sample_rate == 32000) ? 0x01 : (sample_rate == 44100 ? 0x02 : (sample_rate == 48000 ? 0x03 : 0x00));
++
++    packet->subpacket[0][1] = cc | (ct << 4);
++    packet->subpacket[0][2] = ss | (sf << 2);
++    packet->subpacket[0][3] = 0x00;
++    packet->subpacket[0][4] = 0x00;
++    packet->subpacket[0][5] = 0x00;
++
++    compute_infoframe_checksum(packet);
++    compute_all_parity(packet);
++}
++
++void hstx_packet_set_avi_infoframe(hstx_packet_t *packet, uint8_t vic, uint8_t pixel_repetition)
++{
++    hstx_packet_init(packet);
++    packet->header[0] = 0x82;
++    packet->header[1] = 0x02;
++    packet->header[2] = 0x0D;
++
++    packet->subpacket[0][1] = 0x00;
++    packet->subpacket[0][2] = 0x08;
++    packet->subpacket[0][3] = 0x00;
++    packet->subpacket[0][4] = vic;
++    packet->subpacket[0][5] = pixel_repetition & 0x0F;
++
++    compute_infoframe_checksum(packet);
++    compute_all_parity(packet);
++}
++
++int hstx_packet_set_audio_samples(hstx_packet_t *packet, const audio_sample_t *samples, int num_samples,
++                                  int frame_count)
++{
++    hstx_packet_init(packet);
++    if (num_samples < 1)
++        num_samples = 1;
++    if (num_samples > 4)
++        num_samples = 4;
++
++    uint8_t sample_present = (1 << num_samples) - 1;
++    uint8_t b_flags = 0;
++
++    int temp_frame_count = frame_count;
++    for (int i = 0; i < num_samples; i++) {
++        if (temp_frame_count == 0)
++            b_flags |= (1 << i);
++        temp_frame_count = (temp_frame_count + 1) % 192;
++    }
++
++    packet->header[0] = 0x02;
++    packet->header[1] = sample_present;
++    packet->header[2] = b_flags << 4;
++    compute_header_parity(packet);
++
++    for (int i = 0; i < num_samples; i++) {
++        uint8_t *d = packet->subpacket[i];
++        int16_t left = samples[i].left;
++        int16_t right = samples[i].right;
++
++        d[0] = 0x00;
++        d[1] = left & 0xFF;
++        d[2] = (left >> 8) & 0xFF;
++        d[3] = 0x00;
++        d[4] = right & 0xFF;
++        d[5] = (right >> 8) & 0xFF;
++
++        // IEC 60958 byte 3 = 0x03 (32 kHz), byte 4 = 0x02 (16 bits).
++        int frame = (frame_count + i) % 192;
++        uint8_t status = frame / 8 == 3 ? 0x03 : (frame / 8 == 4 ? 0x02 : 0);
++        uint8_t c = (status >> (frame % 8)) & 1;
++        bool p_left = compute_parity3(d[1], d[2], c);
++        bool p_right = compute_parity3(d[4], d[5], c);
++        d[6] = (c << 2) | (p_left << 3) | (c << 6) | (p_right << 7);
++        compute_subpacket_parity(packet, i);
++    }
++
++    return temp_frame_count;
++}
++
++static inline uint32_t make_hstx_word(uint16_t lane0, uint16_t lane1, uint16_t lane2)
++{
++    return (lane0 & 0x3FF) | ((lane1 & 0x3FF) << 10) | ((lane2 & 0x3FF) << 20);
++}
++
++static void encode_header_to_lane0(const hstx_packet_t *packet, uint16_t *lane0, int hv, bool first_packet)
++{
++    int hv1 = hv | 0x08;
++    if (!first_packet)
++        hv = hv1;
++
++    int idx = 0;
++    for (int i = 0; i < 4; i++) {
++        uint8_t h = packet->header[i];
++        lane0[idx++] = ter_c4[((h << 2) & 4) | hv];
++        hv = hv1;
++        lane0[idx++] = ter_c4[((h << 1) & 4) | hv];
++        lane0[idx++] = ter_c4[(h & 4) | hv];
++        lane0[idx++] = ter_c4[((h >> 1) & 4) | hv];
++        lane0[idx++] = ter_c4[((h >> 2) & 4) | hv];
++        lane0[idx++] = ter_c4[((h >> 3) & 4) | hv];
++        lane0[idx++] = ter_c4[((h >> 4) & 4) | hv];
++        lane0[idx++] = ter_c4[((h >> 5) & 4) | hv];
++    }
++}
++
++static void encode_subpackets_to_lanes(const hstx_packet_t *packet, uint16_t *lane1, uint16_t *lane2)
++{
++    for (int i = 0; i < 8; i++) {
++        uint32_t v = ((uint32_t)packet->subpacket[0][i] << 0) | ((uint32_t)packet->subpacket[1][i] << 8) | ((uint32_t)packet->subpacket[2][i] << 16) |
++                     ((uint32_t)packet->subpacket[3][i] << 24);
++        uint32_t t = (v ^ (v >> 7)) & 0x00aa00aa;
++        v = v ^ t ^ (t << 7);
++        t = (v ^ (v >> 14)) & 0x0000cccc;
++        v = v ^ t ^ (t << 14);
++
++        lane1[(i * 4) + 0] = ter_c4[(v >> 0) & 0xF];
++        lane1[(i * 4) + 1] = ter_c4[(v >> 16) & 0xF];
++        lane1[(i * 4) + 2] = ter_c4[(v >> 4) & 0xF];
++        lane1[(i * 4) + 3] = ter_c4[(v >> 20) & 0xF];
++
++        lane2[(i * 4) + 0] = ter_c4[(v >> 8) & 0xF];
++        lane2[(i * 4) + 1] = ter_c4[(v >> 24) & 0xF];
++        lane2[(i * 4) + 2] = ter_c4[(v >> 12) & 0xF];
++        lane2[(i * 4) + 3] = ter_c4[(v >> 28) & 0xF];
++    }
++}
++
++void hstx_encode_data_island(hstx_data_island_t *out, const hstx_packet_t *packet, bool vsync_active, bool hsync_active)
++{
++    // vsync_active/hsync_active indicate pulse region, not wire level.
++    // The hv field encodes the actual wire bits (bit1=vsync, bit0=hsync), so
++    // pulse-region semantics are inverted for negative-polarity modes.
++#ifdef MODE_SYNC_POSITIVE
++    int hv = (vsync_active ? 2 : 0) | (hsync_active ? 1 : 0);
++#else
++    int hv = (vsync_active ? 0 : 2) | (hsync_active ? 0 : 1);
++#endif
++    uint16_t lane0[32];
++    uint16_t lane1[32];
++    uint16_t lane2[32];
++
++    encode_header_to_lane0(packet, lane0, hv, true);
++    encode_subpackets_to_lanes(packet, lane1, lane2);
++
++    uint16_t gb_lane0 = ter_c4[0xC | hv];
++    uint32_t guard_word = make_hstx_word(gb_lane0, GUARD_BAND_SYMBOL, GUARD_BAND_SYMBOL);
++
++    out->words[0] = guard_word;
++    out->words[1] = guard_word;
++    for (int i = 0; i < 32; i++)
++        out->words[i + 2] = make_hstx_word(lane0[i], lane1[i], lane2[i]);
++    out->words[34] = guard_word;
++    out->words[35] = guard_word;
++}
++
++static hstx_data_island_t null_islands[4];
++static bool null_islands_initialized = false;
++
++static void init_null_islands(void)
++{
++    if (null_islands_initialized)
++        return;
++    hstx_packet_t null_packet;
++    hstx_packet_set_null(&null_packet);
++    for (int vsync = 0; vsync < 2; vsync++) {
++        for (int hsync = 0; hsync < 2; hsync++) {
++            hstx_encode_data_island(&null_islands[(vsync * 2) + hsync], &null_packet, vsync, hsync);
++        }
++    }
++    null_islands_initialized = true;
++}
++
++const uint32_t *hstx_get_null_data_island(bool vsync, bool hsync)
++{
++    init_null_islands();
++    return null_islands[(vsync ? 2 : 0) | (hsync ? 1 : 0)].words;
++}
+diff --git a/ports/raspberrypi/common-hal/picodvi/hdmi_packet.h b/ports/raspberrypi/common-hal/picodvi/hdmi_packet.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..1e4eb03fea8bda19e26dbd9da139ae74875d5b35
+--- /dev/null
++++ b/ports/raspberrypi/common-hal/picodvi/hdmi_packet.h
+@@ -0,0 +1,53 @@
++#ifndef HSTX_PACKET_H
++#define HSTX_PACKET_H
++
++#include <stdbool.h>
++#include <stdint.h>
++
++// Data Island timing constants
++#define W_GUARDBAND 2                                             // Guard band: 2 pixel clocks
++#define W_PREAMBLE 8                                              // Preamble: 8 pixel clocks
++#define W_DATA_PACKET 32                                          // Packet data: 32 pixel clocks
++#define W_DATA_ISLAND (W_GUARDBAND + W_DATA_PACKET + W_GUARDBAND) // Total: 36
++
++// HSTX outputs 1 symbol per word
++#define HSTX_DATA_ISLAND_WORDS W_DATA_ISLAND // 36 words for HSTX
++
++// Packet structure (same as DVI/HSTX spec)
++typedef struct {
++    uint8_t header[4];       // 3 bytes header + 1 byte BCH parity
++    uint8_t subpacket[4][8]; // 4 subpackets, each 7 bytes + 1 byte BCH parity
++} hstx_packet_t;
++
++// Pre-encoded data island for HSTX (36 words)
++typedef struct {
++    uint32_t words[HSTX_DATA_ISLAND_WORDS];
++} hstx_data_island_t;
++
++// Audio sample structure
++typedef struct {
++    int16_t left;
++    int16_t right;
++} audio_sample_t;
++
++// ============================================================================
++// Packet creation functions
++// ============================================================================
++
++void hstx_packet_init(hstx_packet_t *packet);
++void hstx_packet_set_acr(hstx_packet_t *packet, uint32_t n, uint32_t cts);
++void hstx_packet_set_audio_infoframe(hstx_packet_t *packet, uint32_t sample_rate, uint8_t channels,
++                                     uint8_t bits_per_sample);
++void hstx_packet_set_avi_infoframe(hstx_packet_t *packet, uint8_t vic, uint8_t pixel_repetition);
++int hstx_packet_set_audio_samples(hstx_packet_t *packet, const audio_sample_t *samples, int num_samples,
++                                  int frame_count);
++void hstx_packet_set_null(hstx_packet_t *packet);
++
++// ============================================================================
++// TERC4 encoding for HSTX
++// ============================================================================
++
++void hstx_encode_data_island(hstx_data_island_t *out, const hstx_packet_t *packet, bool vsync, bool hsync);
++const uint32_t *hstx_get_null_data_island(bool vsync, bool hsync);
++
++#endif // HSTX_PACKET_H

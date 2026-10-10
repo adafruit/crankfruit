@@ -1,0 +1,32 @@
+{
+  "upstream_commit": "e7be3ff0141b7cd3b9f008737eda1f0539aca45c",
+  "upstream_script_sha256": "977f2627075c481a9dcdba64ad13fef68749b1eba14c20103b042898446b4de2",
+  "pdi_cli_exact_backgrounds": [
+    "library.pdi",
+    "explorer.pdi",
+    "error.pdi"
+  ],
+  "background_aliases": {
+    "game": "library.bin"
+  },
+  "pdi_cli_checked_pixels": 288000,
+  "pdt_cli_supported": false,
+  "pdt_limitation": "Unchanged upstream CLI rejects PDT. Table framing is local glue; every cell pixel and alpha value uses unchanged upstream read_cell, not a complete upstream PDT reader.",
+  "pdt_upstream_cell_decoder_exact_sprites": 138,
+  "pdt_upstream_cell_decoder_pixel_checks": 54307,
+  "transparent_colors_compared_exactly": true,
+  "hardware_touched": false,
+  "source_assets_changed": false,
+  "asset_hashes": {
+    "error.bin": "b98b15f0fba3f26f6c916136d26f495b81f59d90f1c3d8f533cb03839fada7f4",
+    "error.pdi": "32f0c7c02fa2a16e9de88e219dab54e4efdcf977337a2381e9c8d1155827d654",
+    "explorer.bin": "7e59c06374f3e027af54bd841c637d84784526a1065e243fb166a2e5db2739d5",
+    "explorer.pdi": "cc35359c53c271c533b7d848f31f797e90969f2ca08b694e79443bf65d3de914",
+    "library.bin": "fcc47a72c077e2d23f2b9eb1dc3ff1ad87f1de521db449a31125c3673649ed76",
+    "library.pdi": "c839b9719cddbcf50e3b0d70efdbdd04ed65cca41e3adc1ea5549dcfe442b96d",
+    "manifest.json": "0e591df4216150db8f551e1d0227a7037db0eb5f57e99b4c554d1759d8e58e55",
+    "sprites.bin": "048f9e3e107b12ccc03a6a5abe1030a2fa2f3881ae05778f1b8d808e6ed8afb3",
+    "sprites.desc": "dc45216ebde150423ef08157cd77883cf8aa0048e99f5035fd02b8107b4d9f13",
+    "sprites.pdt": "9ecee3100542304dede620de73b0832bb95c91247c67de4f2e6dc82765218665"
+  }
+}

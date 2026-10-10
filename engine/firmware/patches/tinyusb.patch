@@ -1,0 +1,23 @@
+diff --git a/src/tusb.c b/src/tusb.c
+--- a/src/tusb.c
++++ b/src/tusb.c
+@@ -405,7 +405,8 @@
+ 
+ uint32_t tu_edpt_stream_write(tu_edpt_stream_t *s, const void *buffer, uint32_t bufsize) {
+   TU_VERIFY(bufsize > 0);
+-  const uint16_t ret = tu_fifo_write_n(&s->ff, buffer, (uint16_t) bufsize);
++  // The FIFO count is 16-bit; clamp before narrowing so large writes progress.
++  const uint16_t ret = tu_fifo_write_n(&s->ff, buffer, (uint16_t) tu_min32(bufsize, UINT16_MAX));
+ 
+   // flush if fifo has more than packet size or
+   // in rare case: fifo depth is configured too small (which never reach packet size)
+@@ -447,7 +448,8 @@
+ }
+ 
+ uint32_t tu_edpt_stream_read(tu_edpt_stream_t *s, void *buffer, uint32_t bufsize) {
+-  const uint32_t num_read = tu_fifo_read_n(&s->ff, buffer, (uint16_t)bufsize);
++  // Match write: an exact multiple of 65536 must not become a zero-byte read.
++  const uint32_t num_read = tu_fifo_read_n(&s->ff, buffer, (uint16_t) tu_min32(bufsize, UINT16_MAX));
+   tu_edpt_stream_read_xfer(s);
+   return num_read;
+ }

@@ -1,0 +1,55 @@
+{
+  "backgrounds": 3,
+  "background_aliases": {
+    "game": "library"
+  },
+  "sprites": 138,
+  "roundtrips": "all pixel and alpha planes exact",
+  "width": 400,
+  "height": 240,
+  "hardware_tested": false,
+  "wordmark_source_sha256": "98ff2a0e3b480303c0a3178f23899343f5c793f4542aeb6b47990b58dfd4503d",
+  "assets": {
+    "error.bin": {
+      "bytes": 12000,
+      "sha256": "b98b15f0fba3f26f6c916136d26f495b81f59d90f1c3d8f533cb03839fada7f4"
+    },
+    "error.pdi": {
+      "bytes": 1419,
+      "sha256": "32f0c7c02fa2a16e9de88e219dab54e4efdcf977337a2381e9c8d1155827d654"
+    },
+    "explorer.bin": {
+      "bytes": 12000,
+      "sha256": "7e59c06374f3e027af54bd841c637d84784526a1065e243fb166a2e5db2739d5"
+    },
+    "explorer.pdi": {
+      "bytes": 1321,
+      "sha256": "cc35359c53c271c533b7d848f31f797e90969f2ca08b694e79443bf65d3de914"
+    },
+    "library.bin": {
+      "bytes": 12000,
+      "sha256": "fcc47a72c077e2d23f2b9eb1dc3ff1ad87f1de521db449a31125c3673649ed76"
+    },
+    "library.pdi": {
+      "bytes": 1294,
+      "sha256": "c839b9719cddbcf50e3b0d70efdbdd04ed65cca41e3adc1ea5549dcfe442b96d"
+    },
+    "manifest.json": {
+      "bytes": 6425,
+      "sha256": "0e591df4216150db8f551e1d0227a7037db0eb5f57e99b4c554d1759d8e58e55"
+    },
+    "sprites.bin": {
+      "bytes": 15302,
+      "sha256": "048f9e3e107b12ccc03a6a5abe1030a2fa2f3881ae05778f1b8d808e6ed8afb3"
+    },
+    "sprites.desc": {
+      "bytes": 1656,
+      "sha256": "dc45216ebde150423ef08157cd77883cf8aa0048e99f5035fd02b8107b4d9f13"
+    },
+    "sprites.pdt": {
+      "bytes": 2355,
+      "sha256": "9ecee3100542304dede620de73b0832bb95c91247c67de4f2e6dc82765218665"
+    }
+  },
+  "source_png_metadata": "timestamp/text chunks removed; image data unchanged"
+}

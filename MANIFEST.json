@@ -1,0 +1,1717 @@
+[
+  {
+    "path": "AUTHORING.md",
+    "bytes": 3564,
+    "sha256": "00ac24e68ee366f695c267e07da76208048befd88edf2cfa29ae2680b5c568e1"
+  },
+  {
+    "path": "COMPATIBILITY.md",
+    "bytes": 1894,
+    "sha256": "27b1e3e3d2148a0ab8211ff5448c5c39995d6c125e6461e26063aa7c6f75c93d"
+  },
+  {
+    "path": "LICENSE",
+    "bytes": 1080,
+    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+  },
+  {
+    "path": "README.md",
+    "bytes": 3118,
+    "sha256": "2ff288f04a0556e35366259de6f67e85b069f5e2977bfd406d2585cfa31ced8f"
+  },
+  {
+    "path": "RESULTS.md",
+    "bytes": 6573,
+    "sha256": "46c0e3fd2a0e3be114a4b6bebef8b5c532b1452a50a3a194ec16cb2b73b65d2e"
+  },
+  {
+    "path": "START-HERE.md",
+    "bytes": 3985,
+    "sha256": "40cfd7b5475bd0124d48edd18e894d3481f3f227e4f4c10426d728bbdd7079dc"
+  },
+  {
+    "path": "TEST-RESULTS-TEMPLATE.md",
+    "bytes": 967,
+    "sha256": "54e68a911cbfa14cb185c9fc2b82e336aaf3ea58c0bb3966b0d210f825fc8d97"
+  },
+  {
+    "path": "TOOLS-README.md",
+    "bytes": 3135,
+    "sha256": "ff984dbc15794fab9c8c6f9dcdc0f3cef69a8d5cc401a716121864a27041d688"
+  },
+  {
+    "path": "app-manifest.json",
+    "bytes": 6178,
+    "sha256": "a78bc9ac625281622a8c8cad4475dc646315d46d7cbd7f5c74a838551a892c71"
+  },
+  {
+    "path": "app/_crankfruit_blit.mpy",
+    "bytes": 474,
+    "sha256": "d05cc81cf38a3ca162081fbfae7017d65e97f4a7ae0b10b090c2e40a9abc3e95"
+  },
+  {
+    "path": "app/_crankfruit_pcm.mpy",
+    "bytes": 722,
+    "sha256": "a362319b53ea0faec8c43fda6a1efdcdfc663d38b4042b079fc63ef0b63b0c37"
+  },
+  {
+    "path": "app/_crankfruit_sprite.mpy",
+    "bytes": 1835,
+    "sha256": "96befe4744c76fe7990e3ad74b800c2f693c086e7c551d4d22fbd38221df20bd"
+  },
+  {
+    "path": "app/bootclip.py",
+    "bytes": 2418,
+    "sha256": "1988a5b0b2e58bde6c28bbb32a7ab7bfa6087749a39823f7e1acb71b13f70296"
+  },
+  {
+    "path": "app/bootclip/boot.frames",
+    "bytes": 773760,
+    "sha256": "6161b45a8ac37e5ccb75bb1673b95e3840be55aad3934008e2226a7a66dbae27"
+  },
+  {
+    "path": "app/bootclip/boot.index",
+    "bytes": 75,
+    "sha256": "7c29c68081572f8f8f83f64babdc78f3a4ba216c1b495ac9065c55e35115e152"
+  },
+  {
+    "path": "app/bootclip/boot.pcm",
+    "bytes": 160000,
+    "sha256": "3b6eaea7d2f1000a6f46ec69113877c5fa2d9848ab96c30063cddd19a7cb6454"
+  },
+  {
+    "path": "app/canvas.py",
+    "bytes": 3582,
+    "sha256": "71653749fc1bc8c46077587527b5808130a8b4e4b0037dbc18d2145cac912966"
+  },
+  {
+    "path": "app/cartridges.py",
+    "bytes": 11285,
+    "sha256": "a4de77631cf3b6df774d8fd38b30fe57bc58fd33380c1d01cf1123f1228813ca"
+  },
+  {
+    "path": "app/code.py",
+    "bytes": 160,
+    "sha256": "82d93cbe419bfa48c1d46de04d062c5205d9bd6c289b1563112d4b82f41d6c9f"
+  },
+  {
+    "path": "app/crank_input.py",
+    "bytes": 6461,
+    "sha256": "c5287205ba3fdf8e75ae8bcca548fb5aa031f77be043dae2f4d958de123370a1"
+  },
+  {
+    "path": "app/crankfruit.py",
+    "bytes": 6563,
+    "sha256": "64a456df7b7683613f48210dd812833000bd4153f02dedcf6b40547e96468d4e"
+  },
+  {
+    "path": "app/direct_hardware.py",
+    "bytes": 1501,
+    "sha256": "e8032d984471004907a53cf2f7d63908b669c9e7d489f7f383831f0bc24e1d13"
+  },
+  {
+    "path": "app/games/almost-tennis/LICENSE",
+    "bytes": 1065,
+    "sha256": "5d22695c10d21f2dd53f11e45c96bc8a24b0e88c2f2841e5cdcbc5d5bd91ef47"
+  },
+  {
+    "path": "app/games/almost-tennis/main.lua",
+    "bytes": 7908,
+    "sha256": "11d66d2c4162c4b2b205a787452eb0e3d569d31a1982f675283ab3a4b0a1d58c"
+  },
+  {
+    "path": "app/games/almost-tennis/manifest.json",
+    "bytes": 270,
+    "sha256": "0a85f5463ac70c9c776c4ab4193702f79ec5300896a569c0017c1ee12b8d522a"
+  },
+  {
+    "path": "app/games/orbit-breaker/LICENSE",
+    "bytes": 1080,
+    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+  },
+  {
+    "path": "app/games/orbit-breaker/README.md",
+    "bytes": 2607,
+    "sha256": "aabe5e016fd7c08ddb676dd61b10ca7f57ae594d40374c8b348605c9564bf894"
+  },
+  {
+    "path": "app/games/orbit-breaker/main.lua",
+    "bytes": 6168,
+    "sha256": "208aee68235e068863884df3e4e285fc6826fe0f0c2732f8cb110f001703a2cf"
+  },
+  {
+    "path": "app/games/orbit-breaker/manifest.json",
+    "bytes": 356,
+    "sha256": "c6bc12a10105c01ddd9cc26262657c05cd0da97ea8637051f0a811f0b41172ce"
+  },
+  {
+    "path": "app/hardware.py",
+    "bytes": 6593,
+    "sha256": "e15e618cc7252f25b128c6b50f263f3261d666e8ca4aa101dda580f78091161c"
+  },
+  {
+    "path": "app/library.py",
+    "bytes": 3958,
+    "sha256": "7d390c0c4e26be2d657545983aea63d0ba862ca2b4785f7e9dd145ed4fafea49"
+  },
+  {
+    "path": "app/player.py",
+    "bytes": 9843,
+    "sha256": "51882ce1f7cf2c8faa6ea287f8110b500c6a08f593852b01c72b4ae8213a66b3"
+  },
+  {
+    "path": "app/player/assets/error.bin",
+    "bytes": 12000,
+    "sha256": "b98b15f0fba3f26f6c916136d26f495b81f59d90f1c3d8f533cb03839fada7f4"
+  },
+  {
+    "path": "app/player/assets/error.pdi",
+    "bytes": 1419,
+    "sha256": "32f0c7c02fa2a16e9de88e219dab54e4efdcf977337a2381e9c8d1155827d654"
+  },
+  {
+    "path": "app/player/assets/explorer.bin",
+    "bytes": 12000,
+    "sha256": "7e59c06374f3e027af54bd841c637d84784526a1065e243fb166a2e5db2739d5"
+  },
+  {
+    "path": "app/player/assets/explorer.pdi",
+    "bytes": 1321,
+    "sha256": "cc35359c53c271c533b7d848f31f797e90969f2ca08b694e79443bf65d3de914"
+  },
+  {
+    "path": "app/player/assets/library.bin",
+    "bytes": 12000,
+    "sha256": "fcc47a72c077e2d23f2b9eb1dc3ff1ad87f1de521db449a31125c3673649ed76"
+  },
+  {
+    "path": "app/player/assets/library.pdi",
+    "bytes": 1294,
+    "sha256": "c839b9719cddbcf50e3b0d70efdbdd04ed65cca41e3adc1ea5549dcfe442b96d"
+  },
+  {
+    "path": "app/player/assets/manifest.json",
+    "bytes": 6425,
+    "sha256": "0e591df4216150db8f551e1d0227a7037db0eb5f57e99b4c554d1759d8e58e55"
+  },
+  {
+    "path": "app/player/assets/sample_boot.pcm",
+    "bytes": 28800,
+    "sha256": "3d49cc0250908aac71ba6491e1045714405e3bbffd94b870ccff7cf00ceede26"
+  },
+  {
+    "path": "app/player/assets/sample_boot.pda",
+    "bytes": 28816,
+    "sha256": "0a22936232d87230b240c7576cc5280f3879f7e9e434568a6a0bb508bdf98439"
+  },
+  {
+    "path": "app/player/assets/sample_coin.pcm",
+    "bytes": 12800,
+    "sha256": "9c6bda56c3fa42cc361eb831042ff51170d7846f44d60f80fc91a2f79b59eb92"
+  },
+  {
+    "path": "app/player/assets/sample_coin.pda",
+    "bytes": 12816,
+    "sha256": "a50018e9606653cce5a69eb3b66494b665fd2ed48be25a933d2209a226eea877"
+  },
+  {
+    "path": "app/player/assets/sample_swoop.pcm",
+    "bytes": 32000,
+    "sha256": "8776bc6219fd139fc3593a92100bee1148674d7df82951ba92ad6d056e69a058"
+  },
+  {
+    "path": "app/player/assets/sample_swoop.pda",
+    "bytes": 32016,
+    "sha256": "5825a472d8d76774ebe51366b3c1d35fe6414e20bdea631002e79fa12bacc758"
+  },
+  {
+    "path": "app/player/assets/samples.json",
+    "bytes": 2066,
+    "sha256": "cdeecd6b4fbfc2f30fbab51ab34edb4bfc564b7f27a0661ffbe91d36aa1e48ab"
+  },
+  {
+    "path": "app/player/assets/sprites.bin",
+    "bytes": 15302,
+    "sha256": "048f9e3e107b12ccc03a6a5abe1030a2fa2f3881ae05778f1b8d808e6ed8afb3"
+  },
+  {
+    "path": "app/player/assets/sprites.desc",
+    "bytes": 1656,
+    "sha256": "dc45216ebde150423ef08157cd77883cf8aa0048e99f5035fd02b8107b4d9f13"
+  },
+  {
+    "path": "app/player/assets/sprites.pdt",
+    "bytes": 2355,
+    "sha256": "9ecee3100542304dede620de73b0832bb95c91247c67de4f2e6dc82765218665"
+  },
+  {
+    "path": "app/sound_explorer.py",
+    "bytes": 6455,
+    "sha256": "ea689bf65503b777fe1b10879d26aa1b8151e228fcf5b5dd275c9f1d19e68f0f"
+  },
+  {
+    "path": "app/stream.py",
+    "bytes": 13634,
+    "sha256": "5cdde9da7205be5a2a00fd8c168801e11d6748862d860643b9cb01d1ea84353c"
+  },
+  {
+    "path": "boot-source/CMakeLists.txt",
+    "bytes": 843,
+    "sha256": "8936b7068883717ddf0daf6a3cd228fd078c68309f854f530c30d6f5fe43d6d3"
+  },
+  {
+    "path": "boot-source/LICENSE",
+    "bytes": 1094,
+    "sha256": "611da24e6c123d09aef043f4bccbcd617802a2f5e99716dfcd0ba8c88983788b"
+  },
+  {
+    "path": "boot-source/README.md",
+    "bytes": 5066,
+    "sha256": "db1764faa08ba038fddc54122b918fb5876a0422901c6b06d04d6372722c8fd6"
+  },
+  {
+    "path": "boot-source/boot-splash.lua",
+    "bytes": 30409,
+    "sha256": "a1556f333eee7c021f32e2c6ed8735fb00ff86327a41ce71e3d6d50d699abe1b"
+  },
+  {
+    "path": "boot-source/build.py",
+    "bytes": 2569,
+    "sha256": "c994df4f71c2b5e3d32692336d00a37ea57cb422b7b3cecb7af52f94e3d79dff"
+  },
+  {
+    "path": "boot-source/check.py",
+    "bytes": 3326,
+    "sha256": "1d7882513e271cb12f63a1da7da4e3c0ef0af3948ca063114193c74fb23daeb7"
+  },
+  {
+    "path": "boot-source/expected.json",
+    "bytes": 472,
+    "sha256": "e2f132791269dd50dab180fb67ba6d51c3134c7ef22cb54bd89a8c41a46462b0"
+  },
+  {
+    "path": "boot-source/render_boot.c",
+    "bytes": 6133,
+    "sha256": "3f2e801fda20e1c3d639a1cf5d5766804ece7f1c98ade994c645a458c1ad15ba"
+  },
+  {
+    "path": "engine/CMakeLists.txt",
+    "bytes": 2803,
+    "sha256": "d9ebc426f16daa2c63a6d1d5fc638bbdfe13d0b0fea3b16f003c4a1344a5ceef"
+  },
+  {
+    "path": "engine/README.md",
+    "bytes": 2444,
+    "sha256": "5e592749b74d5b69454ebc08c55dffca8cb423648e92b6e58923f0ef5c8ee9c7"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/arena.h",
+    "bytes": 236,
+    "sha256": "4fc143372f00042c94fa45c732f055a1f1fa60d73786a8b36be5019e036a529e"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/core_graphics.c",
+    "bytes": 35,
+    "sha256": "e2856261e9109317b7b00910325760c618aa1100534848ab7c1f6c45e86ed9ee"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/core_runtime.c",
+    "bytes": 3789,
+    "sha256": "a60b8d1ca39e9e99b7a3da4ded76fb423cd33de5ca31b86149a30095f37d7599"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/core_sound.c",
+    "bytes": 32,
+    "sha256": "3d62cbdef245d9387ef8dc98b1730989cb413584b28d166d76e8145ab9dd6e33"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/LICENSE-APACHE",
+    "bytes": 10767,
+    "sha256": "097a889aa954d04e088b790b10a4014d6189561d0a6013935a73ce3d4ddaaf06"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/LICENSE-BOOST",
+    "bytes": 1337,
+    "sha256": "8d8291caf1cee26d23acf3eb67c9f9a2d58f1c681b16a4fbe8cbfb9e3c0b5a9b"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/LICENSE-MIT",
+    "bytes": 1079,
+    "sha256": "e562f3f974ced7e69dd1db77b820b36bcf8f30377f1aa105723fba449c53c4e6"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/ascii_number.h",
+    "bytes": 18903,
+    "sha256": "a034d44ff5b945a51c4797ecf4be7ef50c3a9730d50f5a26a6dc75a2c02d5b11"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/bigint.h",
+    "bytes": 18631,
+    "sha256": "1ed0b598da0b522613399897ddc748792dee6f804debf9fee131359252f80763"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/constexpr_feature_detect.h",
+    "bytes": 1629,
+    "sha256": "2dd2dc5f98a8f1a78813e62d47e82a19ebe42af726356723d60f6eb387c6dd38"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/decimal_to_binary.h",
+    "bytes": 8333,
+    "sha256": "82fad8134c272a3f1bc545b3ef367a2e9e3c7464b9dcef75640c37e325dfb973"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/digit_comparison.h",
+    "bytes": 15623,
+    "sha256": "941d18ff89a9164f6ad447542a7b369252cdd5d63d289f1064a71641bd9c99b6"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/fast_float.h",
+    "bytes": 2521,
+    "sha256": "2427cd297f5b4d524e696ab9c69f957ffb9f851e59262f5d0b07930ba7dae016"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/fast_table.h",
+    "bytes": 31278,
+    "sha256": "c18e0a0a2513215730557cc1dd53541cacd72855ddc0287934e78b364f989edb"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/float_common.h",
+    "bytes": 39545,
+    "sha256": "c09daa98e482d9a068c4174f208227741a64f82c7cd1b9cf0db0e8b96fee5562"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/fast_float/parse_number.h",
+    "bytes": 14316,
+    "sha256": "8bb35524d9b52107ac28215e932307a5a1765de8cb099599a7412f429cfb7e33"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/floatparse.cpp",
+    "bytes": 3545,
+    "sha256": "64e9bdde9743e5150dd66ee7b4377766b3be0ff4003c5748fd21592f5ac87221"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/floatparse.h",
+    "bytes": 246,
+    "sha256": "06937b79d7553887cb072d6b66b7b9bc61a0d78ee245812741ebbb723837c2ed"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/formatter.c",
+    "bytes": 943,
+    "sha256": "0928d515a6ce373c8c7090ce2e00f5f5200a9d1e958a69b3c072d6de9e26069c"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/formatter.h",
+    "bytes": 336,
+    "sha256": "b0fbd23a4bb673676723020a92a105d05894214df73492f449b55ec61d32922b"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lapi.c",
+    "bytes": 347,
+    "sha256": "ad7f59af59987abc017bc87ce84d422e5f7d5bf563ad914a9860013cacb1d964"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lauxlib.c",
+    "bytes": 453,
+    "sha256": "269c84401f48ad67aa1885f9e0775ae2d7dc80f60102a6034ee94b01c6abc844"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lbaselib.c",
+    "bytes": 351,
+    "sha256": "a5a441cc33483c75c322d962360a42887ced71f94a33f15c602bb19b4e1db7a5"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lcode.c",
+    "bytes": 348,
+    "sha256": "2cf51440ae65cb19cd98a78062c7630fbe8ed1dc29f42d03edd322c093732dbc"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lctype.c",
+    "bytes": 349,
+    "sha256": "53af723f56f99d6fd98b573dffaf77aa7c1c7a6fe0c293ebbd412cef06de1452"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_ldebug.c",
+    "bytes": 349,
+    "sha256": "9f657fde80a1b2a40df9118dbe5fe6e157656e277e4e5a4e4ce0caef122bbe7e"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_ldo.c",
+    "bytes": 346,
+    "sha256": "bb274e17dfdd84fc5feafcd217645f8909a296de2018004ea752a52479a793a5"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_ldump.c",
+    "bytes": 348,
+    "sha256": "0db767021dd9984ae6b4235fd9e42fd390138d8c3ef35d3d0422ffb98ede8072"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lfunc.c",
+    "bytes": 348,
+    "sha256": "f51a5f6e89284fe553fa7569241e9267fce97d8e6b6592b46dc9c10fcbe2f1af"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lgc.c",
+    "bytes": 346,
+    "sha256": "accfe35c9cd2f77fcbd8a834cb0cd58c65a3bf67b57a82832d925fb55c26190e"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_llex.c",
+    "bytes": 347,
+    "sha256": "94a5dc86e242bdc40259e6d29a3b42ca63edda723cd62b3e7831a9f5796bf81d"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lmathlib.c",
+    "bytes": 351,
+    "sha256": "af803be2f923f386fdaa7dd270a5c74314720fe76583decd42ede274771787d4"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lmem.c",
+    "bytes": 347,
+    "sha256": "f2edcd7661e42141d7541baa346648f559585219becdac88682657ed3385e3e2"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lobject.c",
+    "bytes": 350,
+    "sha256": "86c55c103b6ab03f80a231c4ef5ce68a31842061d14a0e6f7617d0634aaa5079"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lopcodes.c",
+    "bytes": 351,
+    "sha256": "2cbb0de71f24250a4cf858979cbde90d72ae083522467c9e1e28414daac5a34d"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lparser.c",
+    "bytes": 350,
+    "sha256": "51d72e94a67590239c308b1866a9ac768cd596ff0346a2961372fb78f9cc9651"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lstate.c",
+    "bytes": 349,
+    "sha256": "5a693d9a2450307db9b2386ee9f5f2dcd3188a74b3c22a7ebb162c8071848494"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lstring.c",
+    "bytes": 350,
+    "sha256": "d5992d2f290c4aa28735d647c24bb84ee31a6d5b2857292fd3a5acc54a40ae9f"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lstrlib.c",
+    "bytes": 350,
+    "sha256": "483eb08ad896a028580162eeb87f483d85b08a0ad40df915066d2b4f7d08036a"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_ltable.c",
+    "bytes": 349,
+    "sha256": "be9d4ef3619d0a8d2603519c9a05e4343b244bc081ca3653accdd33015fcd7d6"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_ltablib.c",
+    "bytes": 350,
+    "sha256": "05e3a64f626c11419b1d54569aece06b2594813ea26efdd07d1f4bf1522b5179"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_ltm.c",
+    "bytes": 346,
+    "sha256": "b924f327c3ef6f2f6cb7ba3e2698aac50e334928f8a80665448fd1657f74f452"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lundump.c",
+    "bytes": 350,
+    "sha256": "2eb6b9c37dd4bee368324fc3062d88321ec5b21afac78a2f0c47c7517d349d96"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lutf8lib.c",
+    "bytes": 351,
+    "sha256": "26154d0bedb8b65019749934ca23686dfd53c9b6240a8027f36c0457e8464858"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lvm.c",
+    "bytes": 346,
+    "sha256": "eee7232a4c1dd2e38c8dca780d5ddcd92ba8759f107c71be8b827a36b081ef34"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/lua_lzio.c",
+    "bytes": 347,
+    "sha256": "dceee0140d3c49d273e3187d68cc5db21d5e1fbd7ff8b4d2ce28bc4b877aa633"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/micropython.mk",
+    "bytes": 2089,
+    "sha256": "f27146aad6180457f466b1c8068b2e1dce7a2f5ec993279a10bb4ce0dcb36ea4"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/modcrankjam.c",
+    "bytes": 8644,
+    "sha256": "e35c81dfd00888e85c1251aca0c3f8dd6f6c8cfaf886a386e5ab5362e75f87e3"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/pico_double_math.c",
+    "bytes": 325,
+    "sha256": "13566348e8c2b9234f48218ee224a56c595befae362183175a3efffe2e4d993b"
+  },
+  {
+    "path": "engine/backends/circuitpython/crankjam/stb_sprintf.h",
+    "bytes": 56737,
+    "sha256": "848f06078166227117dab1caab1ba74a1fd13c022506f0a11406710e4b7f4b4b"
+  },
+  {
+    "path": "engine/backends/circuitpython/generate_wrappers.py",
+    "bytes": 1485,
+    "sha256": "9a8e65e9c4bb05cc050fae76e73dd52604ff16a2cda1240ef432e3c84ecefc71"
+  },
+  {
+    "path": "engine/examples/hello.lua",
+    "bytes": 618,
+    "sha256": "0b2920178958fba5de97d9d7ed3bb4017ac8bc58812f34d241f1fe2f2a9ff109"
+  },
+  {
+    "path": "engine/firmware/README.md",
+    "bytes": 3444,
+    "sha256": "1546bdc21f0d03abf593cd64bb9c1af69f89fed79fd0ee7f3bd42df340107490"
+  },
+  {
+    "path": "engine/firmware/build-integration.patch",
+    "bytes": 891,
+    "sha256": "70e08721de2587950a7c14bb087b2c74cb34cb0f8cb004a57f6ea4841c9adab4"
+  },
+  {
+    "path": "engine/firmware/build.py",
+    "bytes": 2282,
+    "sha256": "86d5880740fb604c82923454086b0b78f7330a4666459f06f50df8fea2308629"
+  },
+  {
+    "path": "engine/firmware/fast-float-provenance.json",
+    "bytes": 1359,
+    "sha256": "021d4a3a7a96a2b5d75be7658d6f0c28b76131156123889ed45fa7847e3e682c"
+  },
+  {
+    "path": "engine/firmware/patches/circuitpython.patch",
+    "bytes": 88003,
+    "sha256": "ab09298fa1e94af79ef215f6be61ca8ee04ff8c69fcf487ab537e3598e7dc3c4"
+  },
+  {
+    "path": "engine/firmware/patches/pio-usb.patch",
+    "bytes": 23113,
+    "sha256": "42c8e5ed962e1ee2ce183580cd10ebfc262900bb2fbb37d98fb0c22612bc7db1"
+  },
+  {
+    "path": "engine/firmware/patches/receipt.json",
+    "bytes": 6738,
+    "sha256": "22121341f7150617e8b1c5ac8b9dac19f9372fcd02e2812c89bb52ad7791f3d1"
+  },
+  {
+    "path": "engine/firmware/patches/tinyusb.patch",
+    "bytes": 1035,
+    "sha256": "0b3e98ebc72512c7166869d4295df9ca19772c995056e0122d0959e89cb4acf5"
+  },
+  {
+    "path": "engine/firmware/prepare.py",
+    "bytes": 3091,
+    "sha256": "cbfed3a757a4a5000eb8b792ef6208a5da1cf9d79d49af7e96a73005e9052dae"
+  },
+  {
+    "path": "engine/firmware/requirements-lock.txt",
+    "bytes": 397,
+    "sha256": "6977cbf9f46c971987b0e7ac8a2bf205ffa5f219fb37556217f38ced87328e51"
+  },
+  {
+    "path": "engine/firmware/source-pins.json",
+    "bytes": 11617,
+    "sha256": "f75b46037ec97769417990b42dc40e806f95bbdd51dee61b0c535e91b1674130"
+  },
+  {
+    "path": "engine/firmware/stb-local.patch",
+    "bytes": 5052,
+    "sha256": "dc8d3098f0e87e263f2dba80662129c4d6a8364de705a301c3d86f54876175cd"
+  },
+  {
+    "path": "engine/host/main.c",
+    "bytes": 10921,
+    "sha256": "17251fee578173f4d83676a95bb284639747db3c81d1009c43257fda1cda1b63"
+  },
+  {
+    "path": "engine/include/crankjam.h",
+    "bytes": 1649,
+    "sha256": "bc913d8fe93e3d7209dcecf32913e5f863e6a8bc9215a73aa224df78983b4cc3"
+  },
+  {
+    "path": "engine/licenses/CircuitPython/LICENSE",
+    "bytes": 1431,
+    "sha256": "f8d44b948113cff390f6454e59069139a92da75227a7b50bb3589499d4b5fe1b"
+  },
+  {
+    "path": "engine/licenses/CircuitPython/LICENSES/BSD-3-Clause.txt",
+    "bytes": 1480,
+    "sha256": "e11af671c491efac2f94c1d752bea92f4308ca2450c7d11e582e4b48c40e4de1"
+  },
+  {
+    "path": "engine/licenses/CircuitPython/LICENSES/CC-BY-4.0.txt",
+    "bytes": 16814,
+    "sha256": "b89aeb7c2a164a0576786dd2a8b57f2fb628b23981f0a06bd77e2f99a9befa0f"
+  },
+  {
+    "path": "engine/licenses/CircuitPython/LICENSES/MIT.txt",
+    "bytes": 1108,
+    "sha256": "8f25018489d6fe0dec34a352314c38dc146247b7de65735790f4398a92afa84b"
+  },
+  {
+    "path": "engine/licenses/CircuitPython/LICENSES/OFL-1.1.txt",
+    "bytes": 4292,
+    "sha256": "797832eda5ff4360a10fee3be94a3250995e76423b79675c9c44204c37ca492d"
+  },
+  {
+    "path": "engine/licenses/CircuitPython/LICENSES/Unlicense.txt",
+    "bytes": 1211,
+    "sha256": "567675401b124cc8ed1095665474a4f04ce1ed44134ee7eec46a691e387a1397"
+  },
+  {
+    "path": "engine/licenses/CircuitPython/LICENSES/lgpl-2.1.txt",
+    "bytes": 26521,
+    "sha256": "592987e8510228d546540b84a22444bde98e48d03078d3b2eefcd889bec5ce8c"
+  },
+  {
+    "path": "engine/licenses/CircuitPython/LICENSE_MicroPython",
+    "bytes": 3379,
+    "sha256": "cc3e5c0e8e89530b4790c4cc76a47e58ec3a9c755f856c2bd08c390446c6516b"
+  },
+  {
+    "path": "engine/licenses/LICENSE-pico-hdmi.txt",
+    "bytes": 1211,
+    "sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/LICENSE",
+    "bytes": 1431,
+    "sha256": "f8d44b948113cff390f6454e59069139a92da75227a7b50bb3589499d4b5fe1b"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/LICENSE_MicroPython",
+    "bytes": 3379,
+    "sha256": "cc3e5c0e8e89530b4790c4cc76a47e58ec3a9c755f856c2bd08c390446c6516b"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/data/nvm.toml/LICENSE",
+    "bytes": 1106,
+    "sha256": "d431903f4682a981bbc38a88f705b55403b29fd86064b9b81e767e68b9ab4a41"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/docs/LICENSE.md",
+    "bytes": 1128,
+    "sha256": "3731b9747e9489c24ca9b3ac726d347206932d0a3d7f3d9663c296d8ca4797de"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/extmod/ulab/LICENSE",
+    "bytes": 1072,
+    "sha256": "001ebbafb11de9151f5b71b5d8095bc5962ba544f52de46a867166a9b4e5d99d"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/lib/adafruit_floppy/license.txt",
+    "bytes": 1142,
+    "sha256": "83c2d564c71d7794b9b153beb72665a0321981b6637d8ae223973df8065c9fbc"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/lib/certificates/LICENSE",
+    "bytes": 1076,
+    "sha256": "adbd6ca21e5eceac2b3b51f17db8e5763fb9d4c045c86469bb222c43896ecb95"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/lib/mbedtls/LICENSE",
+    "bytes": 29852,
+    "sha256": "9b405ef4c89342f5eae1dd828882f931747f71001cfba7d114801039b52ad09b"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/lib/mbedtls/framework/LICENSE",
+    "bytes": 29861,
+    "sha256": "11402351e38392230bb8934ba1095c0c0049a296c0f8821f76e4672dff54b490"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/lib/mbedtls/tf-psa-crypto/LICENSE",
+    "bytes": 29856,
+    "sha256": "da8c58f05f135a9d15e9ffad4ecf854cfcc1f014c8abfd75ba05f62630ccc118"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/lib/quirc/LICENSE",
+    "bytes": 815,
+    "sha256": "a70ef3ea032998eead2e2c7573a170a809eae08e3ca134611f707eda5932c8a9"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/lib/tinyusb/LICENSE",
+    "bytes": 1095,
+    "sha256": "b01185698f530f4f61b28f42d5a4d6bbe7834bde6a63f00773235628a7bdce22"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/lib/tinyusb/hw/bsp/espressif/components/led_strip/LICENSE",
+    "bytes": 11358,
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/lib/tinyusb/lib/SEGGER_RTT/LICENSE.md",
+    "bytes": 1543,
+    "sha256": "4fe88073436555f5b8403316c2c78e06a20ac591bc4a612926544ace0f26aff8"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/common-hal/picodvi/LICENSE-pico-hdmi.txt",
+    "bytes": 1211,
+    "sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/lib/Pico-PIO-USB/LICENSE",
+    "bytes": 1071,
+    "sha256": "552320d7937c0ef4bde067b2905d6331e3dd9bba1ff726b2d34d8edcdc9dbc76"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/lib/PicoDVI/LICENSE",
+    "bytes": 1517,
+    "sha256": "7993a97d7c08e7b2712d9763ca40fa80adfbac5f2e53ba00b602bc3fac5bfd8d"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/lib/cyw43-driver/LICENSE",
+    "bytes": 1654,
+    "sha256": "0ce42360898b7c3f168317b559d4783b55c892751580c2a12c76b548aa5858fb"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/lib/cyw43-driver/LICENSE.RP",
+    "bytes": 1789,
+    "sha256": "67aca4f10d9edf489871f64cd8f0dcd6c5df3e4ce75bd39e1914fc54f99e40b3"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/lib/lwip/COPYING",
+    "bytes": 1425,
+    "sha256": "ef4aac92e05e87cd1cdc140870ed52206ba03d4a7fe46c1e11d7ffa6c87d252b"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/lib/lwip/contrib/apps/LwipMibCompiler/SharpSnmpLib/license.txt",
+    "bytes": 24383,
+    "sha256": "ef1f7505cfdff240e72602bc50ef1cdba37c681c84611cdf30e4371320c70942"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/sdk/LICENSE.TXT",
+    "bytes": 1489,
+    "sha256": "483f865953435b66c443dee7558debe3cc3cf8fcbb6a112fd9fc6a795d53f1f6"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/sdk/src/rp2_common/cmsis/stub/CMSIS/LICENSE.txt",
+    "bytes": 11357,
+    "sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/sdk/src/rp2_common/pico_btstack/LICENSE.RP",
+    "bytes": 2281,
+    "sha256": "3b9280bbfedf57d9f7793d2f9af7beb5d5c45f16b587fa3c3568aaedd16fedf4"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/sdk/src/rp2_common/pico_printf/LICENSE",
+    "bytes": 1080,
+    "sha256": "3fd3a80a06465d0b4affa1d1a16e18a8d2ef42a52eb52060109ae12f1f878f72"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/ports/raspberrypi/sdk/test/pico_float_test/llvm/LICENSE.TXT",
+    "bytes": 3192,
+    "sha256": "abd4d8794808bacb1eb6924d49efafd9ab6eef88faaaeb5d3cfa13ee3670d672"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/tools/adabot/LICENSE",
+    "bytes": 1106,
+    "sha256": "45ca96c509fa3fae19fd6a55ee5d0cba22746b41acb10ab2037d3ece6f4a932e"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/tools/huffman/LICENSE.md",
+    "bytes": 1080,
+    "sha256": "b2c206dd1fa01ae9137710639a81ae4b441a5e3a4332f906e1680fe4de71319d"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/tools/python-semver/LICENSE.txt",
+    "bytes": 1496,
+    "sha256": "cda490c32e61d3884dc17791fc8078f2a3e564fba98dd18b4dc64eb2720b2b6f"
+  },
+  {
+    "path": "engine/licenses/circuitpython-tree/tools/uf2/LICENSE.txt",
+    "bytes": 1120,
+    "sha256": "c581accf1e5449482b70ac5fcdfb171599317ccff559cf0794d771671486f800"
+  },
+  {
+    "path": "engine/licenses/license-inventory.json",
+    "bytes": 2076,
+    "sha256": "737e7046c37c882c0f5cc4c73a9d663334cf1b6db80df41c6044086624cb79bd"
+  },
+  {
+    "path": "engine/src/LICENSE",
+    "bytes": 1305,
+    "sha256": "2a78bb21d8dcf368a7e7066df3bd3c01d72c2833e8636c79f3edb2280e155a2c"
+  },
+  {
+    "path": "engine/src/font.h",
+    "bytes": 1849,
+    "sha256": "7e63474b15ddf75828027ad8b4fe8207830557870568c7ea6e31b2dd27c0f14c"
+  },
+  {
+    "path": "engine/src/graphics.c",
+    "bytes": 5716,
+    "sha256": "1054bc73cbe8dbf8abcce51e028c072686353797c530ded5fb125eb57ff7e1dd"
+  },
+  {
+    "path": "engine/src/internal.h",
+    "bytes": 1251,
+    "sha256": "886e8b24e978947c7c317d20b15698e6f5f31374460596e9b144154efa6addd0"
+  },
+  {
+    "path": "engine/src/runtime.c",
+    "bytes": 10102,
+    "sha256": "d242dc512f8eec039ec52df16c724a5fb51935d5a7ca845b7a5f27a5ab2c4a6f"
+  },
+  {
+    "path": "engine/src/sound.c",
+    "bytes": 4456,
+    "sha256": "14cb2df30316541bbcca5a614f9352bc336a5e47f08febc5a9ef172fe8c9c93a"
+  },
+  {
+    "path": "engine/tests/runtime/test_runtime.c",
+    "bytes": 12060,
+    "sha256": "7c8bad660f7be996e5411703131d01d20866a9cdff657596618f71cbfd7a28e9"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lapi.c",
+    "bytes": 36201,
+    "sha256": "cd369dc6900a7696ca55ccbd4f50eadfa799b975f34b7afe450e1b859517a56e"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lapi.h",
+    "bytes": 1427,
+    "sha256": "9522209670086adfbb11379416078a7f4dafe154043e320cd435fa1811aaabfb"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lauxlib.c",
+    "bytes": 33908,
+    "sha256": "257c287ed4964ec8bb07fe0a1fd1b52b712e4bccd6c889db62f84abb905d6996"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lauxlib.h",
+    "bytes": 9314,
+    "sha256": "2d9e18e577a6062646268e7f7228264c28bd9b972c186e1af81b8357179c0ab4"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lbaselib.c",
+    "bytes": 15478,
+    "sha256": "5dc9a64468c1ac31e59066c7d3597eeb8ea4ac8fc19a257a74c431624300b487"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lcode.c",
+    "bytes": 53215,
+    "sha256": "2cf13c7f8205e9f07c2ccf1fedc3f0f0a05d238c194b176c72cc22b2cc96210e"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lcode.h",
+    "bytes": 3636,
+    "sha256": "c5ad73fb12fd3e9f6b6a5f37fea5b60e4c09f8a262e9ac3ca85e8e047f745cea"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lcorolib.c",
+    "bytes": 4856,
+    "sha256": "5408ccec737678d045d421f84a56e1ce03192a42c55440ffef07bec356aaec89"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lctype.c",
+    "bytes": 2461,
+    "sha256": "3e21ae6a8faab3ed470ae0de19360da6b4e21a0a0f8572f502f7e13d590186f8"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lctype.h",
+    "bytes": 2115,
+    "sha256": "c800311872ecba642f6d013b290eda83ba6cd8df8061e25cdca1dd4adcbed8b5"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ldblib.c",
+    "bytes": 13356,
+    "sha256": "349afd63c8be2cb8a522e4a04e9f444b65ed1fc7f4dabba5b4b61fd8c11d0c42"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ldebug.c",
+    "bytes": 29785,
+    "sha256": "06d065d1f26c29546cc74b61a50267cb70567ae538691f190bf15ca5cd29d308"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ldebug.h",
+    "bytes": 2215,
+    "sha256": "b0fd38f6461251ec481cf5633d622569cef939067e37cac23331d9f96b601702"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ldo.c",
+    "bytes": 35857,
+    "sha256": "af1522801876fe267bf2f892caa24209c395459331ac9a1fdf7ad3ed82402a6c"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ldo.h",
+    "bytes": 3298,
+    "sha256": "a577744f7c773bd91263540a1effefe75d3dfbfc8a9874349844f9a1ddae8d52"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ldump.c",
+    "bytes": 4879,
+    "sha256": "3c05402c5e282e06c2218f2469b1f38e1b84c783b9387aec7740c60b287d82c9"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lfunc.c",
+    "bytes": 8423,
+    "sha256": "38809428b76fafa79db9f65b7248cc0c02c9b696e7410fc4ab1699940768f1b2"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lfunc.h",
+    "bytes": 1708,
+    "sha256": "81dc02d55ae8000461ab90bb9689d2600ba51f2ea9ac9fb019386995c07e3e4a"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lgc.c",
+    "bytes": 57057,
+    "sha256": "caa4df2eccfae0899686d1aed3f2bad91184de3bd12176fdfead91147f704e0b"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lgc.h",
+    "bytes": 6431,
+    "sha256": "c83d3b8e31345c0aacd37442954a7f2434312ee48f98a8b9ae4fc8aad26d0c99"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/linit.c",
+    "bytes": 1621,
+    "sha256": "3578568e27b9c1e2f4a7f9a53fdb4bc8ac095db75cc86e966bb1deec2792158e"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/liolib.c",
+    "bytes": 22211,
+    "sha256": "bd3176d1c5d30d61fdfc2aa17d7af0819f2da51694942a24b6c185ef797f0060"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ljumptab.h",
+    "bytes": 1663,
+    "sha256": "6c3e9858b9dad03ccd61445ab0bff0eb6ddfa5e731e044f93350fe6c6b2ad8d5"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/llex.c",
+    "bytes": 17100,
+    "sha256": "5cfbaabf3dc0d75835aaafc37fcd87a92f3dba451e002732747b602fda122958"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/llex.h",
+    "bytes": 2402,
+    "sha256": "5ce0302528260ed6a40ec3ebf5e27d3bc108242d9dca57e8cdbe80fe34e13410"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/llimits.h",
+    "bytes": 9294,
+    "sha256": "d588bdac3c8e1adc88df3dc92c950a1bfa29663d15f9221f58e2aa553b05a422"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lmathlib.c",
+    "bytes": 19616,
+    "sha256": "da5c7d74cffce22f0a9eb468e6e7e80b543ea6bec5c21aefb8cf285a3556722a"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lmem.c",
+    "bytes": 6174,
+    "sha256": "6154c2865bec97e61a92d8284be7e8ba21818f6edc95f5d72adb5dcf3e9532ca"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lmem.h",
+    "bytes": 3368,
+    "sha256": "8318a170a1d4bf21c3cb4deb1f8661f1dc7cf4eb688e4ec9a1e7ea16bfc3b5cf"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/loadlib.c",
+    "bytes": 22892,
+    "sha256": "f21cafa3258669d6f8c4f09195c654a4a588ab402f5e976c731918658b747a5b"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lobject.c",
+    "bytes": 19504,
+    "sha256": "7a9748e38c52e45bc468cae74ccea08b98f8c53a523c1b0f9a117e5cf162c921"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lobject.h",
+    "bytes": 22773,
+    "sha256": "8539beae7dd9a08efc09b04d64c09663e9afc0f2ad342abc612bb000c0c9be70"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lopcodes.c",
+    "bytes": 4126,
+    "sha256": "bdc9d39fd8bf1a350c0249f726c5f61bef64b122b93a0fbc172b0328dc01f594"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lopcodes.h",
+    "bytes": 13367,
+    "sha256": "b3f511933be3039a4b92ba79601b2e5daf75b34f268bfc757adf3e24ea4f1ec9"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lopnames.h",
+    "bytes": 1143,
+    "sha256": "fbdbebc96b136efc6165cba1ac2b311b0c52413aaef59ae9ec750748f13c9e9a"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/loslib.c",
+    "bytes": 11825,
+    "sha256": "474f2a3ee7ca8083e4552177da426ea159be82b4b34f3bd2151239810b57bb0e"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lparser.c",
+    "bytes": 56439,
+    "sha256": "e24f9e869afd690749404b3075fd82efaf3af882a13a131b612c6ff28e052a8c"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lparser.h",
+    "bytes": 5927,
+    "sha256": "68c34ef2d6e5a227f7cff18436a42c6739b1470ce12f059f168d9bb69fc8d49c"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lprefix.h",
+    "bytes": 828,
+    "sha256": "626785d4eda75e9435f0ac21a780ae3b11f8b27dc36934e637a5c2305f906531"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lstate.c",
+    "bytes": 11776,
+    "sha256": "e5f3b17104f6764bad609d18ce8f3008a87731491a41cb78b79aed78777c21d8"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lstate.h",
+    "bytes": 15311,
+    "sha256": "8816454aa1df7c6cb1bc6366ca163b575e259e36497b75db354c572a81836cee"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lstring.c",
+    "bytes": 7580,
+    "sha256": "b6162f3a65735a902911ffafcafe1db0994c3b0df441581dcbb04dca6bc0b71d"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lstring.h",
+    "bytes": 1603,
+    "sha256": "a8cb0d737276f6a41071a0776ee1d8aa13cf02fa7c79ea096d202b14ea792e31"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lstrlib.c",
+    "bytes": 56498,
+    "sha256": "d386f8bbb75d5ef7b04c8ca9e747ff256525a9546bb6ff01c788b912b6995aa6"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ltable.c",
+    "bytes": 32757,
+    "sha256": "27a711276b1e22aaea3b9182e2d17693f598cfe9bc7fd203c05d400df6673853"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ltable.h",
+    "bytes": 2052,
+    "sha256": "1c8736b87aa408ef2afebfe693f46ae5424d658d798fb2a8a88b6868cf5569b5"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ltablib.c",
+    "bytes": 13227,
+    "sha256": "3d430a6f9cde66d0b791444c6164e7559ccf62b7cdc3a6325882408c6806e26c"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ltm.c",
+    "bytes": 8268,
+    "sha256": "7cbe645ed7e1161d31eb32ea467d8220b592c0acfa6107f0194487f0ddbf954b"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/ltm.h",
+    "bytes": 2907,
+    "sha256": "5b2f6e59951edeef6e71bebe5ac4351f4b3602ee0461729308b80dcee8cea910"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lua.c",
+    "bytes": 20564,
+    "sha256": "ee7b72f64fa489d3e5393494f09c2517f5bdceb43f768c087a9ced74060af254"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lua.h",
+    "bytes": 15949,
+    "sha256": "06138352a12f0710bc214eb3a2e134889979cadc9a7a761a4e43dafa926419af"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lua.hpp",
+    "bytes": 191,
+    "sha256": "fd83f7e823cfbb03ac2da937ec83f01b4a6ddaac220a4fa1ffd6c6c3842c5890"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/luac.c",
+    "bytes": 15145,
+    "sha256": "3a424e6cb4177886c8790821cf15345f488764bc215eb29719c80002ef24cdc1"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/luaconf.h",
+    "bytes": 21743,
+    "sha256": "af243c94bee6d2601383e8b65ed66a0d1b4ab3b7418ff903fcd0679912160e3a"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lualib.h",
+    "bytes": 1116,
+    "sha256": "4ea0f67d3e467f5d6a327616e22a3c2da8e03d47a3c3660916275f2842f521ea"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lundump.c",
+    "bytes": 7976,
+    "sha256": "7f7b078026e162161d402feba73a69cbe66a98558ec0745a445a595f42eac688"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lundump.h",
+    "bytes": 805,
+    "sha256": "1137c0c9d8654ce223374d21c52a599fd1cc1ccb869801f87a27238a7bf55e8e"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lutf8lib.c",
+    "bytes": 8248,
+    "sha256": "441251bdf176e066e60a36735594f0cb92c067143fed32e373949bdb65a52866"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lvm.c",
+    "bytes": 59380,
+    "sha256": "7df5095ee2f6c88162d3536afb1fa04527b98fa3265cb579fc9aa6dcf05606de"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lvm.h",
+    "bytes": 4552,
+    "sha256": "aba601b887236d5e135392e0c49370df3b5a9ac5c66ab2d44156b3244f2dcef3"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lzio.c",
+    "bytes": 1322,
+    "sha256": "fba61ceeeb257a3fe5f63310f21e14fc26c4be647583dcf8e74cbc7fb7e43e8a"
+  },
+  {
+    "path": "engine/vendor/lua-5.4.9/src/lzio.h",
+    "bytes": 1438,
+    "sha256": "9673f62eac2d0fe3010f9d23148be7b8113319fdf4c4490015cd9feae2ecaad4"
+  },
+  {
+    "path": "examples/orbit-breaker/LICENSE",
+    "bytes": 1080,
+    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+  },
+  {
+    "path": "examples/orbit-breaker/README.md",
+    "bytes": 2607,
+    "sha256": "aabe5e016fd7c08ddb676dd61b10ca7f57ae594d40374c8b348605c9564bf894"
+  },
+  {
+    "path": "examples/orbit-breaker/main.lua",
+    "bytes": 6168,
+    "sha256": "208aee68235e068863884df3e4e285fc6826fe0f0c2732f8cb110f001703a2cf"
+  },
+  {
+    "path": "examples/orbit-breaker/manifest.json",
+    "bytes": 356,
+    "sha256": "c6bc12a10105c01ddd9cc26262657c05cd0da97ea8637051f0a811f0b41172ce"
+  },
+  {
+    "path": "examples/orbit-breaker/native_check.py",
+    "bytes": 4223,
+    "sha256": "f276821645714161dd0ede33341fdbf6eb753f89e036c987da745826160bf4c1"
+  },
+  {
+    "path": "examples/orbit-breaker/verify.py",
+    "bytes": 1101,
+    "sha256": "2006cdec3ad1f165e5e5ff2391da6c1619a623b9d22da6ff2925e58cb43153d6"
+  },
+  {
+    "path": "firmware/impossible-playdate-fruit-jam.uf2",
+    "bytes": 2380800,
+    "sha256": "fe3f629d83609e900fe12d5e8f183ab59a6b708918abed26bcc9b506b57f49af"
+  },
+  {
+    "path": "install.py",
+    "bytes": 10919,
+    "sha256": "10d72de0f6202c01604b3fc69fa5b4d3b70564e4c8e04cee0b626563bdb1de50"
+  },
+  {
+    "path": "media/hardware-demo.mp4",
+    "bytes": 1164995,
+    "sha256": "7753fdbb6ac21d32a3d50e1b6f980580a6d1571005e180c7486646f6e24930cb"
+  },
+  {
+    "path": "native/BUILD-RESULTS.json",
+    "bytes": 2855,
+    "sha256": "9e48c4e78a088abbec6701f196e89af27e224315e0ef988ce2be37f326512b64"
+  },
+  {
+    "path": "native/HOST-RESULTS.json",
+    "bytes": 1977,
+    "sha256": "548bfd9fb6c2ee31c09f12c91d1a6be3b5573b2371ccf9846048103022cdab20"
+  },
+  {
+    "path": "native/LICENSE",
+    "bytes": 1080,
+    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+  },
+  {
+    "path": "native/README.md",
+    "bytes": 2685,
+    "sha256": "5e9e8ccd448dd2d7b0b831646a71d1188279607ced8d1ac855f025c1c6b6c4a9"
+  },
+  {
+    "path": "native/blit/_crankfruit_blit.mpy",
+    "bytes": 474,
+    "sha256": "d05cc81cf38a3ca162081fbfae7017d65e97f4a7ae0b10b090c2e40a9abc3e95"
+  },
+  {
+    "path": "native/blit/blit.c",
+    "bytes": 864,
+    "sha256": "4c3ff7e284a4fb5282d5a2b040f25c88fce265d7bb9001bef707cf56f4b4a628"
+  },
+  {
+    "path": "native/blit/blit.h",
+    "bytes": 450,
+    "sha256": "149a6381ceb6eb6f78c657584ec7b66bd4475e5b3e39ec40096a15d3dc195c0f"
+  },
+  {
+    "path": "native/blit/module.c",
+    "bytes": 878,
+    "sha256": "e2a976b3b5bde649565f793736605ead50362a34a9a23b2aff7ae8c2eee72d73"
+  },
+  {
+    "path": "native/blit/reference.py",
+    "bytes": 726,
+    "sha256": "9aa0f8e2ef66db9e8dab3ef7dc295318188b0a939e43ab7538aa1a2e3ab91baf"
+  },
+  {
+    "path": "native/blit/test_blit.c",
+    "bytes": 2866,
+    "sha256": "133fcf6f4bd14ca7c51202c7d6048ff7848a83fad16da381aa78c8c9b998dcae"
+  },
+  {
+    "path": "native/build.py",
+    "bytes": 4622,
+    "sha256": "5a199878f060f8394da753b10dfee1b0acd80ff55a5b82d745f60d96d7fa6d32"
+  },
+  {
+    "path": "native/pcm/_crankfruit_pcm.mpy",
+    "bytes": 722,
+    "sha256": "a362319b53ea0faec8c43fda6a1efdcdfc663d38b4042b079fc63ef0b63b0c37"
+  },
+  {
+    "path": "native/pcm/module.c",
+    "bytes": 1500,
+    "sha256": "d49b9532f35fc9b010650a9a9d959279012372bbea1ba7c07f1ee5c2da40b26f"
+  },
+  {
+    "path": "native/pcm/pcm.c",
+    "bytes": 783,
+    "sha256": "468959265b999f28f6a69d5bcedf86f8abc6acf9a22d554029d822cb5b675f06"
+  },
+  {
+    "path": "native/pcm/pcm.h",
+    "bytes": 383,
+    "sha256": "1b39a24444917a774f6418678893dc2ee2e33cbbbfe05929cc57d0121a611af4"
+  },
+  {
+    "path": "native/pcm/reference.py",
+    "bytes": 854,
+    "sha256": "546bf15b5ba45bf603b9631e3374291cc17e63cc7375ae437072a4f96212f37b"
+  },
+  {
+    "path": "native/pcm/test_pcm.c",
+    "bytes": 2598,
+    "sha256": "775c7a6d0d0eedf68f9fc6a40450b8944f74d909a224c316db89c2bdb70b01be"
+  },
+  {
+    "path": "native/sprite/_crankfruit_sprite.mpy",
+    "bytes": 1835,
+    "sha256": "96befe4744c76fe7990e3ad74b800c2f693c086e7c551d4d22fbd38221df20bd"
+  },
+  {
+    "path": "native/sprite/module.c",
+    "bytes": 1190,
+    "sha256": "db2d6e24bf7eb129cfa63103b7e248c4bc9a29dcf5064ad8ee279d5e074e34cb"
+  },
+  {
+    "path": "native/sprite/reference.py",
+    "bytes": 2473,
+    "sha256": "569583c03e909dd1f7a647e6114cd7dc13d24c2579ee98daa90838078def0550"
+  },
+  {
+    "path": "native/sprite/sprite.c",
+    "bytes": 4530,
+    "sha256": "297c0daf94f4fe56c22c3c69d43d73b03023eec4a152b520d95bebb31b5c23b0"
+  },
+  {
+    "path": "native/sprite/sprite.h",
+    "bytes": 555,
+    "sha256": "695559ac6e83d8007cdc75856af2e9baf404f708b3619b3abe41e1ff68e401d8"
+  },
+  {
+    "path": "native/sprite/test_sprite.c",
+    "bytes": 9185,
+    "sha256": "8f0e18bacc9d0d950561729a98619e929593848de8f4c468d96f4b0103f95d6d"
+  },
+  {
+    "path": "physical-results.json",
+    "bytes": 29457,
+    "sha256": "81b0da6186e046e14b43c4e701d6be591cdc45af813f01b465481d8e63e9888d"
+  },
+  {
+    "path": "test_installer.py",
+    "bytes": 4529,
+    "sha256": "e0cc01f8f3788a6dd7c31232b20c2a27c488717e6db4576e0a0fdc1da4d0a038"
+  },
+  {
+    "path": "tests/audio/baseline_stream.py",
+    "bytes": 9274,
+    "sha256": "fe50cce2df8b737f228f7b22d3c9eed5f69857d600e8188f1c8b48a1536e9e56"
+  },
+  {
+    "path": "tests/audio/fixtures.py",
+    "bytes": 3904,
+    "sha256": "dc5dbc024546930f3a05586d8c5a6515a81935c257acb30cf921d0d2f5b5a256"
+  },
+  {
+    "path": "tests/audio/test_contracts.py",
+    "bytes": 9987,
+    "sha256": "82e4cff9e6138785163f1b552d6c849084ab4ba8624ff13689386265f59d33ae"
+  },
+  {
+    "path": "tests/audio/test_native_copy.py",
+    "bytes": 5859,
+    "sha256": "aa7b459142be9ed74f6090bd55d98beff3c802eb3f7f6d5783c911cff02352ad"
+  },
+  {
+    "path": "tests/audio/test_timing.py",
+    "bytes": 4101,
+    "sha256": "bb1b33b4fe3e301b70c1deadaff592a931d0c5a7d1780caf5ddd5037427e668d"
+  },
+  {
+    "path": "tests/hardware/001_player.py",
+    "bytes": 1685,
+    "sha256": "5390385a7ff009dcd939036739e623db41d97925a5fa24773b615cd9f73cf3bf"
+  },
+  {
+    "path": "tests/hardware/002_endurance.py",
+    "bytes": 464,
+    "sha256": "837b95685977ec9846ff708cf100e90f9ea1ba5b362a582e9f9491273ddb047d"
+  },
+  {
+    "path": "tests/hardware/003_recovery.py",
+    "bytes": 1524,
+    "sha256": "f3f970a54b91eaf1fb65cb77aaf125df30951676df58fccda9c06f81cbb91939"
+  },
+  {
+    "path": "tests/hardware/004_showcase.py",
+    "bytes": 1066,
+    "sha256": "54c7e2d4d4c79ee2983ab07b2a9c7eee4d763c408f53bf1d2617cdcb94a14852"
+  },
+  {
+    "path": "tests/hardware/README.md",
+    "bytes": 1398,
+    "sha256": "07268ebba2111f7096c152aa426b6c0dc8c6d5db94dae0cb534d126418486b21"
+  },
+  {
+    "path": "tests/hardware/fixtures/zz-test-load-error/main.lua",
+    "bytes": 39,
+    "sha256": "81446b92916a55adf672ddcab8442ba3dce0b6bbba7ee7bca060db1de87c5b58"
+  },
+  {
+    "path": "tests/hardware/fixtures/zz-test-load-error/manifest.json",
+    "bytes": 179,
+    "sha256": "35e2c1dd6707f36fdceece36b59c08d6d9e0e499e009afda4f689264654ad669"
+  },
+  {
+    "path": "tests/hardware/fixtures/zz-test-step-error/main.lua",
+    "bytes": 245,
+    "sha256": "44242ba30b9f887e5fa2c4042b72fa9481974bb7b13af7802e604f687f726c2b"
+  },
+  {
+    "path": "tests/hardware/fixtures/zz-test-step-error/manifest.json",
+    "bytes": 181,
+    "sha256": "5316f8f0caa92ac2b647bd8786c626bc0d48da3dc2b5d49d30535da591399556"
+  },
+  {
+    "path": "tools/art/LICENSE",
+    "bytes": 1080,
+    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+  },
+  {
+    "path": "tools/art/README.md",
+    "bytes": 4721,
+    "sha256": "4f448d41cc8b19ec297f9ba90f435e166c680f5ab0654c982fb2e2105a6fa0fc"
+  },
+  {
+    "path": "tools/art/UPSTREAM-ORACLE.json",
+    "bytes": 1678,
+    "sha256": "890a22831eb35e3bf0070fc76dafd621bbd8f173cdf4993f3622c26bc3d92b24"
+  },
+  {
+    "path": "tools/art/asset-build.json",
+    "bytes": 1726,
+    "sha256": "9c54db1cf69b94f1099ac4cafdc9576a8cd04c6a71d05052fa9f3918189619a1"
+  },
+  {
+    "path": "tools/art/assets/error.bin",
+    "bytes": 12000,
+    "sha256": "b98b15f0fba3f26f6c916136d26f495b81f59d90f1c3d8f533cb03839fada7f4"
+  },
+  {
+    "path": "tools/art/assets/error.pdi",
+    "bytes": 1419,
+    "sha256": "32f0c7c02fa2a16e9de88e219dab54e4efdcf977337a2381e9c8d1155827d654"
+  },
+  {
+    "path": "tools/art/assets/explorer.bin",
+    "bytes": 12000,
+    "sha256": "7e59c06374f3e027af54bd841c637d84784526a1065e243fb166a2e5db2739d5"
+  },
+  {
+    "path": "tools/art/assets/explorer.pdi",
+    "bytes": 1321,
+    "sha256": "cc35359c53c271c533b7d848f31f797e90969f2ca08b694e79443bf65d3de914"
+  },
+  {
+    "path": "tools/art/assets/library.bin",
+    "bytes": 12000,
+    "sha256": "fcc47a72c077e2d23f2b9eb1dc3ff1ad87f1de521db449a31125c3673649ed76"
+  },
+  {
+    "path": "tools/art/assets/library.pdi",
+    "bytes": 1294,
+    "sha256": "c839b9719cddbcf50e3b0d70efdbdd04ed65cca41e3adc1ea5549dcfe442b96d"
+  },
+  {
+    "path": "tools/art/assets/manifest.json",
+    "bytes": 6425,
+    "sha256": "0e591df4216150db8f551e1d0227a7037db0eb5f57e99b4c554d1759d8e58e55"
+  },
+  {
+    "path": "tools/art/assets/sprites.bin",
+    "bytes": 15302,
+    "sha256": "048f9e3e107b12ccc03a6a5abe1030a2fa2f3881ae05778f1b8d808e6ed8afb3"
+  },
+  {
+    "path": "tools/art/assets/sprites.desc",
+    "bytes": 1656,
+    "sha256": "dc45216ebde150423ef08157cd77883cf8aa0048e99f5035fd02b8107b4d9f13"
+  },
+  {
+    "path": "tools/art/assets/sprites.pdt",
+    "bytes": 2355,
+    "sha256": "9ecee3100542304dede620de73b0832bb95c91247c67de4f2e6dc82765218665"
+  },
+  {
+    "path": "tools/art/build_assets.py",
+    "bytes": 11258,
+    "sha256": "1e5b511801eed39bc67338e9aabe078370bf71b50ea2719d8f25d97145e3bf31"
+  },
+  {
+    "path": "tools/art/previews/error.png",
+    "bytes": 1603,
+    "sha256": "7e3876c628a0b346f1c01952c1ca8c4e2b4b725491de39ed043c0592bcebc731"
+  },
+  {
+    "path": "tools/art/previews/explorer-populated.png",
+    "bytes": 2121,
+    "sha256": "24b1d57f05776cd6ed96cc244b15c0b7a3a05cf2bf1cb2c8c3d6bfa87d8c0db1"
+  },
+  {
+    "path": "tools/art/previews/explorer.png",
+    "bytes": 1448,
+    "sha256": "bf8cc3fa01038057209bd7a773ee8ed2055361a0ceb9fb77af31ec455eaafef2"
+  },
+  {
+    "path": "tools/art/previews/library-crank.gif",
+    "bytes": 4913,
+    "sha256": "c49e4f0f94de56b3bbd780ffd61544bff299241caa9977249653c8a737e21487"
+  },
+  {
+    "path": "tools/art/previews/library-populated.png",
+    "bytes": 2226,
+    "sha256": "97e2f29df670a4500114a43aed47f265fd2b38f4dce79d2fe58594cc14e5c699"
+  },
+  {
+    "path": "tools/art/previews/library.png",
+    "bytes": 1398,
+    "sha256": "eaba7dd84b7a0be1ea36be0931823e54482ad22dd325d53fefe6317d81100a19"
+  },
+  {
+    "path": "tools/art/raster_source/README.md",
+    "bytes": 709,
+    "sha256": "d9aa5d3dd437d4871a420567e5a73a669c36887426285130cecf1be37277bd25"
+  },
+  {
+    "path": "tools/art/raster_source/approved-startup-lockup.png",
+    "bytes": 3933,
+    "sha256": "98ff2a0e3b480303c0a3178f23899343f5c793f4542aeb6b47990b58dfd4503d"
+  },
+  {
+    "path": "tools/art/test_assets.py",
+    "bytes": 2480,
+    "sha256": "9dbf1cbaca4d50a7729588b4f49a763693f490f23a57411a87f6dcfc393b27d4"
+  },
+  {
+    "path": "tools/art/tools/pd_assets.py",
+    "bytes": 20264,
+    "sha256": "65b43fabb394df0b3816fabedac807e56afaff452175394e06748205df64af72"
+  },
+  {
+    "path": "tools/art/tools/test_pd_assets.py",
+    "bytes": 12176,
+    "sha256": "c86d4535b52c1ba2b665146ec56cd7590c8772058561bc44f23339694eff40f5"
+  },
+  {
+    "path": "tools/art/upstream/LICENSE",
+    "bytes": 7048,
+    "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
+  },
+  {
+    "path": "tools/art/upstream/pdi2png.py",
+    "bytes": 3790,
+    "sha256": "977f2627075c481a9dcdba64ad13fef68749b1eba14c20103b042898446b4de2"
+  },
+  {
+    "path": "tools/art/vendor/LICENSE-CrankJam",
+    "bytes": 1305,
+    "sha256": "2a78bb21d8dcf368a7e7066df3bd3c01d72c2833e8636c79f3edb2280e155a2c"
+  },
+  {
+    "path": "tools/art/vendor/font.h",
+    "bytes": 1849,
+    "sha256": "7e63474b15ddf75828027ad8b4fe8207830557870568c7ea6e31b2dd27c0f14c"
+  },
+  {
+    "path": "tools/art/verify_upstream.py",
+    "bytes": 6109,
+    "sha256": "eab7f0f80af7536dc2dde378218dd2331a6165cf4595a86be4dd1e267fa70d60"
+  },
+  {
+    "path": "tools/cartridges/LICENSE",
+    "bytes": 1068,
+    "sha256": "0ae780769bb1da399661faa8756a598654dae9e57edf6a6b5511170eaeb8f006"
+  },
+  {
+    "path": "tools/cartridges/README.md",
+    "bytes": 6728,
+    "sha256": "bc6f9edbc3f8dacc821c2b0104358702d957b2ef223ff13baf7f15412cb2248b"
+  },
+  {
+    "path": "tools/cartridges/cartridge_cli.py",
+    "bytes": 2906,
+    "sha256": "29b41675897351824ce306552c9e12bd464692381365b449bf6e9832b02ae8fe"
+  },
+  {
+    "path": "tools/cartridges/cartridge_loader.py",
+    "bytes": 11285,
+    "sha256": "a4de77631cf3b6df774d8fd38b30fe57bc58fd33380c1d01cf1123f1228813ca"
+  },
+  {
+    "path": "tools/cartridges/test_integration.py",
+    "bytes": 12579,
+    "sha256": "8dffcd04684456f1484d53d0eb0ffe22f7f7b1cc0fd6d398dfa573b51a193d9e"
+  },
+  {
+    "path": "tools/cartridges/test_loader.py",
+    "bytes": 11463,
+    "sha256": "a90ae25317f17f99083192ee776cbc7cf9647b3c82eff8f858f4e4a5935fd777"
+  },
+  {
+    "path": "tools/crank/LICENSE",
+    "bytes": 1081,
+    "sha256": "bfe20f81e8256d830b3e685114b11aa6795154a0f9c8c90d1f4a09a425525ffe"
+  },
+  {
+    "path": "tools/crank/README.md",
+    "bytes": 6770,
+    "sha256": "f6ad725829aa8013adaef8c701d24842112a76d781daf5da9bf047f7fd301342"
+  },
+  {
+    "path": "tools/crank/crank-config.json",
+    "bytes": 19,
+    "sha256": "3875b81e90b636147cc5bce5f247b71ad25877c165f4773c98d5c2ad61db515e"
+  },
+  {
+    "path": "tools/crank/crank_input.py",
+    "bytes": 6461,
+    "sha256": "c5287205ba3fdf8e75ae8bcca548fb5aa031f77be043dae2f4d958de123370a1"
+  },
+  {
+    "path": "tools/crank/crank_settings.py",
+    "bytes": 735,
+    "sha256": "d0d5b9d790d4229530a5b44a8fc0c638fc4698b236e94cab12ff8d0c3d7a4193"
+  },
+  {
+    "path": "tools/crank/test_crank_input.py",
+    "bytes": 7132,
+    "sha256": "0039315ae6ecf26c9e143a1251a57c9bf8c3c38a9ab081455fbcaf22ca1ded97"
+  },
+  {
+    "path": "tools/crank/test_scheduler.py",
+    "bytes": 9820,
+    "sha256": "7c4d30eb92b24d4e2edba4e346bfa6ac584f4cf5002e563e6a2178268d38b6a7"
+  },
+  {
+    "path": "tools/sound/LICENSE",
+    "bytes": 1084,
+    "sha256": "71cac7ec76100ec75a6029cab45d016fe64360daad8e254a1365000fa050a3fe"
+  },
+  {
+    "path": "tools/sound/README.md",
+    "bytes": 4857,
+    "sha256": "6c0b4b69d3d764e5f66ca466817ef8a2ccd0d5f48ac2b84822c6984edd7c82a8"
+  },
+  {
+    "path": "tools/sound/assets/sample_boot.pcm",
+    "bytes": 28800,
+    "sha256": "3d49cc0250908aac71ba6491e1045714405e3bbffd94b870ccff7cf00ceede26"
+  },
+  {
+    "path": "tools/sound/assets/sample_boot.pda",
+    "bytes": 28816,
+    "sha256": "0a22936232d87230b240c7576cc5280f3879f7e9e434568a6a0bb508bdf98439"
+  },
+  {
+    "path": "tools/sound/assets/sample_coin.pcm",
+    "bytes": 12800,
+    "sha256": "9c6bda56c3fa42cc361eb831042ff51170d7846f44d60f80fc91a2f79b59eb92"
+  },
+  {
+    "path": "tools/sound/assets/sample_coin.pda",
+    "bytes": 12816,
+    "sha256": "a50018e9606653cce5a69eb3b66494b665fd2ed48be25a933d2209a226eea877"
+  },
+  {
+    "path": "tools/sound/assets/sample_swoop.pcm",
+    "bytes": 32000,
+    "sha256": "8776bc6219fd139fc3593a92100bee1148674d7df82951ba92ad6d056e69a058"
+  },
+  {
+    "path": "tools/sound/assets/sample_swoop.pda",
+    "bytes": 32016,
+    "sha256": "5825a472d8d76774ebe51366b3c1d35fe6414e20bdea631002e79fa12bacc758"
+  },
+  {
+    "path": "tools/sound/assets/samples.json",
+    "bytes": 2066,
+    "sha256": "cdeecd6b4fbfc2f30fbab51ab34edb4bfc564b7f27a0661ffbe91d36aa1e48ab"
+  },
+  {
+    "path": "tools/sound/build_samples.py",
+    "bytes": 2217,
+    "sha256": "045581c7b809475bf3ca1286d6ecf34471c9c7ec2341e962283e321d46005372"
+  },
+  {
+    "path": "tools/sound/pda.py",
+    "bytes": 3603,
+    "sha256": "2a7f39e384a7feac27dfb47a8be7f520b60bdeabf7a4a4e273af73ad35ae61cf"
+  },
+  {
+    "path": "tools/sound/real_runtime.py",
+    "bytes": 2484,
+    "sha256": "dcfcf997e1f2e5d6c6375c843fc726b39f8ec5cd89974482907c8d96cdc04a77"
+  },
+  {
+    "path": "tools/sound/sound_explorer.py",
+    "bytes": 6455,
+    "sha256": "ea689bf65503b777fe1b10879d26aa1b8151e228fcf5b5dd275c9f1d19e68f0f"
+  },
+  {
+    "path": "tools/sound/test_sound.py",
+    "bytes": 7767,
+    "sha256": "a8c70f138e83d232fbc8c49320a1468bc9e27dac4922534b036fec83a6eca96a"
+  },
+  {
+    "path": "verify.py",
+    "bytes": 1257,
+    "sha256": "a337ef78f350022ae3066f5ff82137db13617997c36afc861ed4f48a8639cf71"
+  }
+]

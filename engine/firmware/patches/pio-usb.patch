@@ -1,0 +1,648 @@
+diff --git a/src/pio_usb.c b/src/pio_usb.c
+--- a/src/pio_usb.c
++++ b/src/pio_usb.c
+@@ -183,8 +183,8 @@
+   return pp->usb_rx_buffer[1];
+ }
+ 
+-int __no_inline_not_in_flash_func(pio_usb_bus_receive_packet_and_handshake)(
+-    pio_port_t *pp, uint8_t handshake) {
++int __no_inline_not_in_flash_func(pio_usb_bus_receive_packet_and_handshake_limit)(
++    pio_port_t *pp, uint8_t handshake, uint16_t max_payload) {
+   uint16_t crc = 0xffff;
+   uint16_t crc_prev = 0xffff;
+   uint16_t crc_prev2 = 0xffff;
+@@ -192,6 +192,9 @@
+   bool crc_match = false;
+   const uint16_t rx_buf_len = sizeof(pp->usb_rx_buffer) / sizeof(pp->usb_rx_buffer[0]);
+   int16_t idx = 0;
++  if (max_payload > rx_buf_len - 4) {
++    return -1;
++  }
+ 
+   // Per USB Specs 7.1.18 for turnaround: We must wait at least 2 bit times for inter-packet delay.
+   // This is essential for working with LS device specially when we overlocked the mcu.
+@@ -219,9 +222,10 @@
+   while (1) {
+     if (pio_sm_get_rx_fifo_level(pio_usb_rx, sm_rx)) {
+       uint8_t data = pio_sm_get(pio_usb_rx, sm_rx) >> 24;
+-      if (idx < rx_buf_len) {
+-        usb_rx_buffer[idx] = data;
++      if (idx >= max_payload + 4) {
++        return -1; // Oversize packet: never ACK or expose truncated bytes.
+       }
++      usb_rx_buffer[idx] = data;
+       start = get_time_us_32(); // reset timeout when a byte is received
+ 
+       if (idx >= 2) {
+@@ -239,10 +243,15 @@
+         busy_wait_at_least_cycles(turnaround_in_cycle); // wait for turnaround for LS only
+       }
+ 
+-      if (handshake == USB_PID_ACK) {
+-        // Only ACK if crc matches
+-        if (idx >= 4 && crc_match) {
+-          pio_usb_bus_usb_transfer(pp, ack_encoded, 5);
++      if (handshake == USB_PID_ACK || handshake == 0) {
++        // A valid data packet must include SYNC/PID/CRC and no bit-stuff error.
++        // ISO transfers never ACK, even when the packet is valid.
++        if (idx >= 4 && crc_match && usb_rx_buffer[0] == USB_SYNC &&
++            (usb_rx_buffer[1] == USB_PID_DATA0 || usb_rx_buffer[1] == USB_PID_DATA1) &&
++            !(pio_usb_rx->irq & (1u << IRQ_RX_BS_ERR))) {
++          if (handshake == USB_PID_ACK) {
++            pio_usb_bus_usb_transfer(pp, ack_encoded, 5);
++          }
+           return idx - 4;
+         }
+       } else if (handshake == USB_PID_NAK) {
+@@ -257,6 +266,11 @@
+   }
+ 
+   return -1;
++}
++
++int __no_inline_not_in_flash_func(pio_usb_bus_receive_packet_and_handshake)(
++    pio_port_t *pp, uint8_t handshake) {
++  return pio_usb_bus_receive_packet_and_handshake_limit(pp, handshake, PIO_USB_EP_SIZE);
+ }
+ 
+ static __always_inline void add_pio_host_rx_program(PIO pio,
+@@ -451,6 +465,10 @@
+   ep->ep_num = d->epaddr;
+   ep->attr = d->attr;
+   ep->interval = d->interval;
++  if ((d->attr & 0x03) == EP_ATTR_ISOCHRONOUS &&
++      d->interval >= 1 && d->interval <= 16) {
++    ep->interval = 1u << (d->interval - 1);
++  }
+   ep->interval_counter = 0;
+   ep->data_id = 0;
+ }
+@@ -568,11 +586,18 @@
+ 
+ bool __no_inline_not_in_flash_func(pio_usb_ll_transfer_continue)(
+     endpoint_t *ep, uint16_t xferred_bytes) {
+-  ep->app_buf += xferred_bytes;
++  if (xferred_bytes) {
++    ep->app_buf += xferred_bytes;
++  }
+   ep->actual_len += xferred_bytes;
+-  ep->data_id ^= 1;
+-
+-  if ((xferred_bytes < ep->size) || (ep->actual_len >= ep->total_len)) {
++  bool const is_iso = (ep->attr & 0x03) == EP_ATTR_ISOCHRONOUS;
++  if (!is_iso) {
++    ep->data_id ^= 1;
++  }
++
++  // Expose each ISO packet separately, including zero-length and full-size
++  // packets. Concatenating packets loses UVC payload header boundaries.
++  if (is_iso || (xferred_bytes < ep->size) || (ep->actual_len >= ep->total_len)) {
+     // complete if all bytes transferred or short packet
+     pio_usb_ll_transfer_complete(ep, PIO_USB_INTS_ENDPOINT_COMPLETE_BITS);
+     return false;
+diff --git a/src/pio_usb_host.c b/src/pio_usb_host.c
+--- a/src/pio_usb_host.c
++++ b/src/pio_usb_host.c
+@@ -219,6 +219,8 @@
+   }
+ }
+ 
++static void iso_detach(endpoint_t *ep, bool disconnected);
++
+ static bool __no_inline_not_in_flash_func(connection_check)(root_port_t *port) {
+   if (pio_usb_bus_get_line_state(port) == PORT_PIN_SE0) {
+     busy_wait_1_us();
+@@ -234,6 +236,9 @@
+       uint8_t root_idx = port - PIO_USB_ROOT_PORT(0);
+       for (int ep_idx = 0; ep_idx < PIO_USB_EP_POOL_CNT; ep_idx++) {
+         endpoint_t *ep = PIO_USB_ENDPOINT(ep_idx);
++        if ((ep->root_idx == root_idx) && ep->iso_ring) {
++          iso_detach(ep, true);
++        }
+         if ((ep->root_idx == root_idx) && ep->size && ep->has_transfer) {
+           pio_usb_ll_transfer_complete(ep, PIO_USB_INTS_ENDPOINT_ERROR_BITS);
+         }
+@@ -253,7 +258,140 @@
+ static int usb_in_transaction(pio_port_t *pp, endpoint_t *ep);
+ static int usb_out_transaction(pio_port_t *pp, endpoint_t *ep);
+ 
++// These helpers run only on the host-owner core, never the VM core.
++static __always_inline void iso_stats_begin(pio_usb_iso_ring_t *ring) {
++  ring->stats_seq++;
++  __dmb();
++}
++
++static __always_inline void iso_stats_end(pio_usb_iso_ring_t *ring) {
++  __dmb();
++  ring->stats_seq++;
++}
++
++static void __no_inline_not_in_flash_func(iso_detach)(endpoint_t *ep, bool disconnected) {
++  pio_usb_iso_ring_t *ring = ep->iso_ring;
++  if (!ring) {
++    return;
++  }
++  iso_stats_begin(ring);
++  ring->stats.disconnected |= disconnected;
++  iso_stats_end(ring);
++  ep->iso_ring = NULL;
++  __dmb();
++  // Final access to ring. Core0 may free it as soon as this store is visible.
++  ring->active = false;
++}
++
++static void __no_inline_not_in_flash_func(iso_ring_write)(pio_usb_iso_ring_t *ring,
++                                                         const uint8_t *data, uint16_t len) {
++  uint32_t const written = ring->write_pos;
++  uint32_t const read = ring->read_pos;
++  __dmb();
++  uint32_t const used = written - read;
++  if (used > ring->capacity || len > ring->capacity - used) {
++    ring->stats.overrun_packets++;
++    ring->stats.overrun_bytes += len;
++    return;
++  }
++  uint32_t const offset = written & (ring->capacity - 1);
++  uint32_t first = ring->capacity - offset;
++  if (first > len) {
++    first = len;
++  }
++  if (first) {
++    memcpy(ring->buffer + offset, data, first);
++  }
++  if (len > first) {
++    memcpy(ring->buffer, data + first, len - first);
++  }
++  if (used + len > ring->stats.high_water_bytes) {
++    ring->stats.high_water_bytes = used + len;
++  }
++  __dmb(); // Publish only after the entire packet is stored.
++  ring->write_pos = written + len;
++}
++
++static int __no_inline_not_in_flash_func(usb_iso_ring_transaction)(pio_port_t *pp,
++                                      endpoint_t *ep, pio_usb_iso_ring_t *ring) {
++  uint32_t const started = get_time_us_32();
++  pio_usb_bus_prepare_receive(pp);
++  pio_usb_bus_send_token(pp, USB_PID_IN, ep->dev_addr, ep->ep_num);
++  pio_usb_bus_start_receive(pp);
++  int const len = pio_usb_bus_receive_packet_and_handshake_limit(pp, 0, ep->size);
++  iso_stats_begin(ring);
++  if (ring->stats.polls) {
++    uint32_t const gap = started - ring->last_poll_us;
++    if (gap > ring->stats.max_poll_gap_us) {
++      ring->stats.max_poll_gap_us = gap;
++    }
++  }
++  ring->last_poll_us = started;
++  ring->stats.polls++;
++  int result = 0;
++  if (len >= 0 && len <= ep->size && pp->usb_rx_buffer[1] == USB_PID_DATA0) {
++    ring->stats.packets++;
++    ring->stats.bytes += len;
++    ring->stats.zero_packets += len == 0;
++    iso_ring_write(ring, pp->usb_rx_buffer + 2, len);
++  } else {
++    ring->stats.error_packets++;
++    result = -1;
++  }
++  pio_sm_set_enabled(pp->pio_usb_rx, pp->sm_rx, false);
++  pp->usb_rx_buffer[0] = 0;
++  pp->usb_rx_buffer[1] = 0;
++  uint32_t const elapsed = get_time_us_32() - started;
++  ring->stats.total_transaction_us += elapsed;
++  if (elapsed > ring->stats.max_transaction_us) {
++    ring->stats.max_transaction_us = elapsed;
++  }
++  iso_stats_end(ring);
++  // No TinyUSB event or app_buf completion: the next SOF remains armed.
++  return result;
++}
++
++// Called before root readiness tests, so stop is acknowledged even during
++// suspension/disconnect and before timer shutdown returns from host_frame.
++static void __no_inline_not_in_flash_func(iso_ring_frame_begin)(void) {
++  for (int i = 0; i < PIO_USB_EP_POOL_CNT; i++) {
++    endpoint_t *ep = PIO_USB_ENDPOINT(i);
++    pio_usb_iso_ring_t *ring = ep->iso_ring;
++    __dmb();
++    if (!ring) {
++      continue;
++    }
++    root_port_t *root = PIO_USB_ROOT_PORT(ep->root_idx);
++    if (ring->stop_requested || !ep->size || !root->connected) {
++      iso_detach(ep, !root->connected);
++      continue;
++    }
++    iso_stats_begin(ring);
++    ring->stats.active_frames++;
++    if (!timer_active || !root->initialized || root->suspended || ep->transfer_aborted) {
++      ring->stats.unarmed_frames++;
++    }
++    iso_stats_end(ring);
++  }
++}
++
++static void __no_inline_not_in_flash_func(iso_ring_frame_end)(uint32_t elapsed) {
++  for (int i = 0; i < PIO_USB_EP_POOL_CNT; i++) {
++    pio_usb_iso_ring_t *ring = PIO_USB_ENDPOINT(i)->iso_ring;
++    if (ring) {
++      iso_stats_begin(ring);
++      if (elapsed > ring->stats.max_frame_us) {
++        ring->stats.max_frame_us = elapsed;
++      }
++      ring->stats.frame_overruns += elapsed > 1000;
++      iso_stats_end(ring);
++    }
++  }
++}
++
+ void __not_in_flash_func(pio_usb_host_frame)(void) {
++  uint32_t const frame_started = get_time_us_32();
++  iso_ring_frame_begin();
+   if (!timer_active) {
+     return;
+   }
+@@ -290,14 +428,15 @@
+          ep_pool_idx++) {
+       endpoint_t *ep = PIO_USB_ENDPOINT(ep_pool_idx);
+       if ((ep->root_idx == root_idx) && ep->size) {
+-        bool const is_periodic = ((ep->attr & 0x03) == EP_ATTR_INTERRUPT);
++        bool const is_periodic = ((ep->attr & 0x03) == EP_ATTR_INTERRUPT) ||
++                                 ((ep->attr & 0x03) == EP_ATTR_ISOCHRONOUS);
+ 
+         if (is_periodic && (ep->interval_counter > 0)) {
+           ep->interval_counter--;
+           continue;
+         }
+ 
+-        if (ep->has_transfer && !ep->transfer_aborted) {
++        if ((ep->iso_ring || ep->has_transfer) && !ep->transfer_aborted) {
+           ep->transfer_started = true;
+ 
+           if (ep->need_pre) {
+@@ -308,13 +447,19 @@
+             usb_setup_transaction(pp, ep);
+           } else {
+             if (ep->ep_num & EP_IN) {
+-              usb_in_transaction(pp, ep);
++              pio_usb_iso_ring_t *ring = ep->iso_ring;
++              if (ring) {
++                usb_iso_ring_transaction(pp, ep, ring);
++              } else {
++                usb_in_transaction(pp, ep);
++              }
+             } else {
+               usb_out_transaction(pp, ep);
+             }
+ 
+             if (is_periodic) {
+-              ep->interval_counter = ep->interval - 1;
++              uint16_t const interval = ep->iso_ring ? ep->iso_ring->interval_frames : ep->interval;
++              ep->interval_counter = interval ? interval - 1 : 0;
+             }
+           }
+ 
+@@ -350,6 +495,7 @@
+     }
+   }
+ 
++  iso_ring_frame_end(get_time_us_32() - frame_started);
+   sof_count++;
+ 
+   // SOF counter is 11-bit
+@@ -408,6 +554,11 @@
+     endpoint_t *ep = PIO_USB_ENDPOINT(ep_pool_idx);
+     if ((ep->root_idx == root_idx) && (ep->dev_addr == device_address) &&
+         ep->size) {
++      if (ep->iso_ring && !pio_usb_host_iso_stop(ep->iso_ring, 10000)) {
++        // Never retire an endpoint that core1 may still be using. The VM's
++        // capture owner must retain storage and retry its stop request.
++        continue;
++      }
+       ep->size = 0;
+       ep->has_transfer = false;
+     }
+@@ -430,11 +581,141 @@
+   return NULL;
+ }
+ 
++bool pio_usb_host_iso_start(uint8_t root_idx, uint8_t device_address,
++                           uint8_t ep_address, pio_usb_iso_ring_t *ring,
++                           uint8_t *storage, uint32_t capacity,
++                           uint16_t interval_override_frames) {
++  if (!ring || !storage || ring->active || capacity < 4096 || capacity > 65536 ||
++      (capacity & (capacity - 1)) || root_idx >= PIO_USB_ROOT_PORT_CNT ||
++      interval_override_frames > 32768) {
++    return false;
++  }
++  endpoint_t *ep = _find_ep(root_idx, device_address, ep_address);
++  root_port_t *root = PIO_USB_ROOT_PORT(root_idx);
++  if (!ep || ep->has_transfer || ep->iso_ring || ep->transfer_started ||
++      !(ep->ep_num & EP_IN) || (ep->attr & 3) != EP_ATTR_ISOCHRONOUS ||
++      ep->need_pre || !root->is_fullspeed || !root->connected || root->suspended) {
++    return false;
++  }
++  memset(ring, 0, sizeof(*ring));
++  ring->buffer = storage;
++  ring->capacity = capacity;
++  ring->interval_frames = interval_override_frames ? interval_override_frames : ep->interval;
++  if (!ring->interval_frames) {
++    ring->interval_frames = 1;
++  }
++  ring->active = true;
++  ep->interval_counter = 0;
++  ep->transfer_aborted = false;
++  __dmb();
++  ep->iso_ring = ring; // Publish fully initialized SRAM state to core1.
++  return true;
++}
++
++uint32_t pio_usb_host_iso_read(pio_usb_iso_ring_t *ring, uint8_t *dest, uint32_t len) {
++  if (!ring || !dest || !len) {
++    return 0;
++  }
++  uint32_t const read = ring->read_pos;
++  uint32_t const written = ring->write_pos;
++  __dmb();
++  uint32_t available = written - read;
++  if (available > ring->capacity) {
++    return 0; // Inconsistent/corrupt state must not read beyond storage.
++  }
++  if (len > available) {
++    len = available;
++  }
++  uint32_t const offset = read & (ring->capacity - 1);
++  uint32_t first = ring->capacity - offset;
++  if (first > len) {
++    first = len;
++  }
++  if (first) {
++    memcpy(dest, ring->buffer + offset, first);
++  }
++  if (len > first) {
++    memcpy(dest + first, ring->buffer, len - first);
++  }
++  __dmb(); // Producer cannot reuse these bytes until copying has finished.
++  ring->read_pos = read + len;
++  return len;
++}
++
++bool pio_usb_host_iso_stop(pio_usb_iso_ring_t *ring, uint32_t timeout_us) {
++  if (!ring) {
++    return true;
++  }
++  ring->stop_requested = true;
++  __dmb();
++  uint32_t const started = get_time_us_32();
++  while (ring->active) {
++    if (get_time_us_32() - started >= timeout_us) {
++      return false;
++    }
++    tight_loop_contents();
++  }
++  __dmb();
++  return true;
++}
++
++bool pio_usb_host_iso_stats(pio_usb_iso_ring_t *ring, pio_usb_iso_stats_t *out) {
++  if (!ring || !out) {
++    return false;
++  }
++  // A USB transaction may take hundreds of microseconds. Bound by elapsed
++  // time, not a tiny spin count which can expire during a healthy producer.
++  uint32_t const started = get_time_us_32();
++  while (get_time_us_32() - started < 2000) {
++    uint32_t const before = ring->stats_seq;
++    __dmb();
++    if (before & 1) {
++      continue;
++    }
++    *out = ring->stats;
++    __dmb();
++    if (before != ring->stats_seq) {
++      continue;
++    }
++    uint32_t const written = ring->write_pos;
++    uint32_t const read = ring->read_pos;
++    __dmb();
++    out->available_bytes = written - read;
++    if (out->available_bytes > ring->capacity) {
++      out->available_bytes = 0;
++    }
++    out->active = ring->active;
++    return true;
++  }
++  return false;
++}
++
+ bool pio_usb_host_endpoint_open(uint8_t root_idx, uint8_t device_address,
+                                 uint8_t const *desc_endpoint, bool need_pre) {
+   const endpoint_descriptor_t *d = (const endpoint_descriptor_t *)desc_endpoint;
+-  if (NULL != _find_ep(root_idx, device_address, d->epaddr)) {
+-    return true; // already opened
++  uint16_t const size = d->max_size[0] | (d->max_size[1] << 8);
++  bool const is_iso = (d->attr & 0x03) == EP_ATTR_ISOCHRONOUS;
++  // This controller supports full-speed ISO IN only. Its TX encoder and
++  // ordinary full/low-speed endpoint buffers remain limited to 64 bytes.
++  if (!size || (is_iso ? (size > 1023 || !(d->epaddr & EP_IN) || need_pre ||
++                         !PIO_USB_ROOT_PORT(root_idx)->is_fullspeed ||
++                         d->interval < 1 || d->interval > 16)
++                      : size > PIO_USB_EP_SIZE)) {
++    return false;
++  }
++  endpoint_t *existing = _find_ep(root_idx, device_address, d->epaddr);
++  if (existing) {
++    // Re-opening after SET_INTERFACE may change max packet size. Do not
++    // silently keep the descriptor from a different alternate setting.
++    if (existing->has_transfer || existing->iso_ring) {
++      return false;
++    }
++    uint16_t const interval = is_iso ? (1u << (d->interval - 1)) : d->interval;
++    if (existing->size != size || existing->attr != d->attr ||
++        existing->interval != interval) {
++      pio_usb_ll_configure_endpoint(existing, desc_endpoint);
++    }
++    return true;
+   }
+   for (int ep_pool_idx = 0; ep_pool_idx < PIO_USB_EP_POOL_CNT; ep_pool_idx++) {
+     endpoint_t *ep = PIO_USB_ENDPOINT(ep_pool_idx);
+@@ -459,6 +740,9 @@
+     return false; // endpoint not opened
+   }
+ 
++  if (ep->iso_ring && !pio_usb_host_iso_stop(ep->iso_ring, 10000)) {
++    return false;
++  }
+   ep->size = 0; // mark as closed
+   return true;
+ }
+@@ -487,6 +771,10 @@
+     return false;
+   }
+ 
++  if (ep->iso_ring) {
++    return false; // Continuous capture owns this endpoint until quiesced.
++  }
++
+   // Control endpoint, address may switch between 0x00 <-> 0x80
+   // therefore we need to update ep_num and is_tx
+   if ((ep_address & 0x7f) == 0) {
+@@ -537,22 +825,37 @@
+ static int __no_inline_not_in_flash_func(usb_in_transaction)(pio_port_t *pp,
+                                                              endpoint_t *ep) {
+   int res = 0;
+-  uint8_t expect_pid = (ep->data_id == 1) ? USB_PID_DATA1 : USB_PID_DATA0;
++  bool const is_iso = (ep->attr & 0x03) == EP_ATTR_ISOCHRONOUS;
++  uint8_t expect_pid = (!is_iso && ep->data_id == 1) ? USB_PID_DATA1 : USB_PID_DATA0;
+ 
+   pio_usb_bus_prepare_receive(pp);
+   pio_usb_bus_send_token(pp, USB_PID_IN, ep->dev_addr, ep->ep_num);
+   pio_usb_bus_start_receive(pp);
+ 
+-  int receive_len = pio_usb_bus_receive_packet_and_handshake(pp, USB_PID_ACK);
++  int receive_len = pio_usb_bus_receive_packet_and_handshake_limit(pp, is_iso ? 0 : USB_PID_ACK, ep->size);
+   uint8_t const receive_pid = pp->usb_rx_buffer[1];
+ 
+   if (receive_len >= 0) {
+-    if (receive_pid == expect_pid) {
+-      memcpy(ep->app_buf, &pp->usb_rx_buffer[2], receive_len);
++    if (receive_len > ep->size || receive_len > ep->total_len - ep->actual_len) {
++      // A device must not overflow either the endpoint or application buffer.
++      res = -1;
++      pio_usb_ll_transfer_complete(ep, PIO_USB_INTS_ENDPOINT_ERROR_BITS);
++    } else if (receive_pid == expect_pid) {
++      if (receive_len) {
++        memcpy(ep->app_buf, &pp->usb_rx_buffer[2], receive_len);
++      }
+       pio_usb_ll_transfer_continue(ep, receive_len);
++    } else if (is_iso) {
++      res = -1;
++      pio_usb_ll_transfer_complete(ep, PIO_USB_INTS_ENDPOINT_ERROR_BITS);
+     } else {
+       // DATA0/1 mismatched, 0 for re-try next frame
+     }
++  } else if (is_iso) {
++    // ISO packets have no retry or handshake. Report this frame's failure
++    // immediately so the consumer can discard its partial video frame.
++    res = -1;
++    pio_usb_ll_transfer_complete(ep, PIO_USB_INTS_ENDPOINT_ERROR_BITS);
+   } else if (receive_pid == USB_PID_NAK) {
+     // NAK try again next frame
+   } else if (receive_pid == USB_PID_STALL) {
+diff --git a/src/pio_usb_ll.h b/src/pio_usb_ll.h
+--- a/src/pio_usb_ll.h
++++ b/src/pio_usb_ll.h
+@@ -4,6 +4,8 @@
+  */
+ 
+ #pragma once
++
++#include "pio_usb_iso.h"
+ 
+ #include "hardware/pio.h"
+ #include "hardware/regs/sysinfo.h"
+@@ -86,7 +88,8 @@
+   bool need_pre;
+   bool low_speed;
+ 
+-  uint8_t usb_rx_buffer[128];
++  // Full-speed ISO IN: payload plus SYNC, PID and CRC16.
++  uint8_t usb_rx_buffer[1023 + 4];
+ } pio_port_t;
+ 
+ //--------------------------------------------------------------------+
+@@ -131,7 +134,9 @@
+                       root_port_t *root);
+ 
+ void pio_usb_bus_prepare_receive(const pio_port_t *pp);
++// handshake == 0 receives without a handshake (isochronous IN).
+ int pio_usb_bus_receive_packet_and_handshake(pio_port_t *pp, uint8_t handshake);
++int pio_usb_bus_receive_packet_and_handshake_limit(pio_port_t *pp, uint8_t handshake, uint16_t max_payload);
+ void pio_usb_bus_usb_transfer(pio_port_t *pp, uint8_t *data,
+                               uint16_t len);
+ 
+diff --git a/src/usb_definitions.h b/src/usb_definitions.h
+--- a/src/usb_definitions.h
++++ b/src/usb_definitions.h
+@@ -64,8 +64,8 @@
+   volatile uint16_t size;
+ 
+   volatile uint8_t attr;
+-  volatile uint8_t interval;
+-  volatile uint8_t interval_counter;
++  volatile uint16_t interval;
++  volatile uint16_t interval_counter;
+   volatile uint8_t data_id; // data0 or data1
+ 
+   volatile bool stalled;
+@@ -77,6 +77,7 @@
+   uint8_t encoded_data_len;
+   uint8_t failed_count;
+ 
++  struct pio_usb_iso_ring *volatile iso_ring;
+   uint8_t *app_buf;
+   uint16_t total_len;
+   uint16_t actual_len;
+diff --git a/src/pio_usb_iso.h b/src/pio_usb_iso.h
+new file mode 100644
+--- /dev/null
++++ b/src/pio_usb_iso.h
+@@ -0,0 +1,56 @@
++#pragma once
++
++#include <stdbool.h>
++#include <stdint.h>
++
++// One core1 producer and one core0 consumer. Both this object and storage MUST
++// reside in internal SRAM. The caller retains ownership until stop succeeds.
++// Counters are unsigned 32-bit totals, with normal modulo-2^32 wrap semantics.
++typedef struct {
++  uint32_t polls;
++  uint32_t packets;
++  uint32_t bytes;
++  uint32_t zero_packets;
++  uint32_t error_packets;
++  uint32_t overrun_packets;
++  uint32_t overrun_bytes;
++  uint32_t unarmed_frames;
++  uint32_t active_frames;
++  uint32_t total_transaction_us;
++  uint32_t max_transaction_us;
++  uint32_t max_poll_gap_us;
++  uint32_t high_water_bytes;
++  uint32_t max_frame_us;
++  uint32_t frame_overruns;
++  uint32_t available_bytes;
++  uint32_t active;
++  uint32_t disconnected;
++} pio_usb_iso_stats_t;
++
++typedef struct pio_usb_iso_ring {
++  uint8_t *buffer;
++  uint32_t capacity;
++  volatile uint32_t write_pos;
++  volatile uint32_t read_pos;
++  volatile uint32_t stats_seq;
++  volatile bool active;
++  volatile bool stop_requested;
++  uint16_t interval_frames;
++  uint32_t last_poll_us;
++  pio_usb_iso_stats_t stats;
++} pio_usb_iso_ring_t;
++
++// Endpoint must already be open, idle, full-speed isochronous IN. Zero override
++// uses the descriptor interval. UAC full-speed callers may explicitly select 1.
++bool pio_usb_host_iso_start(uint8_t root_idx, uint8_t device_address,
++                           uint8_t ep_address, pio_usb_iso_ring_t *ring,
++                           uint8_t *storage, uint32_t capacity,
++                           uint16_t interval_override_frames);
++// Returns bytes copied, never blocks. A full ring drops the newest whole USB
++// packet and increments overrun counters; it never manufactures silence.
++uint32_t pio_usb_host_iso_read(pio_usb_iso_ring_t *ring, uint8_t *dest, uint32_t len);
++// Returns true only after core1 has detached and no longer references ring or
++// storage. On timeout, the caller MUST retain both allocations and retry later.
++bool pio_usb_host_iso_stop(pio_usb_iso_ring_t *ring, uint32_t timeout_us);
++// Consistent core1 counter snapshot; available_bytes is a concurrent estimate.
++bool pio_usb_host_iso_stats(pio_usb_iso_ring_t *ring, pio_usb_iso_stats_t *out);

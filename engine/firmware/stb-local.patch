@@ -1,0 +1,153 @@
+--- firmware/stb_sprintf.upstream.h	2026-09-20 02:12:12
++++ backends/circuitpython/crankjam/stb_sprintf.h	2026-09-20 02:15:01
+@@ -142,7 +142,7 @@
+ "...512 char string..." ( 35.0x/32.5x faster!)
+ */
+ 
+-#if defined(__clang__)
++#if 0 /* CrankJam: byte-safe scans below need no ASan exclusions. */
+  #if defined(__has_feature) && defined(__has_attribute)
+   #if __has_feature(address_sanitizer)
+    #if __has_attribute(__no_sanitize__)
+@@ -154,7 +154,7 @@
+    #endif
+   #endif
+  #endif
+-#elif defined(__GNUC__) && (__GNUC__ >= 5 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))
++#elif 0 /* CrankJam: no sanitizer exclusions under GCC either. */
+  #if defined(__SANITIZE_ADDRESS__) && __SANITIZE_ADDRESS__
+   #define STBSP__ASAN __attribute__((__no_sanitize_address__))
+  #endif
+@@ -310,34 +310,7 @@
+ {
+    char const * sn = s;
+ 
+-   // get up to 4-byte alignment
+-   for (;;) {
+-      if (((stbsp__uintptr)sn & 3) == 0)
+-         break;
+-
+-      if (!limit || *sn == 0)
+-         return (stbsp__uint32)(sn - s);
+-
+-      ++sn;
+-      --limit;
+-   }
+-
+-   // scan over 4 bytes at a time to find terminating 0
+-   // this will intentionally scan up to 3 bytes past the end of buffers,
+-   // but becase it works 4B aligned, it will never cross page boundaries
+-   // (hence the STBSP__ASAN markup; the over-read here is intentional
+-   // and harmless)
+-   while (limit >= 4) {
+-      stbsp__uint32 v = *(stbsp__uint32 *)sn;
+-      // bit hack to find if there's a 0 byte in there
+-      if ((v - 0x01010101) & (~v) & 0x80808080UL)
+-         break;
+-
+-      sn += 4;
+-      limit -= 4;
+-   }
+-
+-   // handle the last few characters to find actual size
++   /* CrankJam: never read past the string object, even by an aligned word. */
+    while (limit && *sn) {
+       ++sn;
+       --limit;
+@@ -386,51 +359,14 @@
+             int lg = STB_SPRINTF_MIN - (int)(bf - buf); \
+             if (cl > lg)                                \
+                cl = lg;                                 \
+-         }
+-
+-      // fast copy everything up to the next % (or end of string)
+-      for (;;) {
+-         while (((stbsp__uintptr)f) & 3) {
+-         schk1:
+-            if (f[0] == '%')
+-               goto scandd;
+-         schk2:
+-            if (f[0] == 0)
+-               goto endfmt;
+-            stbsp__chk_cb_buf(1);
+-            *bf++ = f[0];
+-            ++f;
+-         }
+-         for (;;) {
+-            // Check if the next 4 bytes contain %(0x25) or end of string.
+-            // Using the 'hasless' trick:
+-            // https://graphics.stanford.edu/~seander/bithacks.html#HasLessInWord
+-            stbsp__uint32 v, c;
+-            v = *(stbsp__uint32 *)f;
+-            c = (~v) & 0x80808080;
+-            if (((v ^ 0x25252525) - 0x01010101) & c)
+-               goto schk1;
+-            if ((v - 0x01010101) & c)
+-               goto schk2;
+-            if (callback)
+-               if ((STB_SPRINTF_MIN - (int)(bf - buf)) < 4)
+-                  goto schk1;
+-            #ifdef STB_SPRINTF_NOUNALIGNED
+-                if(((stbsp__uintptr)bf) & 3) {
+-                    bf[0] = f[0];
+-                    bf[1] = f[1];
+-                    bf[2] = f[2];
+-                    bf[3] = f[3];
+-                } else
+-            #endif
+-            {
+-                *(stbsp__uint32 *)bf = v;
+-            }
+-            bf += 4;
+-            f += 4;
+          }
++
++      /* CrankJam: bounded-object byte scan, no intentional over-read. */
++      while (*f && *f != '%') {
++         stbsp__chk_cb_buf(1);
++         *bf++ = *f++;
+       }
+-   scandd:
++      if (!*f) goto endfmt;
+ 
+       ++f;
+ 
+@@ -641,7 +577,7 @@
+          h = (f[0] == 'A') ? hexu : hex;
+          fv = va_arg(va, double);
+          if (pr == -1)
+-            pr = 6; // default is 6
++            pr = 13; // CrankJam: preserve all 52 fraction bits for Lua %q.
+          // read the double into a string
+          if (stbsp__real_to_parts((stbsp__int64 *)&n64, &dp, fv))
+             fl |= STBSP__NEGATIVE;
+@@ -650,6 +586,12 @@
+ 
+          stbsp__lead_sign(fl, lead);
+ 
++         /* CrankJam: IEEE specials must not become finite-looking hex. */
++         if (dp == 1024) {
++            s = (char *)(n64 ? (f[0] == 'A' ? "NAN" : "nan") : (f[0] == 'A' ? "INF" : "inf"));
++            l = 3; tail[0] = 0; pr = 0; cs = 0;
++            goto scopy;
++         }
+          if (dp == -1023)
+             dp = (n64) ? -1022 : 0;
+          else
+@@ -1061,14 +1003,14 @@
+             stbsp__int64 i64 = va_arg(va, stbsp__int64);
+             n64 = (stbsp__uint64)i64;
+             if ((f[0] != 'u') && (i64 < 0)) {
+-               n64 = (stbsp__uint64)-i64;
++               n64 = (stbsp__uint64)0 - (stbsp__uint64)i64;
+                fl |= STBSP__NEGATIVE;
+             }
+          } else {
+             stbsp__int32 i = va_arg(va, stbsp__int32);
+             n64 = (stbsp__uint32)i;
+             if ((f[0] != 'u') && (i < 0)) {
+-               n64 = (stbsp__uint32)-i;
++               n64 = (stbsp__uint32)0 - (stbsp__uint32)i;
+                fl |= STBSP__NEGATIVE;
+             }
+          }

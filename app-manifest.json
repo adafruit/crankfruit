@@ -1,0 +1,212 @@
+[
+  {
+    "path": "_crankfruit_blit.mpy",
+    "bytes": 474,
+    "sha256": "d05cc81cf38a3ca162081fbfae7017d65e97f4a7ae0b10b090c2e40a9abc3e95"
+  },
+  {
+    "path": "_crankfruit_pcm.mpy",
+    "bytes": 722,
+    "sha256": "a362319b53ea0faec8c43fda6a1efdcdfc663d38b4042b079fc63ef0b63b0c37"
+  },
+  {
+    "path": "_crankfruit_sprite.mpy",
+    "bytes": 1835,
+    "sha256": "96befe4744c76fe7990e3ad74b800c2f693c086e7c551d4d22fbd38221df20bd"
+  },
+  {
+    "path": "bootclip.py",
+    "bytes": 2418,
+    "sha256": "1988a5b0b2e58bde6c28bbb32a7ab7bfa6087749a39823f7e1acb71b13f70296"
+  },
+  {
+    "path": "bootclip/boot.frames",
+    "bytes": 773760,
+    "sha256": "6161b45a8ac37e5ccb75bb1673b95e3840be55aad3934008e2226a7a66dbae27"
+  },
+  {
+    "path": "bootclip/boot.index",
+    "bytes": 75,
+    "sha256": "7c29c68081572f8f8f83f64babdc78f3a4ba216c1b495ac9065c55e35115e152"
+  },
+  {
+    "path": "bootclip/boot.pcm",
+    "bytes": 160000,
+    "sha256": "3b6eaea7d2f1000a6f46ec69113877c5fa2d9848ab96c30063cddd19a7cb6454"
+  },
+  {
+    "path": "canvas.py",
+    "bytes": 3582,
+    "sha256": "71653749fc1bc8c46077587527b5808130a8b4e4b0037dbc18d2145cac912966"
+  },
+  {
+    "path": "cartridges.py",
+    "bytes": 11285,
+    "sha256": "a4de77631cf3b6df774d8fd38b30fe57bc58fd33380c1d01cf1123f1228813ca"
+  },
+  {
+    "path": "code.py",
+    "bytes": 160,
+    "sha256": "82d93cbe419bfa48c1d46de04d062c5205d9bd6c289b1563112d4b82f41d6c9f"
+  },
+  {
+    "path": "crank_input.py",
+    "bytes": 6461,
+    "sha256": "c5287205ba3fdf8e75ae8bcca548fb5aa031f77be043dae2f4d958de123370a1"
+  },
+  {
+    "path": "crankfruit.py",
+    "bytes": 6563,
+    "sha256": "64a456df7b7683613f48210dd812833000bd4153f02dedcf6b40547e96468d4e"
+  },
+  {
+    "path": "direct_hardware.py",
+    "bytes": 1501,
+    "sha256": "e8032d984471004907a53cf2f7d63908b669c9e7d489f7f383831f0bc24e1d13"
+  },
+  {
+    "path": "games/almost-tennis/LICENSE",
+    "bytes": 1065,
+    "sha256": "5d22695c10d21f2dd53f11e45c96bc8a24b0e88c2f2841e5cdcbc5d5bd91ef47"
+  },
+  {
+    "path": "games/almost-tennis/main.lua",
+    "bytes": 7908,
+    "sha256": "11d66d2c4162c4b2b205a787452eb0e3d569d31a1982f675283ab3a4b0a1d58c"
+  },
+  {
+    "path": "games/almost-tennis/manifest.json",
+    "bytes": 270,
+    "sha256": "0a85f5463ac70c9c776c4ab4193702f79ec5300896a569c0017c1ee12b8d522a"
+  },
+  {
+    "path": "games/orbit-breaker/LICENSE",
+    "bytes": 1080,
+    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+  },
+  {
+    "path": "games/orbit-breaker/README.md",
+    "bytes": 2607,
+    "sha256": "aabe5e016fd7c08ddb676dd61b10ca7f57ae594d40374c8b348605c9564bf894"
+  },
+  {
+    "path": "games/orbit-breaker/main.lua",
+    "bytes": 6168,
+    "sha256": "208aee68235e068863884df3e4e285fc6826fe0f0c2732f8cb110f001703a2cf"
+  },
+  {
+    "path": "games/orbit-breaker/manifest.json",
+    "bytes": 356,
+    "sha256": "c6bc12a10105c01ddd9cc26262657c05cd0da97ea8637051f0a811f0b41172ce"
+  },
+  {
+    "path": "hardware.py",
+    "bytes": 6593,
+    "sha256": "e15e618cc7252f25b128c6b50f263f3261d666e8ca4aa101dda580f78091161c"
+  },
+  {
+    "path": "library.py",
+    "bytes": 3958,
+    "sha256": "7d390c0c4e26be2d657545983aea63d0ba862ca2b4785f7e9dd145ed4fafea49"
+  },
+  {
+    "path": "player.py",
+    "bytes": 9843,
+    "sha256": "51882ce1f7cf2c8faa6ea287f8110b500c6a08f593852b01c72b4ae8213a66b3"
+  },
+  {
+    "path": "player/assets/error.bin",
+    "bytes": 12000,
+    "sha256": "b98b15f0fba3f26f6c916136d26f495b81f59d90f1c3d8f533cb03839fada7f4"
+  },
+  {
+    "path": "player/assets/error.pdi",
+    "bytes": 1419,
+    "sha256": "32f0c7c02fa2a16e9de88e219dab54e4efdcf977337a2381e9c8d1155827d654"
+  },
+  {
+    "path": "player/assets/explorer.bin",
+    "bytes": 12000,
+    "sha256": "7e59c06374f3e027af54bd841c637d84784526a1065e243fb166a2e5db2739d5"
+  },
+  {
+    "path": "player/assets/explorer.pdi",
+    "bytes": 1321,
+    "sha256": "cc35359c53c271c533b7d848f31f797e90969f2ca08b694e79443bf65d3de914"
+  },
+  {
+    "path": "player/assets/library.bin",
+    "bytes": 12000,
+    "sha256": "fcc47a72c077e2d23f2b9eb1dc3ff1ad87f1de521db449a31125c3673649ed76"
+  },
+  {
+    "path": "player/assets/library.pdi",
+    "bytes": 1294,
+    "sha256": "c839b9719cddbcf50e3b0d70efdbdd04ed65cca41e3adc1ea5549dcfe442b96d"
+  },
+  {
+    "path": "player/assets/manifest.json",
+    "bytes": 6425,
+    "sha256": "0e591df4216150db8f551e1d0227a7037db0eb5f57e99b4c554d1759d8e58e55"
+  },
+  {
+    "path": "player/assets/sample_boot.pcm",
+    "bytes": 28800,
+    "sha256": "3d49cc0250908aac71ba6491e1045714405e3bbffd94b870ccff7cf00ceede26"
+  },
+  {
+    "path": "player/assets/sample_boot.pda",
+    "bytes": 28816,
+    "sha256": "0a22936232d87230b240c7576cc5280f3879f7e9e434568a6a0bb508bdf98439"
+  },
+  {
+    "path": "player/assets/sample_coin.pcm",
+    "bytes": 12800,
+    "sha256": "9c6bda56c3fa42cc361eb831042ff51170d7846f44d60f80fc91a2f79b59eb92"
+  },
+  {
+    "path": "player/assets/sample_coin.pda",
+    "bytes": 12816,
+    "sha256": "a50018e9606653cce5a69eb3b66494b665fd2ed48be25a933d2209a226eea877"
+  },
+  {
+    "path": "player/assets/sample_swoop.pcm",
+    "bytes": 32000,
+    "sha256": "8776bc6219fd139fc3593a92100bee1148674d7df82951ba92ad6d056e69a058"
+  },
+  {
+    "path": "player/assets/sample_swoop.pda",
+    "bytes": 32016,
+    "sha256": "5825a472d8d76774ebe51366b3c1d35fe6414e20bdea631002e79fa12bacc758"
+  },
+  {
+    "path": "player/assets/samples.json",
+    "bytes": 2066,
+    "sha256": "cdeecd6b4fbfc2f30fbab51ab34edb4bfc564b7f27a0661ffbe91d36aa1e48ab"
+  },
+  {
+    "path": "player/assets/sprites.bin",
+    "bytes": 15302,
+    "sha256": "048f9e3e107b12ccc03a6a5abe1030a2fa2f3881ae05778f1b8d808e6ed8afb3"
+  },
+  {
+    "path": "player/assets/sprites.desc",
+    "bytes": 1656,
+    "sha256": "dc45216ebde150423ef08157cd77883cf8aa0048e99f5035fd02b8107b4d9f13"
+  },
+  {
+    "path": "player/assets/sprites.pdt",
+    "bytes": 2355,
+    "sha256": "9ecee3100542304dede620de73b0832bb95c91247c67de4f2e6dc82765218665"
+  },
+  {
+    "path": "sound_explorer.py",
+    "bytes": 6455,
+    "sha256": "ea689bf65503b777fe1b10879d26aa1b8151e228fcf5b5dd275c9f1d19e68f0f"
+  },
+  {
+    "path": "stream.py",
+    "bytes": 13634,
+    "sha256": "5cdde9da7205be5a2a00fd8c168801e11d6748862d860643b9cb01d1ea84353c"
+  }
+]

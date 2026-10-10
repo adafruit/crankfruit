@@ -1,0 +1,146 @@
+"""Opt-in crank input for CircuitPython. SPDX-License-Identifier: MIT.
+
+No hardware imports, configuration-file reads, buses or pins on the disabled
+path. Call read once per admitted game frame, not once per outer-loop spin.
+"""
+
+
+def load_config(path):
+    """Explicit optional JSON loader; never called automatically at startup."""
+    import json
+    with open(path, 'r') as source:
+        text = source.read(4097)
+    if len(text) > 4096:
+        raise ValueError('crank configuration exceeds 4096 characters')
+    config = json.loads(text)
+    if not isinstance(config, dict):
+        raise ValueError('crank configuration must be an object')
+    return config
+
+
+def _integer(config, name, low, high, default=None):
+    value = config.get(name, default)
+    if type(value) is not int or not low <= value <= high:
+        raise ValueError('invalid crank setting: ' + name)
+    return value
+
+
+def _name(config, key):
+    value = config.get(key)
+    letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+    if (not isinstance(value, str) or not value or value[0] not in letters
+            or any(char not in letters + '0123456789_' for char in value)):
+        raise ValueError('explicit board name required: ' + key)
+    return value
+
+
+class CrankInput:
+    def __init__(self, config=None):
+        self.closed = False
+        self.enabled = False
+        self.kind = 'disabled'
+        self.angle = 0.0
+        self.sensor = None
+        self.bus = None
+        self.seesaw = None
+        self.previous = None
+        self.phase = 0
+        self.last_frame = None
+        self.cached = (0.0, 0.0)
+        if config is None:
+            return
+        if not isinstance(config, dict) or type(config.get('enabled', False)) is not bool:
+            raise ValueError('crank enabled must be a boolean in a configuration object')
+        if not config.get('enabled', False):
+            return
+        self.kind = config.get('kind')
+        self.direction = _integer(config, 'direction', -1, 1, 1)
+        if not self.direction:
+            raise ValueError('crank direction must be -1 or 1')
+        self.zero = _integer(config, 'zero_degrees', 0, 359, 0)
+        if self.kind == 'seesaw':
+            bus_name = _name(config, 'bus_factory')
+            address = _integer(config, 'address', 8, 119)
+            channel = _integer(config, 'encoder', 0, 3, 0)
+            self.counts = _integer(config, 'counts_per_revolution', 1, 1048576)
+            # All config validation precedes hardware imports and initialization.
+            import board
+            from adafruit_seesaw.seesaw import Seesaw
+            from adafruit_seesaw.rotaryio import IncrementalEncoder
+            factory = getattr(board, bus_name)
+            if not callable(factory):
+                raise ValueError('configured board bus factory is not callable')
+            self.bus = factory()  # board factory is shared; never deinit it here
+            self.seesaw = Seesaw(self.bus, addr=address, reset=False)
+            self.sensor = IncrementalEncoder(self.seesaw, encoder=channel)
+        elif self.kind == 'analog':
+            pin_name = _name(config, 'pin')
+            self.minimum = _integer(config, 'adc_min', 0, 65534)
+            self.maximum = _integer(config, 'adc_max', self.minimum + 1, 65535)
+            self.deadband = _integer(config, 'deadband', 0, self.maximum - self.minimum - 1, 128)
+            self.travel = _integer(config, 'travel_degrees', 1, 360)
+            import board
+            import analogio
+            self.sensor = analogio.AnalogIn(getattr(board, pin_name))
+        else:
+            raise ValueError('crank kind must be seesaw or analog')
+        self.enabled = True
+
+    def read(self, frame_id=None):
+        """Read once; same optional frame_id returns the held sample unchanged.
+
+        Delta is consumed by the caller exactly once when its game frame runs.
+        A skipped/backpressured tick must reuse that token/sample. Do not replay
+        the same cached delta into multiple actual frames.
+        """
+        if self.closed:
+            raise RuntimeError('crank input closed')
+        if not self.enabled:
+            return self.cached
+        if frame_id is not None:
+            if type(frame_id) is not int or frame_id < 0:
+                raise ValueError('frame_id must be a nonnegative integer')
+            if frame_id == self.last_frame:
+                return self.cached
+            if self.last_frame is not None and frame_id < self.last_frame:
+                raise ValueError('frame_id must not move backwards')
+        if self.kind == 'seesaw':
+            raw = self.sensor.position
+            if type(raw) is not int or not -(1 << 31) <= raw < (1 << 31):
+                raise ValueError('invalid signed32 seesaw position')
+            steps = 0 if self.previous is None else raw - self.previous
+            if steps > 2147483647:
+                steps -= 4294967296
+            elif steps < -2147483648:
+                steps += 4294967296
+            steps *= self.direction
+            self.phase = (self.phase + steps) % self.counts
+            self.angle = (self.zero + self.phase * 360.0 / self.counts) % 360.0
+            delta = steps * 360.0 / self.counts
+            self.previous = raw
+        else:
+            raw = self.sensor.value
+            if type(raw) is not int or not 0 <= raw <= 65535:
+                raise ValueError('invalid analogio 16-bit value')
+            value = min(self.maximum, max(self.minimum, raw))
+            if self.previous is None:
+                delta = 0.0
+                self.previous = value
+            elif abs(value - self.previous) <= self.deadband:
+                value = self.previous
+                delta = 0.0
+            else:
+                delta = (value - self.previous) * self.travel * self.direction / (self.maximum - self.minimum)
+                self.previous = value
+            # Delta uses physical pot travel, not shortest distance around a ring.
+            self.angle = (self.zero + (value - self.minimum) * self.travel * self.direction / (self.maximum - self.minimum)) % 360.0
+        self.cached = (self.angle, delta)
+        self.last_frame = frame_id
+        return self.cached
+
+    def close(self):
+        if not self.closed:
+            if self.kind == 'analog' and self.sensor is not None:
+                self.sensor.deinit()
+            self.sensor = self.seesaw = self.bus = None
+            self.closed = True

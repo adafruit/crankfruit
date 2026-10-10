@@ -1,0 +1,1058 @@
+{
+  "board": "Adafruit Fruit Jam RP2350B",
+  "firmware_version": "10.3.0-55-geb49ac4141-dirty",
+  "firmware_flashed_in_this_pass": false,
+  "full_flash_hash_readback": false,
+  "controls": "injected button states, not physical presses",
+  "crank_hardware": "disabled; physical input not tested",
+  "app_manifest_sha256": "a78bc9ac625281622a8c8cad4475dc646315d46d7cbd7f5c74a838551a892c71",
+  "initial_library_failure": {
+    "worst_step_ms": 25,
+    "underrun_observations": 1,
+    "fix": "precompute library pages before audio"
+  },
+  "cached_library_smoke": {
+    "completed": true,
+    "failed_checks": 0,
+    "scenes": [
+      {
+        "scene": "splash",
+        "game": {
+          "max_present_ms": 5,
+          "max_lateness_ms": 4,
+          "late_frames": 37,
+          "frames": 78,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 83200,
+          "max_step_ms": 1,
+          "missed_deadlines": 0,
+          "max_tick_ms": 11,
+          "errors": 0,
+          "max_mix_ms": 1,
+          "presentations": 76,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 166400,
+          "partial_writes": 155,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 309,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 9,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 166400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 1878
+        },
+        "heap": [
+          "PRERENDERED_BOOT_ASSET_BYTES",
+          933835
+        ]
+      },
+      {
+        "scene": "library",
+        "game": {
+          "max_present_ms": 5,
+          "max_lateness_ms": 2,
+          "late_frames": 0,
+          "frames": 37,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 39466,
+          "max_step_ms": 4,
+          "missed_deadlines": 0,
+          "max_tick_ms": 22,
+          "errors": 0,
+          "max_mix_ms": 8,
+          "presentations": 35,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 78932,
+          "partial_writes": 73,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 145,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 23,
+          "trace_overflow": 0,
+          "max_pump_ms": 5,
+          "enqueued_bytes": 78932,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 735
+        },
+        "heap": [
+          13988,
+          14498,
+          32768,
+          66368
+        ]
+      },
+      {
+        "scene": "almost-tennis",
+        "game": {
+          "max_present_ms": 5,
+          "max_lateness_ms": 28,
+          "late_frames": 1202,
+          "frames": 483,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 515200,
+          "max_step_ms": 20,
+          "missed_deadlines": 0,
+          "max_tick_ms": 42,
+          "errors": 0,
+          "max_mix_ms": 14,
+          "presentations": 481,
+          "queue_backpressure": 1360
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 1030400,
+          "partial_writes": 965,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 7472,
+          "write_calls": 1920,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 68,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 1030400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 5232
+        },
+        "heap": [
+          39216,
+          39216,
+          65536,
+          115520
+        ]
+      },
+      {
+        "scene": "orbit-breaker",
+        "game": {
+          "max_present_ms": 5,
+          "max_lateness_ms": 4,
+          "late_frames": 14,
+          "frames": 483,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 515200,
+          "max_step_ms": 13,
+          "missed_deadlines": 0,
+          "max_tick_ms": 38,
+          "errors": 0,
+          "max_mix_ms": 10,
+          "presentations": 481,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 1030400,
+          "partial_writes": 965,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 1929,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 25,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 1030400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 8858
+        },
+        "heap": [
+          33359,
+          33542,
+          65536,
+          115520
+        ]
+      },
+      {
+        "scene": "sound-explorer",
+        "game": {
+          "max_present_ms": 5,
+          "max_lateness_ms": 4,
+          "late_frames": 248,
+          "frames": 483,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 515200,
+          "max_step_ms": 11,
+          "missed_deadlines": 0,
+          "max_tick_ms": 31,
+          "errors": 0,
+          "max_mix_ms": 9,
+          "presentations": 481,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 1030400,
+          "partial_writes": 965,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 1929,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 42,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 1030400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 10065
+        },
+        "heap": [
+          16057,
+          16627,
+          32768,
+          66368
+        ]
+      },
+      {
+        "scene": "return",
+        "game": {
+          "max_present_ms": 4,
+          "max_lateness_ms": 30,
+          "late_frames": 18,
+          "frames": 56,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 59733,
+          "max_step_ms": 20,
+          "missed_deadlines": 0,
+          "max_tick_ms": 42,
+          "errors": 0,
+          "max_mix_ms": 10,
+          "presentations": 54,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 119466,
+          "partial_writes": 112,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 209,
+          "stop_pending_samples": 0,
+          "short_final_offers": 4,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 67,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 119466,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 618
+        },
+        "heap": [
+          39144,
+          39144,
+          65536,
+          115520
+        ]
+      }
+    ],
+    "raw_log_sha256": "68024ec2275452e2ed2390b1db96ab7f634074f07c90d738867c2c70893dac05"
+  },
+  "endurance": {
+    "completed": true,
+    "failed_checks": 0,
+    "scenes": [
+      {
+        "scene": "splash",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 1,
+          "late_frames": 0,
+          "frames": 78,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 83200,
+          "max_step_ms": 1,
+          "missed_deadlines": 0,
+          "max_tick_ms": 6,
+          "errors": 0,
+          "max_mix_ms": 1,
+          "presentations": 76,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 166400,
+          "partial_writes": 155,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 309,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 6,
+          "trace_overflow": 0,
+          "max_pump_ms": 5,
+          "enqueued_bytes": 166400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 2110
+        },
+        "heap": [
+          "PRERENDERED_BOOT_ASSET_BYTES",
+          933835
+        ]
+      },
+      {
+        "scene": "library",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 1,
+          "late_frames": 0,
+          "frames": 37,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 39466,
+          "max_step_ms": 4,
+          "missed_deadlines": 0,
+          "max_tick_ms": 20,
+          "errors": 0,
+          "max_mix_ms": 8,
+          "presentations": 35,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 78932,
+          "partial_writes": 73,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 145,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 20,
+          "trace_overflow": 0,
+          "max_pump_ms": 5,
+          "enqueued_bytes": 78932,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 810
+        },
+        "heap": [
+          13988,
+          14498,
+          32768,
+          66368
+        ]
+      },
+      {
+        "scene": "almost-tennis",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 8,
+          "late_frames": 1414,
+          "frames": 5403,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 5763200,
+          "max_step_ms": 18,
+          "missed_deadlines": 0,
+          "max_tick_ms": 39,
+          "errors": 0,
+          "max_mix_ms": 14,
+          "presentations": 5401,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 11526400,
+          "partial_writes": 10805,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 21609,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 62,
+          "trace_overflow": 0,
+          "max_pump_ms": 5,
+          "enqueued_bytes": 11526400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 94255
+        },
+        "heap": [
+          39216,
+          39216,
+          65536,
+          115520
+        ]
+      },
+      {
+        "scene": "orbit-breaker",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 2,
+          "late_frames": 0,
+          "frames": 5403,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 5763200,
+          "max_step_ms": 14,
+          "missed_deadlines": 0,
+          "max_tick_ms": 33,
+          "errors": 0,
+          "max_mix_ms": 10,
+          "presentations": 5401,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 11526400,
+          "partial_writes": 10805,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6404,
+          "write_calls": 21609,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 23,
+          "trace_overflow": 0,
+          "max_pump_ms": 4,
+          "enqueued_bytes": 11526400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 114114
+        },
+        "heap": [
+          33359,
+          33542,
+          65536,
+          115520
+        ]
+      },
+      {
+        "scene": "sound-explorer",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 5,
+          "late_frames": 2964,
+          "frames": 5403,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 5763200,
+          "max_step_ms": 11,
+          "missed_deadlines": 0,
+          "max_tick_ms": 30,
+          "errors": 0,
+          "max_mix_ms": 9,
+          "presentations": 5401,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 11526400,
+          "partial_writes": 10805,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6404,
+          "write_calls": 21609,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 41,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 11526400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 118168
+        },
+        "heap": [
+          16057,
+          16627,
+          32768,
+          66368
+        ]
+      },
+      {
+        "scene": "return",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 7,
+          "late_frames": 7,
+          "frames": 56,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 59733,
+          "max_step_ms": 19,
+          "missed_deadlines": 0,
+          "max_tick_ms": 36,
+          "errors": 0,
+          "max_mix_ms": 10,
+          "presentations": 54,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 119466,
+          "partial_writes": 112,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 7468,
+          "write_calls": 219,
+          "stop_pending_samples": 0,
+          "short_final_offers": 4,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 63,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 119466,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 861
+        },
+        "heap": [
+          39144,
+          39144,
+          65536,
+          115520
+        ]
+      }
+    ],
+    "raw_log_sha256": "05d5f0e4fd93f9ec6e55528675bc5108f7a9eb2cdcc9a9b023d053a9df00729c",
+    "followup_change": "cleanup-only nesting plus hardware docstring; final showcase uses final app bytes"
+  },
+  "recovery": {
+    "completed": true,
+    "failed_checks": 0,
+    "scenes": [
+      {
+        "scene": "library",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 3,
+          "late_frames": 9,
+          "frames": 18,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 19200,
+          "max_step_ms": 4,
+          "missed_deadlines": 0,
+          "max_tick_ms": 15,
+          "errors": 0,
+          "max_mix_ms": 3,
+          "presentations": 16,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 38400,
+          "partial_writes": 35,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 69,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 20,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 38400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 384
+        },
+        "heap": [
+          13988,
+          14498,
+          32768,
+          66368
+        ]
+      },
+      {
+        "scene": "library",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 1,
+          "late_frames": 0,
+          "frames": 18,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 19200,
+          "max_step_ms": 3,
+          "missed_deadlines": 0,
+          "max_tick_ms": 14,
+          "errors": 0,
+          "max_mix_ms": 3,
+          "presentations": 16,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 38400,
+          "partial_writes": 35,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 69,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 18,
+          "trace_overflow": 0,
+          "max_pump_ms": 5,
+          "enqueued_bytes": 38400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 398
+        },
+        "heap": [
+          13988,
+          14498,
+          32768,
+          66368
+        ]
+      },
+      {
+        "scene": "orbit-breaker",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 1,
+          "late_frames": 0,
+          "frames": 63,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 67200,
+          "max_step_ms": 12,
+          "missed_deadlines": 0,
+          "max_tick_ms": 31,
+          "errors": 0,
+          "max_mix_ms": 9,
+          "presentations": 61,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 134400,
+          "partial_writes": 125,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 249,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 23,
+          "trace_overflow": 0,
+          "max_pump_ms": 5,
+          "enqueued_bytes": 134400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 1385
+        },
+        "heap": [
+          33359,
+          33542,
+          65536,
+          115520
+        ]
+      }
+    ],
+    "raw_log_sha256": "899234716d26d21560adfe637ee1d939fef80bb0c84b72e8e6c8e1b46432529e",
+    "expected_fault": "load error and update error during active audio;10 assertions passed",
+    "intentional_abort_dropped_bytes": 3202
+  },
+  "showcase": {
+    "completed": true,
+    "failed_checks": 0,
+    "scenes": [
+      {
+        "scene": "splash",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 4,
+          "late_frames": 12,
+          "frames": 78,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 83200,
+          "max_step_ms": 1,
+          "missed_deadlines": 0,
+          "max_tick_ms": 9,
+          "errors": 0,
+          "max_mix_ms": 1,
+          "presentations": 76,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 166400,
+          "partial_writes": 155,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6402,
+          "write_calls": 309,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 6,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 166400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 2050
+        },
+        "heap": [
+          "PRERENDERED_BOOT_ASSET_BYTES",
+          933835
+        ]
+      },
+      {
+        "scene": "library",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 4,
+          "late_frames": 20,
+          "frames": 123,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 131200,
+          "max_step_ms": 4,
+          "missed_deadlines": 0,
+          "max_tick_ms": 16,
+          "errors": 0,
+          "max_mix_ms": 4,
+          "presentations": 121,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 262400,
+          "partial_writes": 245,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6402,
+          "write_calls": 489,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 20,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 262400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 2692
+        },
+        "heap": [
+          13988,
+          14498,
+          32768,
+          66368
+        ]
+      },
+      {
+        "scene": "almost-tennis",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 11,
+          "late_frames": 10,
+          "frames": 363,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 387200,
+          "max_step_ms": 19,
+          "missed_deadlines": 0,
+          "max_tick_ms": 37,
+          "errors": 0,
+          "max_mix_ms": 14,
+          "presentations": 361,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 774400,
+          "partial_writes": 725,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 7468,
+          "write_calls": 1442,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 63,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 774400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 5937
+        },
+        "heap": [
+          39198,
+          39198,
+          65536,
+          115520
+        ]
+      },
+      {
+        "scene": "orbit-breaker",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 1,
+          "late_frames": 0,
+          "frames": 363,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 387200,
+          "max_step_ms": 13,
+          "missed_deadlines": 0,
+          "max_tick_ms": 32,
+          "errors": 0,
+          "max_mix_ms": 10,
+          "presentations": 361,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 774400,
+          "partial_writes": 725,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 1449,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 22,
+          "trace_overflow": 0,
+          "max_pump_ms": 5,
+          "enqueued_bytes": 774400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 7737
+        },
+        "heap": [
+          33359,
+          33542,
+          65536,
+          115520
+        ]
+      },
+      {
+        "scene": "sound-explorer",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 2,
+          "late_frames": 0,
+          "frames": 543,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 579200,
+          "max_step_ms": 11,
+          "missed_deadlines": 0,
+          "max_tick_ms": 29,
+          "errors": 0,
+          "max_mix_ms": 9,
+          "presentations": 541,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 1158400,
+          "partial_writes": 1085,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6400,
+          "write_calls": 2169,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 41,
+          "trace_overflow": 0,
+          "max_pump_ms": 5,
+          "enqueued_bytes": 1158400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 12534
+        },
+        "heap": [
+          16057,
+          16627,
+          32768,
+          66368
+        ]
+      },
+      {
+        "scene": "library",
+        "game": {
+          "max_present_ms": 3,
+          "max_lateness_ms": 2,
+          "late_frames": 0,
+          "frames": 123,
+          "deadline_failures": 0,
+          "primed_frames": 3,
+          "mixed_samples": 131200,
+          "max_step_ms": 4,
+          "missed_deadlines": 0,
+          "max_tick_ms": 15,
+          "errors": 0,
+          "max_mix_ms": 3,
+          "presentations": 121,
+          "queue_backpressure": 0
+        },
+        "audio": {
+          "errors": 0,
+          "accepted_bytes": 262400,
+          "partial_writes": 245,
+          "deadline_failures": 0,
+          "dropped_bytes": 0,
+          "underrun_observations": 0,
+          "high_water_bytes": 6402,
+          "write_calls": 489,
+          "stop_pending_samples": 0,
+          "short_final_offers": 2,
+          "max_offer_copy_ms": 1,
+          "max_service_gap_ms": 19,
+          "trace_overflow": 0,
+          "max_pump_ms": 6,
+          "enqueued_bytes": 262400,
+          "max_native_write_ms": 3,
+          "max_enqueue_ms": 1,
+          "backpressure": 2741
+        },
+        "heap": [
+          13988,
+          14498,
+          32768,
+          66368
+        ]
+      }
+    ],
+    "raw_log_sha256": "e3f561420df3496dc52b80e22886e03db6d764eaf007011a0ec02ffc2d1f7a67"
+  },
+  "installed_file_readback_count": 42,
+  "native_helpers": {
+    "_crankfruit_blit.mpy": "d05cc81cf38a3ca162081fbfae7017d65e97f4a7ae0b10b090c2e40a9abc3e95",
+    "_crankfruit_pcm.mpy": "a362319b53ea0faec8c43fda6a1efdcdfc663d38b4042b079fc63ef0b63b0c37",
+    "_crankfruit_sprite.mpy": "96befe4744c76fe7990e3ad74b800c2f693c086e7c551d4d22fbd38221df20bd"
+  },
+  "capture": {
+    "source": "physical HDMI capture, not host rendering",
+    "input_video": "USB Capture HDMI+",
+    "input_audio": "USB Capture HDMI+ (digital, not microphone)",
+    "edit": "trim acquisition/teardown; crop centered600x360 game; nearest-neighbor2x; original capture levels preserved",
+    "duration_seconds": 58.6,
+    "bytes": 1164995,
+    "sha256": "7753fdbb6ac21d32a3d50e1b6f980580a6d1571005e180c7486646f6e24930cb",
+    "video": {
+      "codec_name": "h264",
+      "codec_type": "video",
+      "width": 1200,
+      "height": 720
+    },
+    "audio": {
+      "codec_name": "aac",
+      "codec_type": "audio",
+      "sample_rate": "48000",
+      "channels": 2
+    },
+    "nonzero_audio_windows": [
+      {
+        "scene": "boot",
+        "start_seconds": 0,
+        "duration_seconds": 3,
+        "samples": 125568,
+        "peak_pcm16": 8765,
+        "rms_pcm16": 1588.49
+      },
+      {
+        "scene": "tennis",
+        "start_seconds": 10,
+        "duration_seconds": 10,
+        "samples": 419584,
+        "peak_pcm16": 2321,
+        "rms_pcm16": 163.48
+      },
+      {
+        "scene": "orbit-breaker",
+        "start_seconds": 23,
+        "duration_seconds": 10,
+        "samples": 423680,
+        "peak_pcm16": 1126,
+        "rms_pcm16": 134.24
+      },
+      {
+        "scene": "sound-explorer",
+        "start_seconds": 35,
+        "duration_seconds": 18,
+        "samples": 761088,
+        "peak_pcm16": 7656,
+        "rms_pcm16": 753.79
+      }
+    ],
+    "visuals_inspected": [
+      "animated bad apple startup",
+      "library wordmark and mascot",
+      "tennis motion",
+      "orbit breaker motion",
+      "sound controls/waveform/sample selection",
+      "return to library"
+    ],
+    "limitations": [
+      "capture whites appear gray; no contrast correction applied",
+      "capture audio packet timestamps are irregular; not calibrated audio-clock evidence",
+      "nonzero digital audio evidence, not subjective speaker listening test"
+    ]
+  }
+}

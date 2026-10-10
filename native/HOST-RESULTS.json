@@ -1,0 +1,38 @@
+[
+  {
+    "module": "blit",
+    "host_result": "PASS checks=9907985 exhaustive_byte_values=256 patterned_frames=1 invalid_sizes_nulls_overlap=12 guards_and_padding=passed",
+    "host_sanitizers": "address,undefined",
+    "source_sha256": {
+      "blit.c": "4c3ff7e284a4fb5282d5a2b040f25c88fce265d7bb9001bef707cf56f4b4a628",
+      "blit.h": "149a6381ceb6eb6f78c657584ec7b66bd4475e5b3e39ec40096a15d3dc195c0f",
+      "module.c": "e2a976b3b5bde649565f793736605ead50362a34a9a23b2aff7ae8c2eee72d73",
+      "reference.py": "9aa0f8e2ef66db9e8dab3ef7dc295318188b0a939e43ab7538aa1a2e3ab91baf",
+      "test_blit.c": "133fcf6f4bd14ca7c51202c7d6048ff7848a83fad16da381aa78c8c9b998dcae"
+    }
+  },
+  {
+    "module": "sprite",
+    "host_result": "PASS 99735988 checks; 1800 seeded randomized scenes plus edge/error/alias tests",
+    "host_sanitizers": "address,undefined",
+    "source_sha256": {
+      "module.c": "db2d6e24bf7eb129cfa63103b7e248c4bc9a29dcf5064ad8ee279d5e074e34cb",
+      "reference.py": "569583c03e909dd1f7a647e6114cd7dc13d24c2579ee98daa90838078def0550",
+      "sprite.c": "297c0daf94f4fe56c22c3c69d43d73b03023eec4a152b520d95bebb31b5c23b0",
+      "sprite.h": "695559ac6e83d8007cdc75856af2e9baf404f708b3619b3abe41e1ff68e401d8",
+      "test_sprite.c": "8f0e18bacc9d0d950561729a98619e929593848de8f4c468d96f4b0103f95d6d"
+    }
+  },
+  {
+    "module": "pcm",
+    "host_result": "PASS 197839509 checks; 12000 randomized guarded copies, maxima, bounds, aliases, zero-length",
+    "host_sanitizers": "address,undefined",
+    "source_sha256": {
+      "module.c": "d49b9532f35fc9b010650a9a9d959279012372bbea1ba7c07f1ee5c2da40b26f",
+      "pcm.c": "468959265b999f28f6a69d5bcedf86f8abc6acf9a22d554029d822cb5b675f06",
+      "pcm.h": "1b39a24444917a774f6418678893dc2ee2e33cbbbfe05929cc57d0121a611af4",
+      "reference.py": "546bf15b5ba45bf603b9631e3374291cc17e63cc7375ae437072a4f96212f37b",
+      "test_pcm.c": "775c7a6d0d0eedf68f9fc6a40450b8944f74d909a224c316db89c2bdb70b01be"
+    }
+  }
+]

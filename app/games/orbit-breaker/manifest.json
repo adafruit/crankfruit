@@ -1,0 +1,11 @@
+{
+  "title": "Orbit Breaker",
+  "kind": "lua",
+  "profile": "crankfruit-lua-v1",
+  "entry": "main.lua",
+  "author": "Crankfruit contributors",
+  "description": "Original source-Lua space breakout. Clear sixteen satellites with one ship.",
+  "controls": "B1/B2 move; B3 launch/restart; B1+B2 pause; hold B3 exit.",
+  "target_fps": 30,
+  "heap_cap": 65536
+}
