@@ -111,7 +111,9 @@ class Hardware:
                 raw |= 1 << i
         bits = self.debounce.update(raw)
         if self.gamepad is not None:
-            bits |= self.gamepad.poll(self.clock.now())
+            now = self.clock.now()
+            bits |= self.gamepad.poll(now)
+            self.gamepad.record_poll(self.clock.now() - now)
         return bits
 
     def present(self, runtime):

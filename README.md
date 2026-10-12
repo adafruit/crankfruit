@@ -23,6 +23,14 @@ the first commit is the original review kit, unmodified (all files match its
   `/gamepad.json` (on in the template), rotating the right stick drives the
   playdate crank for lua games; orbit breaker's paddle follows it. speed is set by
   `crank_scale` (template: 70%).
+- **STEMMA QT rotary encoder crank:** the kit's seesaw crank backend, tested with
+  adafruit's I2C rotary encoder breakout (product 4991). new optional
+  `read_delay_ms` makes each read ~1ms instead of ~9ms; working `/crank.json` and
+  measurements are in `tools/crank/README.md`. needs `adafruit_seesaw` (10.x
+  bundle) in `/lib`. a hardware crank takes priority over the stick crank.
+- **4-frame audio prefill:** the player pre-mixes 4 frames (was 3), giving ~33ms
+  more buffer against heavy game frames at the cost of ~33ms more latency. the
+  gamepad also logs its slowest poll per scene (`GAMEPAD_DONE`).
 - **simple snake:** a source adaptation of Mocchi Mochi's MIT playdate snake game,
   in `examples/snake/`. copy that folder to `/games/snake/` on the board and
   restart. up/down steering needs the gamepad. changes from upstream are listed

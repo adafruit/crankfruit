@@ -60,6 +60,27 @@ APIs verified against Adafruit's current
 and [Seesaw source](https://docs.circuitpython.org/projects/seesaw/en/latest/_modules/adafruit_seesaw/seesaw.html),
 with upstream main revision `13ba8ba2a2cecb9df5a41390f991ce6c0cd76e14` recorded.
 
+### optional `read_delay_ms` and Fruit Jam results (2026-10-12)
+
+the library's `encoder_position` always sleeps 8ms before reading (about 9ms per
+read). optional `read_delay_ms` 0..8 (default 8) keeps that path at 8; values 0..7
+call `Seesaw.read` on the same encoder position register with the given delay.
+
+measured on the Fruit Jam with product 4991 (seesaw chip 0x55) at address 0x36 on
+`STEMMA_I2C`: 9.1ms per read at 8ms delay, 1.0-1.1ms at 0ms. 3,711 zero-delay
+reads compared against default-delay reads: 0 mismatches, 0 jumps, including fast
+spinning. this encoder counts 20 per revolution, clockwise up. `adafruit_bus_device`
+is built into the Fruit Jam firmware; only `adafruit_seesaw` (10.x bundle) was
+needed in `/lib`. working configuration:
+
+```json
+{"enabled": true, "kind": "seesaw", "bus_factory": "STEMMA_I2C", "address": 54,
+ "counts_per_revolution": 20, "read_delay_ms": 0}
+```
+
+played in Orbit Breaker: paddle follows the knob, clockwise right. in-game encoder
+reads: max 1.9ms, 99% under 1.5ms. see the kit `TEST-RESULTS.md` encoder addendum.
+
 ## analog potentiometer
 
 required enabled settings: `kind='analog'`, explicit ADC-capable board `pin`

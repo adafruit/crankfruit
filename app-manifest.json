@@ -51,13 +51,13 @@
   },
   {
     "path": "crank_input.py",
-    "bytes": 6461,
-    "sha256": "c5287205ba3fdf8e75ae8bcca548fb5aa031f77be043dae2f4d958de123370a1"
+    "bytes": 7518,
+    "sha256": "a5db2227ff2644edec7542680359465193b004d4f7975203e861387ff7eae565"
   },
   {
     "path": "crankfruit.py",
-    "bytes": 7486,
-    "sha256": "59e6a3ad9cea5ef0926d00a5cf46be1b6c8eae277eaa4593127a9b144379b5ec"
+    "bytes": 7655,
+    "sha256": "5589c59761c6ac63b943ccd608ff5788f030c65ddc7d6a0024c121e165dc7a73"
   },
   {
     "path": "direct_hardware.py",
@@ -66,8 +66,8 @@
   },
   {
     "path": "gamepad_input.py",
-    "bytes": 8308,
-    "sha256": "6abd85c8a7e89695e2efb4b2af626bac355064fc9a3edcea963a66d987f77fdf"
+    "bytes": 9035,
+    "sha256": "3e797e37df775cfc1267060d7f5fe65ed80d2739cc5dc0d3718bde9882e55e84"
   },
   {
     "path": "games/almost-tennis/LICENSE",
@@ -106,8 +106,8 @@
   },
   {
     "path": "hardware.py",
-    "bytes": 6788,
-    "sha256": "82ed968c6c948c3622da1f0c8679696e756839067f9f70e77b875401e4a94c83"
+    "bytes": 6871,
+    "sha256": "bbf5102ec705c3bb68e6b696e083195b580c546238a991869859a737c4038fba"
   },
   {
     "path": "library.py",
@@ -116,8 +116,8 @@
   },
   {
     "path": "player.py",
-    "bytes": 9843,
-    "sha256": "51882ce1f7cf2c8faa6ea287f8110b500c6a08f593852b01c72b4ae8213a66b3"
+    "bytes": 9993,
+    "sha256": "80ff5935eaf88e1382557719dfaf9d526ed82ef745e2bd41c49f2baa93b075c6"
   },
   {
     "path": "player/assets/error.bin",

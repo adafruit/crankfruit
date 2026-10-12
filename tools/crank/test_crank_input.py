@@ -115,6 +115,31 @@ class CrankTests(unittest.TestCase):
             self.assertAlmostEqual(angle, total % 360)
         self.assertEqual(total, 0)
         self.assertEqual(self.sensor.reads, 8)
+    def test_fast_read_delay_uses_direct_seesaw_read(self):
+        import struct
+        reads = []
+        class Device:
+            raw = 5
+            def read(self, base, register, buffer, delay):
+                reads.append((base, register, delay))
+                buffer[:] = struct.pack('>i', self.raw)
+        device = Device()
+        sys.modules['adafruit_seesaw.seesaw'] = types.SimpleNamespace(Seesaw=lambda bus, addr, reset: device)
+        crank = self.encoder(counts_per_revolution=20, read_delay_ms=0, encoder=1)
+        self.assertEqual(crank.read(), (0, 0))
+        device.raw = 7
+        self.assertEqual(crank.read(), (36, 36))
+        device.raw = -2147483648  # signed32 unpack
+        crank.read()
+        self.assertEqual(reads[0], (0x11, 0x31, 0))
+        self.assertEqual(len(reads), 3)
+        self.assertFalse(any(isinstance(e, tuple) and len(e) == 2 for e in self.events))  # no IncrementalEncoder
+    def test_default_read_delay_keeps_library_encoder(self):
+        self.encoder(read_delay_ms=8).read()
+        self.assertIn(('seesaw-fixture', 0), self.events)
+        for bad in (-1, 9, 0.5):
+            with self.assertRaises(ValueError):
+                self.encoder(read_delay_ms=bad)
     def test_analog_calibration_clamp_and_direction(self):
         crank = self.analog(zero_degrees=350)
         self.assertEqual(crank.read(), (350,0))

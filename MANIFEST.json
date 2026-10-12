@@ -16,8 +16,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 4993,
-    "sha256": "3b02f96bf3e36e911f455ec48114c4fec73c58565a35d375f2e1c016cb94ddab"
+    "bytes": 5604,
+    "sha256": "130e2b1cdc185dcb3f08026c50719647b211b474c9019425ea6085ca8edcd61d"
   },
   {
     "path": "RESULTS.md",
@@ -42,7 +42,7 @@
   {
     "path": "app-manifest.json",
     "bytes": 6319,
-    "sha256": "034fd82fbe62954f7178f01614adc8e6f283071915a89520ecee6ff23ba9807b"
+    "sha256": "33ac2c67a8e7e7fe9f4133a6311607b6bf440e0d04d17632b873f0b7e66f0499"
   },
   {
     "path": "app/_crankfruit_blit.mpy",
@@ -96,13 +96,13 @@
   },
   {
     "path": "app/crank_input.py",
-    "bytes": 6461,
-    "sha256": "c5287205ba3fdf8e75ae8bcca548fb5aa031f77be043dae2f4d958de123370a1"
+    "bytes": 7518,
+    "sha256": "a5db2227ff2644edec7542680359465193b004d4f7975203e861387ff7eae565"
   },
   {
     "path": "app/crankfruit.py",
-    "bytes": 7486,
-    "sha256": "59e6a3ad9cea5ef0926d00a5cf46be1b6c8eae277eaa4593127a9b144379b5ec"
+    "bytes": 7655,
+    "sha256": "5589c59761c6ac63b943ccd608ff5788f030c65ddc7d6a0024c121e165dc7a73"
   },
   {
     "path": "app/direct_hardware.py",
@@ -111,8 +111,8 @@
   },
   {
     "path": "app/gamepad_input.py",
-    "bytes": 8308,
-    "sha256": "6abd85c8a7e89695e2efb4b2af626bac355064fc9a3edcea963a66d987f77fdf"
+    "bytes": 9035,
+    "sha256": "3e797e37df775cfc1267060d7f5fe65ed80d2739cc5dc0d3718bde9882e55e84"
   },
   {
     "path": "app/games/almost-tennis/LICENSE",
@@ -151,8 +151,8 @@
   },
   {
     "path": "app/hardware.py",
-    "bytes": 6788,
-    "sha256": "82ed968c6c948c3622da1f0c8679696e756839067f9f70e77b875401e4a94c83"
+    "bytes": 6871,
+    "sha256": "bbf5102ec705c3bb68e6b696e083195b580c546238a991869859a737c4038fba"
   },
   {
     "path": "app/library.py",
@@ -161,8 +161,8 @@
   },
   {
     "path": "app/player.py",
-    "bytes": 9843,
-    "sha256": "51882ce1f7cf2c8faa6ea287f8110b500c6a08f593852b01c72b4ae8213a66b3"
+    "bytes": 9993,
+    "sha256": "80ff5935eaf88e1382557719dfaf9d526ed82ef745e2bd41c49f2baa93b075c6"
   },
   {
     "path": "app/player/assets/error.bin",
@@ -1636,8 +1636,8 @@
   },
   {
     "path": "tools/crank/README.md",
-    "bytes": 6770,
-    "sha256": "f6ad725829aa8013adaef8c701d24842112a76d781daf5da9bf047f7fd301342"
+    "bytes": 7837,
+    "sha256": "ce7cf88811fca76f3acbf355db4e5334596d9c1aeaa374b8292d12a96d554e44"
   },
   {
     "path": "tools/crank/crank-config.json",
@@ -1646,8 +1646,8 @@
   },
   {
     "path": "tools/crank/crank_input.py",
-    "bytes": 6461,
-    "sha256": "c5287205ba3fdf8e75ae8bcca548fb5aa031f77be043dae2f4d958de123370a1"
+    "bytes": 7518,
+    "sha256": "a5db2227ff2644edec7542680359465193b004d4f7975203e861387ff7eae565"
   },
   {
     "path": "tools/crank/crank_settings.py",
@@ -1656,13 +1656,13 @@
   },
   {
     "path": "tools/crank/test_crank_input.py",
-    "bytes": 7132,
-    "sha256": "0039315ae6ecf26c9e143a1251a57c9bf8c3c38a9ab081455fbcaf22ca1ded97"
+    "bytes": 8354,
+    "sha256": "c9f9191d2bb06dd528e78295c205fbbf87b22d9e9302f2327186bb6703adf7f4"
   },
   {
     "path": "tools/crank/test_scheduler.py",
-    "bytes": 9820,
-    "sha256": "7c4d30eb92b24d4e2edba4e346bfa6ac584f4cf5002e563e6a2178268d38b6a7"
+    "bytes": 10910,
+    "sha256": "aa8d8ae067aeed08d466e8aa6e421c1515301d5e543ca8d0bd98d6e7738e6ef6"
   },
   {
     "path": "tools/gamepad/LICENSE",
@@ -1681,13 +1681,13 @@
   },
   {
     "path": "tools/gamepad/gamepad_input.py",
-    "bytes": 8308,
-    "sha256": "6abd85c8a7e89695e2efb4b2af626bac355064fc9a3edcea963a66d987f77fdf"
+    "bytes": 9035,
+    "sha256": "3e797e37df775cfc1267060d7f5fe65ed80d2739cc5dc0d3718bde9882e55e84"
   },
   {
     "path": "tools/gamepad/test_gamepad_input.py",
-    "bytes": 18665,
-    "sha256": "2beec100df6942c0691eb58b0bd63a360c589506975fb565f88e53007bca3a68"
+    "bytes": 19723,
+    "sha256": "3798d8b1d9854fa4511770ce5823fc719bd0f61948fb242df16991d61c81860f"
   },
   {
     "path": "tools/sound/LICENSE",

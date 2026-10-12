@@ -34,6 +34,27 @@ def _name(config, key):
     return value
 
 
+class _EncoderPosition:
+    """Seesaw encoder position via Seesaw.read with an explicit delay.
+
+    Same registers as adafruit_seesaw's encoder_position, which always waits
+    8ms. On the Fruit Jam with product 4991, a 0ms delay read in ~1ms and matched
+    default-delay reads across 3,711 samples including fast turning.
+    """
+    def __init__(self, seesaw, channel, delay):
+        import struct
+        self.unpack = struct.unpack
+        self.seesaw = seesaw
+        self.register = 0x30 + channel  # _ENCODER_POSITION
+        self.delay = delay
+        self.buffer = bytearray(4)
+
+    @property
+    def position(self):
+        self.seesaw.read(0x11, self.register, self.buffer, self.delay)  # _ENCODER_BASE
+        return self.unpack('>i', self.buffer)[0]
+
+
 class CrankInput:
     def __init__(self, config=None):
         self.closed = False
@@ -63,6 +84,8 @@ class CrankInput:
             address = _integer(config, 'address', 8, 119)
             channel = _integer(config, 'encoder', 0, 3, 0)
             self.counts = _integer(config, 'counts_per_revolution', 1, 1048576)
+            # The library's encoder read sleeps 8ms; 0..7 uses a direct read instead.
+            delay_ms = _integer(config, 'read_delay_ms', 0, 8, 8)
             # All config validation precedes hardware imports and initialization.
             import board
             from adafruit_seesaw.seesaw import Seesaw
@@ -72,7 +95,10 @@ class CrankInput:
                 raise ValueError('configured board bus factory is not callable')
             self.bus = factory()  # board factory is shared; never deinit it here
             self.seesaw = Seesaw(self.bus, addr=address, reset=False)
-            self.sensor = IncrementalEncoder(self.seesaw, encoder=channel)
+            if delay_ms == 8:
+                self.sensor = IncrementalEncoder(self.seesaw, encoder=channel)
+            else:
+                self.sensor = _EncoderPosition(self.seesaw, channel, delay_ms / 1000)
         elif self.kind == 'analog':
             pin_name = _name(config, 'pin')
             self.minimum = _integer(config, 'adc_min', 0, 65534)

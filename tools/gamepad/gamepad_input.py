@@ -16,6 +16,7 @@ HAT = (UP, UP | RIGHT, RIGHT, DOWN | RIGHT, DOWN, DOWN | LEFT, LEFT, UP | LEFT)
 RECONNECT_MS = 1000
 CRANK_HYSTERESIS = 20  # stick radius units between engage and release
 CRANK_STALE_MS = 250   # movement older than this (no game reading it) is dropped
+SLOW_POLL_MS = 4
 
 
 def load_config(path):
@@ -99,6 +100,8 @@ class GamepadInput:
         self.last_poll = None
         self.next_connect = 0
         self.metrics = dict(connects=0, disconnects=0, reports=0, timeouts=0)
+        self.max_poll_ms = 0   # per scene; see scene_metrics()
+        self.slow_polls = 0    # polls taking SLOW_POLL_MS or longer, per scene
         self.crank = None
         self.crank_angle = 0.0   # virtual crank: advances by scaled stick rotation
         self.crank_pending = 0.0
@@ -206,6 +209,20 @@ class GamepadInput:
         if self.crank is not None and len(self.report) >= 8 and self.report[0] == 1:
             self._update_crank(self.report)
         return self.bits
+
+    def record_poll(self, spent_ms):
+        """Caller-measured poll duration; kept cheap for every outer-loop spin."""
+        if spent_ms > self.max_poll_ms:
+            self.max_poll_ms = spent_ms
+        if spent_ms >= SLOW_POLL_MS:
+            self.slow_polls += 1
+
+    def scene_metrics(self):
+        """Return cumulative counters plus per-scene poll timing, then reset the latter."""
+        result = dict(self.metrics, max_poll_ms=self.max_poll_ms, slow_polls=self.slow_polls)
+        self.max_poll_ms = 0
+        self.slow_polls = 0
+        return result
 
     def close(self):
         if not self.closed:

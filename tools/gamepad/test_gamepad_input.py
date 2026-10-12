@@ -415,7 +415,8 @@ class PlayerIntegrationTests(unittest.TestCase):
         self.assertIn("if active & 64: route = 'library'", source)
         self.assertIn("load_gamepad_config('/gamepad.json')", source)
         hardware = (app / 'hardware.py').read_text()
-        self.assertIn('bits |= self.gamepad.poll(self.clock.now())', hardware)
+        self.assertIn('bits |= self.gamepad.poll(now)', hardware)
+        self.assertIn('self.gamepad.record_poll(self.clock.now() - now)', hardware)
 
     def test_hardware_read_buttons_merges_gamepad(self):
         sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent.parent / 'app'))
@@ -436,8 +437,12 @@ class PlayerIntegrationTests(unittest.TestCase):
 
         class Pad:
             bits = A | HOME
+            recorded = []
             def poll(self, now):
+                hw.clock.t += 5  # a slow poll, measured by the caller
                 return self.bits
+            def record_poll(self, spent):
+                self.recorded.append(spent)
 
         hw = Hardware()
         hw.clock = Clock()
@@ -448,6 +453,24 @@ class PlayerIntegrationTests(unittest.TestCase):
         self.assertEqual(hw.read_buttons(), LEFT)
         hw.gamepad = Pad()
         self.assertEqual(hw.read_buttons(), LEFT | A | HOME)
+        self.assertEqual(hw.gamepad.recorded, [5])
+
+
+class PollTimingTests(unittest.TestCase):
+    def test_record_poll_and_per_scene_reset(self):
+        pad = enabled(USBCore(Device()))
+        for spent in (0, 1, 3, 4, 9, 2):
+            pad.record_poll(spent)
+        first = pad.scene_metrics()
+        self.assertEqual((first['max_poll_ms'], first['slow_polls']), (9, 2))
+        self.assertIn('reports', first)
+        second = pad.scene_metrics()
+        self.assertEqual((second['max_poll_ms'], second['slow_polls']), (0, 0))
+
+    def test_scene_loop_prints_gamepad_metrics(self):
+        app = pathlib.Path(__file__).resolve().parent.parent.parent / 'app'
+        source = (app / 'crankfruit.py').read_text()
+        self.assertIn("print('GAMEPAD_DONE',scene,gamepad.scene_metrics())", source)
 
 
 if __name__ == '__main__':

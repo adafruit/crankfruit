@@ -22,7 +22,7 @@ optional crank disabled / hardware + settings: disabled; no `/crank.json` on the
 | malformed/unsupported entry disabled | not tested | |
 | game error returns to library | not tested | |
 | 10-minute play/audio continuity | partial | one scene ran ~36 min (65,857 presentations) before a Ctrl-C: 0 dropped bytes, 0 errors, 0 missed deadlines, but 1 underrun observation; worst service gap 53ms, worst tick 27ms. which scene was not captured |
-| optional crank direction/calibration/latency | not tested | crank disabled |
+| optional crank direction/calibration/latency | pass (later) | seesaw STEMMA QT encoder (product 4991) measured and played; see encoder addendum below |
 | standalone power, computer unplugged | not tested | board stayed on host USB power |
 
 the five "everything works" rows record the tester's overall report, not separate
@@ -179,6 +179,55 @@ the DS4 right stick can drive the Playdate crank (`"crank": true` in
 | Orbit Breaker paddle follows stick rotation, clockwise = right | pass | tester confirmed |
 | speed | pass at 70% | 100% (one-to-one) felt a little fast; `crank_scale` 70 adopted |
 | Orbit Breaker timing with stick crank (42s) | pass | 0 underruns, 0 dropped bytes, 0 missed deadlines, 0 errors; worst step 14ms, worst tick 32ms |
-| hardware crank (`/crank.json` seesaw/analog) | not tested | still no physical crank attached |
+| hardware crank (`/crank.json` seesaw/analog) | seesaw: pass | see encoder addendum below; analog pot still not tested |
 
 31 gamepad host tests (11 stick-crank) pass; `verify.py` passes.
+
+## addendum: STEMMA QT rotary encoder crank and 4-frame audio prefill (2026-10-12)
+
+hardware: Adafruit I2C STEMMA QT rotary encoder breakout (seesaw chip id 0x55,
+product 4991) on the Fruit Jam STEMMA QT port, address 0x36. `board.STEMMA_I2C`
+exists; the bus also shows the onboard audio chip (0x18) and what appear to be the
+TV's HDMI DDC devices (0x3a, 0x50-0x57). `adafruit_seesaw` 1.18.2 from the
+CircuitPython 10.x bundle (20261010) copied to `/lib`; `adafruit_bus_device` is
+built into this firmware.
+
+`/crank.json`: `{"enabled": true, "kind": "seesaw", "bus_factory": "STEMMA_I2C",
+"address": 54, "counts_per_revolution": 20, "read_delay_ms": 0}`.
+
+code changes: `crank_input.py` gains optional `read_delay_ms` (0..8, default 8 =
+the library's original `IncrementalEncoder.position` path; 0..7 reads the position
+register directly with that delay). `player.py` accepts `prefill_frames=4` with a
+12,288-byte queue (2 and 3 keep 8,192); `crankfruit.py` uses 4. the gamepad records
+its slowest poll and slow-poll count per scene (`GAMEPAD_DONE` log line).
+
+| check | pass / fail / not tested | notes |
+| --- | --- | --- |
+| encoder identified and read | pass | chip 0x55, product 4991 |
+| read cost | pass with `read_delay_ms` 0 | library default 9.1ms per read; 0ms delay 1.0-1.1ms |
+| fast-read accuracy | pass | 3,711 zero-delay reads vs default-delay reads: 0 mismatches, 0 jumps, incl. fast spinning |
+| counts per revolution / direction | pass | 20 (tester confirmed), clockwise counts up |
+| Orbit Breaker paddle follows knob | pass | tester: clockwise right, "clicky but fine" |
+| priority over stick crank | pass | log: `GAMEPAD_CRANK ignored: /crank.json hardware crank takes priority` |
+
+timing investigation (Orbit Breaker with the encoder):
+
+| run | prefill | play | worst tick | underruns | dropped | notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| first encoder run | 3 | 61s | 45ms | 1 | 0 | stick-crank run was 32ms / 0 |
+| instrumented (in-memory wrappers) | 3 | ~52s | 37ms | - | 0 | encoder read max 1.9ms (99% <1.5ms); slow ticks are slow game frames |
+| instrumented, heap sampling | 3 | ~53s | 41ms | - | 0 | timing inflated by 16-22ms `gc.mem_free()` probes |
+| after change | 4 | 48s | 35ms | 0 | 0 | 0 missed deadlines, 1 late frame, gamepad max poll 2ms |
+
+findings: the encoder read is not the spike. slow frames (20-35ms) are Orbit
+Breaker's own heavy frames: Lua step 4-14ms + synth mix 6-13ms + present 2-3ms +
+in-frame audio servicing 3-9ms. automatic garbage collection is rare (app allocates
+~25KB/s; one collection every ~29s, ~12.6ms each with a game loaded), so scheduled
+collection was not pursued. one 40.7ms gamepad poll was seen once and not
+reproduced in ~1.7h of later polling (max 3ms). the 4-frame prefill adds ~33ms
+audio/scene-start latency and removed the observed underrun.
+
+library idle stalls narrowed: a ~1.7h idle library session (prefill 4) again had 2
+underruns, 2 missed deadlines, worst library step 60ms, worst tick 77ms, 0 dropped
+bytes, while the gamepad's slowest poll was 3ms. the stall is in the library
+scene's own update step, not the gamepad or the encoder. not yet fixed.

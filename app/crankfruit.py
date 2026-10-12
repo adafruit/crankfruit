@@ -49,7 +49,7 @@ def run_scene(hardware, item=None, items=None, selected=0, message='', duration=
             del source
         gc.collect()
         print('SCENE',scene,'heap',runtime.heap_stats(),'python_free',gc.mem_free())
-        player = GamePlayer(runtime,hardware,hardware.fb,hardware.clock,present_every=1,prefill_frames=3,crank=crank)
+        player = GamePlayer(runtime,hardware,hardware.fb,hardware.clock,present_every=1,prefill_frames=4,crank=crank)
         player.start(0)
         start = hardware.clock.now()
         released = False
@@ -79,6 +79,9 @@ def run_scene(hardware, item=None, items=None, selected=0, message='', duration=
             if hardware.clock.now()>deadline: raise RuntimeError('scene audio drain timeout')
             time.sleep(.001)
         print('SCENE_DONE',scene,player.metrics,player.stream.metrics,runtime.heap_stats())
+        gamepad = getattr(hardware, 'gamepad', None)
+        if gamepad is not None and gamepad.enabled:
+            print('GAMEPAD_DONE',scene,gamepad.scene_metrics())
         if scripted:
             assert player.metrics['errors'] == player.metrics['deadline_failures'] == 0
             assert player.stream.metrics['errors'] == player.stream.metrics['dropped_bytes'] == player.stream.metrics['underrun_observations'] == 0

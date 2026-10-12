@@ -186,6 +186,33 @@ class SchedulerTests(unittest.TestCase):
         self.assertEqual(self.hardware.fb.audio_pending, 0)
 
 
+class PrefillTests(unittest.TestCase):
+    def player(self, prefill):
+        hardware = HardwareFixture([])
+        return hardware, PLAYER.GamePlayer(hardware.runtime, hardware, hardware.fb, hardware.clock,
+                                           prefill_frames=prefill)
+
+    def test_four_frame_prefill_fits_larger_queue(self):
+        hardware, game = self.player(4)
+        self.assertEqual(game.stream.capacity, 12288)
+        self.assertEqual(game.lead_ms, 100)
+        game.start()
+        self.assertEqual(game.metrics['primed_frames'], 4)
+        self.assertEqual(len(hardware.runtime.steps), 4)
+        self.assertEqual(game.metrics['errors'], 0)
+
+    def test_two_and_three_keep_original_queue(self):
+        for prefill in (2, 3):
+            _, game = self.player(prefill)
+            self.assertEqual(game.stream.capacity, 8192)
+        for bad in (1, 5, 3.0):
+            with self.assertRaises(ValueError):
+                self.player(bad)
+
+    def test_app_uses_four_frame_prefill(self):
+        self.assertIn('prefill_frames=4', (APP / 'crankfruit.py').read_text())
+
+
 class StopMain(BaseException):
     pass
 

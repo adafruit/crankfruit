@@ -33,10 +33,10 @@ class Debounce:
 
 
 class GamePlayer:
-    """Two- or three-update prefill, fixed buffers, no catch-up burst.
+    """Two-, three- or four-update prefill, fixed buffers, no catch-up burst.
 
-    Game time starts at 0,33ms (optionally 66ms); after prefill it runs one or
-    two ticks ahead of wall time. This is explicit latency, not performance. A late
+    Game time starts at 0,33ms (optionally 66ms or 100ms); after prefill it runs
+    one to three ticks ahead of wall time. This is explicit latency, not performance. A late
     step generates one chunk only, counts skipped wall deadlines, and does not
     lose bytes previously mixed. Severe (>100ms) lateness fails closed.
     """
@@ -51,8 +51,8 @@ class GamePlayer:
         if present_every < 1:
             raise ValueError("present_every must be positive")
         self.present_every = present_every
-        if type(prefill_frames) is not int or prefill_frames not in (2, 3):
-            raise ValueError("prefill_frames must be 2 or 3")
+        if type(prefill_frames) is not int or prefill_frames not in (2, 3, 4):
+            raise ValueError("prefill_frames must be 2, 3 or 4")
         self.prefill_frames = prefill_frames
         self.lead_ms = (prefill_frames - 1) * 1000 // self.hz
         self.small = bytearray((RATE // self.hz) * 2)
@@ -60,7 +60,8 @@ class GamePlayer:
         self.small_view = memoryview(self.small)
         self.large_view = memoryview(self.large)
         self.sample_phase = 0
-        self.stream = PcmStream(transport, clock)
+        # Four prefilled frames (~8.5KB) exceed the default 8192-byte queue.
+        self.stream = PcmStream(transport, clock, capacity=12288 if prefill_frames == 4 else 8192)
         self.origin = clock.now()
         self.next_tick = 1
         self.next_due = self.origin + 1000 // self.hz
