@@ -16,8 +16,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 4733,
-    "sha256": "88185502d3332c2a4e37920a95851024c5d7b4f1e6989e5986a888865b18a9ab"
+    "bytes": 4993,
+    "sha256": "3b02f96bf3e36e911f455ec48114c4fec73c58565a35d375f2e1c016cb94ddab"
   },
   {
     "path": "RESULTS.md",
@@ -42,7 +42,7 @@
   {
     "path": "app-manifest.json",
     "bytes": 6319,
-    "sha256": "1989f31b8b317e68f72106dc7ba319e3e6cc4165903ef1a4ca0d3a9a994556c2"
+    "sha256": "034fd82fbe62954f7178f01614adc8e6f283071915a89520ecee6ff23ba9807b"
   },
   {
     "path": "app/_crankfruit_blit.mpy",
@@ -101,8 +101,8 @@
   },
   {
     "path": "app/crankfruit.py",
-    "bytes": 7116,
-    "sha256": "3f219edafc629c4de2c2f12e791a52f7f70a12f14819cd33feda407cf815d346"
+    "bytes": 7486,
+    "sha256": "59e6a3ad9cea5ef0926d00a5cf46be1b6c8eae277eaa4593127a9b144379b5ec"
   },
   {
     "path": "app/direct_hardware.py",
@@ -111,8 +111,8 @@
   },
   {
     "path": "app/gamepad_input.py",
-    "bytes": 5464,
-    "sha256": "d7cfbcf84db8336e727c09bfd24ae02e276374e60bb192f05db9aac7ff834281"
+    "bytes": 8308,
+    "sha256": "6abd85c8a7e89695e2efb4b2af626bac355064fc9a3edcea963a66d987f77fdf"
   },
   {
     "path": "app/games/almost-tennis/LICENSE",
@@ -1671,23 +1671,23 @@
   },
   {
     "path": "tools/gamepad/README.md",
-    "bytes": 2639,
-    "sha256": "9f26bd4de34e7b0fa79b41933a69be2fb29698d5aabef9fbac2322e26939c8e6"
+    "bytes": 3929,
+    "sha256": "baf9ec3cb5e28454c8b2abb732c01af3fbeca9102ad19a88e55ad46d760d9e15"
   },
   {
     "path": "tools/gamepad/gamepad-config.json",
-    "bytes": 33,
-    "sha256": "0f9cfccda40c19b04720febb6ee64ede1a43a010b198d0a0ce5ba0cc0783bbff"
+    "bytes": 67,
+    "sha256": "d32e29efad3cd5c333416cce10b22620f121d6a72609b8ec99ff8577eb87b2d2"
   },
   {
     "path": "tools/gamepad/gamepad_input.py",
-    "bytes": 5464,
-    "sha256": "d7cfbcf84db8336e727c09bfd24ae02e276374e60bb192f05db9aac7ff834281"
+    "bytes": 8308,
+    "sha256": "6abd85c8a7e89695e2efb4b2af626bac355064fc9a3edcea963a66d987f77fdf"
   },
   {
     "path": "tools/gamepad/test_gamepad_input.py",
-    "bytes": 11513,
-    "sha256": "eb263a1b583ee7fb303dc3b6ce21ba3a4ceef1e5b3c1ee1c9ad7f97dbbba25ad"
+    "bytes": 18665,
+    "sha256": "2beec100df6942c0691eb58b0bd63a360c589506975fb565f88e53007bca3a68"
   },
   {
     "path": "tools/sound/LICENSE",

@@ -56,8 +56,8 @@
   },
   {
     "path": "crankfruit.py",
-    "bytes": 7116,
-    "sha256": "3f219edafc629c4de2c2f12e791a52f7f70a12f14819cd33feda407cf815d346"
+    "bytes": 7486,
+    "sha256": "59e6a3ad9cea5ef0926d00a5cf46be1b6c8eae277eaa4593127a9b144379b5ec"
   },
   {
     "path": "direct_hardware.py",
@@ -66,8 +66,8 @@
   },
   {
     "path": "gamepad_input.py",
-    "bytes": 5464,
-    "sha256": "d7cfbcf84db8336e727c09bfd24ae02e276374e60bb192f05db9aac7ff834281"
+    "bytes": 8308,
+    "sha256": "6abd85c8a7e89695e2efb4b2af626bac355064fc9a3edcea963a66d987f77fdf"
   },
   {
     "path": "games/almost-tennis/LICENSE",

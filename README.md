@@ -19,6 +19,10 @@ the first commit is the original review kit, unmodified (all files match its
   options = back to the library. onboard buttons keep working. off unless
   `/gamepad.json` exists: copy `tools/gamepad/gamepad-config.json` there and
   restart. mapping, timing measurements and tests: `tools/gamepad/README.md`.
+- **right-stick crank (proof of concept):** with `"crank": true` in
+  `/gamepad.json` (on in the template), rotating the right stick drives the
+  playdate crank for lua games; orbit breaker's paddle follows it. speed is set by
+  `crank_scale` (template: 70%).
 - **simple snake:** a source adaptation of Mocchi Mochi's MIT playdate snake game,
   in `examples/snake/`. copy that folder to `/games/snake/` on the board and
   restart. up/down steering needs the gamepad. changes from upstream are listed

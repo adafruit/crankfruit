@@ -117,6 +117,13 @@ def main(test=False, endurance=0):
             config=None
         hardware.gamepad=GamepadInput(config)
         print('GAMEPAD_INPUT',hardware.gamepad.kind,'enabled',hardware.gamepad.enabled)
+        if hardware.gamepad.crank is not None:
+            if crank.enabled:
+                print('GAMEPAD_CRANK ignored: /crank.json hardware crank takes priority')
+            else:
+                crank.close()
+                crank=hardware.gamepad.crank  # right stick feeds Lua games' crank
+                print('CRANK_INPUT',crank.kind,'enabled',crank.enabled)
         run_scene(hardware,dict(slug='splash'),duration=2500,name='splash',scripted=test)
         selected = 0; message = ''
         if test:

@@ -4,7 +4,7 @@ import pathlib
 import sys
 import tempfile
 import unittest
-from gamepad_input import (GamepadInput, decode_ds4, load_config,
+from gamepad_input import (GamepadInput, decode_ds4, load_config, stick_angle, angle_change,
                            LEFT, RIGHT, UP, DOWN, A, B, HOME)
 
 
@@ -246,7 +246,167 @@ class PollTests(unittest.TestCase):
             pad.poll(0)
 
 
+def stick_report(angle=None, radius=120):
+    """Report with the right stick pushed toward a Playdate-convention angle."""
+    import math
+    data = report()
+    if angle is None:
+        data[3], data[4] = 128, 128
+    else:
+        rad = math.radians(angle)
+        data[3] = round(128 + radius * math.sin(rad))
+        data[4] = round(128 - radius * math.cos(rad))
+    return data
+
+
+class StickCrankTests(unittest.TestCase):
+    def crank_pad(self, **extra):
+        device = Device()
+        pad = enabled(USBCore(device), poll_ms=8, crank=True, **extra)
+        pad.poll(0)  # connect
+        return pad, device
+
+    def feed(self, pad, device, now, data):
+        device.reports = [data]
+        pad.poll(now)
+
+    def test_angle_convention_and_wrap(self):
+        self.assertAlmostEqual(stick_angle(128, 0), 0.0)       # up
+        self.assertAlmostEqual(stick_angle(255, 128), 90.0)    # right: clockwise positive
+        self.assertAlmostEqual(stick_angle(128, 255), 180.0)   # down
+        self.assertAlmostEqual(stick_angle(1, 128), 270.0)     # left
+        self.assertAlmostEqual(angle_change(10, 350), 20.0)
+        self.assertAlmostEqual(angle_change(350, 10), -20.0)
+        self.assertAlmostEqual(angle_change(180, 0), 180.0)
+
+    def test_disabled_by_default_and_config(self):
+        self.assertIsNone(enabled(USBCore(Device())).crank)
+        self.assertIsNone(GamepadInput({'enabled': False, 'crank': True}).crank)
+        for bad in ({'crank': 1}, {'crank_engage': 39}, {'crank_engage': 128}):
+            with self.assertRaises(ValueError, msg=repr(bad)):
+                enabled(USBCore(Device()), **bad)
+        crank = enabled(USBCore(Device()), crank=True).crank
+        self.assertEqual((crank.kind, crank.enabled), ('ds4_right_stick', True))
+
+    def test_clockwise_rotation_accumulates_once_per_read(self):
+        pad, device = self.crank_pad()
+        crank = pad.crank
+        now = 8
+        for angle in (0, 15, 30, 45):
+            self.feed(pad, device, now, stick_report(angle))
+            now += 8
+        angle, delta = crank.read()  # first read in a scene: baseline only
+        self.assertAlmostEqual(angle, 45.0, delta=1.0)
+        self.assertEqual(delta, 0.0)
+        for target in (60, 75, 90):
+            self.feed(pad, device, now, stick_report(target))
+            now += 8
+        angle, delta = crank.read()
+        self.assertAlmostEqual(angle, 90.0, delta=1.0)
+        self.assertAlmostEqual(delta, 45.0, delta=1.0)
+        self.assertEqual(crank.read()[1], 0.0)  # consumed exactly once
+
+    def test_counterclockwise_across_zero_is_negative(self):
+        pad, device = self.crank_pad()
+        self.feed(pad, device, 8, stick_report(20))
+        pad.crank.read()
+        for i, target in enumerate((10, 0, 350, 340)):
+            self.feed(pad, device, 16 + 8 * i, stick_report(target))
+        angle, delta = pad.crank.read()
+        self.assertAlmostEqual(angle, 320.0, delta=1.0)  # virtual angle: 0 - 40
+        self.assertAlmostEqual(delta, -40.0, delta=1.0)
+
+    def test_full_turns_accumulate_beyond_360(self):
+        pad, device = self.crank_pad()
+        self.feed(pad, device, 8, stick_report(0))
+        pad.crank.read()
+        now = 16
+        total = 0.0
+        for step in range(1, 25):  # 24 steps of 30 degrees = two turns
+            self.feed(pad, device, now, stick_report(step * 30 % 360))
+            now += 8
+            if step % 4 == 0:
+                total += pad.crank.read()[1]  # game reads stay under the stale limit
+        self.assertAlmostEqual(total, 720.0, delta=2.0)
+        self.assertAlmostEqual(pad.crank_angle % 360.0, 0.0, delta=1.0)
+
+    def test_release_holds_angle_and_reengage_adds_no_movement(self):
+        pad, device = self.crank_pad()
+        self.feed(pad, device, 8, stick_report(90))
+        self.feed(pad, device, 16, stick_report(120))
+        pad.crank.read()
+        self.assertAlmostEqual(pad.crank_angle, 30.0, delta=1.0)
+        self.feed(pad, device, 24, stick_report(None))      # centred: released
+        self.assertAlmostEqual(pad.crank.read()[0], 30.0, delta=1.0)
+        self.feed(pad, device, 32, stick_report(270))       # re-engaged elsewhere
+        angle, delta = pad.crank.read()
+        self.assertAlmostEqual(angle, 30.0, delta=1.0)      # virtual crank does not jump
+        self.assertEqual(delta, 0.0)
+        self.feed(pad, device, 40, stick_report(300))
+        self.assertAlmostEqual(pad.crank.read()[1], 30.0, delta=1.0)
+
+    def test_scale_slows_movement_and_angle_together(self):
+        pad, device = self.crank_pad(crank_scale=50)
+        self.feed(pad, device, 8, stick_report(0))
+        pad.crank.read()
+        for i, target in enumerate((30, 60, 90)):
+            self.feed(pad, device, 16 + 8 * i, stick_report(target))
+        angle, delta = pad.crank.read()
+        self.assertAlmostEqual(delta, 45.0, delta=1.0)
+        self.assertAlmostEqual(angle, 45.0, delta=1.0)
+        for bad in (9, 201, 0.5):
+            with self.assertRaises(ValueError):
+                enabled(USBCore(Device()), crank=True, crank_scale=bad)
+
+    def test_hysteresis_keeps_engaged_between_thresholds(self):
+        pad, device = self.crank_pad()
+        self.feed(pad, device, 8, stick_report(0, radius=70))   # below engage 80
+        self.assertFalse(pad.crank_engaged)
+        self.feed(pad, device, 16, stick_report(0, radius=90))
+        self.assertTrue(pad.crank_engaged)
+        self.feed(pad, device, 24, stick_report(30, radius=65))  # above release 60
+        self.assertTrue(pad.crank_engaged)
+        self.assertAlmostEqual(pad.crank_pending, 30.0, delta=1.5)
+        self.feed(pad, device, 32, stick_report(60, radius=50))
+        self.assertFalse(pad.crank_engaged)
+
+    def test_movement_outside_a_game_is_dropped(self):
+        pad, device = self.crank_pad()
+        self.feed(pad, device, 8, stick_report(0))
+        pad.crank.read()
+        now = 16
+        for target in range(10, 360, 10):  # library: polled, no game reading
+            self.feed(pad, device, now, stick_report(target))
+            now += 25
+        angle, delta = pad.crank.read()
+        self.assertAlmostEqual(angle, 350.0, delta=1.0)
+        self.assertEqual(delta, 0.0)
+
+    def test_unplug_clears_crank_state(self):
+        pad, device = self.crank_pad()
+        self.feed(pad, device, 8, stick_report(0))
+        pad.crank.read()
+        self.feed(pad, device, 16, stick_report(40))
+        device.fail = USBError('gone')
+        pad.poll(24)
+        self.assertEqual(pad.crank.read()[1], 0.0)
+        self.assertFalse(pad.crank_engaged)
+
+    def test_left_stick_and_buttons_unaffected(self):
+        pad, device = self.crank_pad()
+        data = stick_report(90)
+        data[5] = 0x20 | 6  # cross + d-pad left
+        self.feed(pad, device, 8, data)
+        self.assertEqual(pad.bits, LEFT | A)
+
+
 class PlayerIntegrationTests(unittest.TestCase):
+    def test_stick_crank_wiring(self):
+        app = pathlib.Path(__file__).resolve().parent.parent.parent / 'app'
+        source = (app / 'crankfruit.py').read_text()
+        self.assertIn('crank=hardware.gamepad.crank', source)
+        self.assertIn('hardware crank takes priority', source)
+
     """Source-level checks: player bits are masked and Options routes home."""
     def test_scene_loop_masks_home_and_routes(self):
         app = pathlib.Path(__file__).resolve().parent.parent.parent / 'app'

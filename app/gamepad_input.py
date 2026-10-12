@@ -3,7 +3,10 @@
 Supports a wired Sony DualShock 4 on the Fruit Jam USB host port. No usb
 imports, configuration-file reads or device access on the disabled path.
 poll() is rate-limited and holds the last report between reads.
+Optional "crank": the right stick's direction becomes a Playdate-style crank.
 """
+import math
+
 LEFT, RIGHT, UP, DOWN, B, A = 1, 2, 4, 8, 16, 32
 HOME = 64  # player-level return to library; never passed to a cartridge
 SONY = 0x054c
@@ -11,6 +14,8 @@ DS4_PRODUCTS = (0x05c4, 0x09cc)
 DS4_ENDPOINT = 0x84
 HAT = (UP, UP | RIGHT, RIGHT, DOWN | RIGHT, DOWN, DOWN | LEFT, LEFT, UP | LEFT)
 RECONNECT_MS = 1000
+CRANK_HYSTERESIS = 20  # stick radius units between engage and release
+CRANK_STALE_MS = 250   # movement older than this (no game reading it) is dropped
 
 
 def load_config(path):
@@ -51,6 +56,39 @@ def decode_ds4(report, stick=True, deadzone=64):
     return bits
 
 
+def stick_angle(x, y):
+    """Playdate crank convention: 0 = up, increasing clockwise, in [0, 360)."""
+    return math.degrees(math.atan2(x - 128, 128 - y)) % 360.0
+
+
+def angle_change(new, old):
+    """Shortest signed rotation from old to new, in (-180, 180]."""
+    change = (new - old) % 360.0
+    return change - 360.0 if change > 180.0 else change
+
+
+class StickCrank:
+    """Right-stick crank with the same read()/close() surface as CrankInput."""
+    kind = 'ds4_right_stick'
+    enabled = True
+
+    def __init__(self, pad):
+        self.pad = pad
+        self.read_at = None
+
+    def read(self, frame_id=None):
+        pad = self.pad
+        now = pad.last_poll
+        stale = self.read_at is None or now is None or now - self.read_at > CRANK_STALE_MS
+        self.read_at = now
+        delta = 0.0 if stale else pad.crank_pending
+        pad.crank_pending = 0.0
+        return pad.crank_angle, delta
+
+    def close(self):
+        self.pad = None
+
+
 class GamepadInput:
     def __init__(self, config=None, usb_core=None):
         self.closed = False
@@ -61,13 +99,19 @@ class GamepadInput:
         self.last_poll = None
         self.next_connect = 0
         self.metrics = dict(connects=0, disconnects=0, reports=0, timeouts=0)
+        self.crank = None
+        self.crank_angle = 0.0   # virtual crank: advances by scaled stick rotation
+        self.crank_pending = 0.0
+        self.crank_engaged = False
+        self.stick_last = 0.0
         if config is None:
             return
         if not isinstance(config, dict) or type(config.get('enabled', False)) is not bool:
             raise ValueError('gamepad enabled must be a boolean in a configuration object')
         if not config.get('enabled', False):
             return
-        unknown = [key for key in config if key not in ('enabled', 'kind', 'poll_ms', 'read_timeout_ms', 'stick', 'stick_deadzone')]
+        unknown = [key for key in config if key not in ('enabled', 'kind', 'poll_ms', 'read_timeout_ms', 'stick', 'stick_deadzone',
+                                                        'crank', 'crank_engage', 'crank_scale')]
         if unknown:
             raise ValueError('unknown gamepad setting: ' + unknown[0])
         self.kind = config.get('kind')
@@ -79,6 +123,13 @@ class GamepadInput:
         if type(self.stick) is not bool:
             raise ValueError('invalid gamepad setting: stick')
         self.deadzone = _integer(config, 'stick_deadzone', 16, 120, 64)
+        crank = config.get('crank', False)
+        if type(crank) is not bool:
+            raise ValueError('invalid gamepad setting: crank')
+        self.crank_engage = _integer(config, 'crank_engage', 40, 127, 80)
+        self.crank_scale = _integer(config, 'crank_scale', 10, 200, 100) / 100  # percent
+        if crank:
+            self.crank = StickCrank(self)
         if usb_core is None:
             import usb.core as usb_core
         self.usb = usb_core
@@ -100,9 +151,26 @@ class GamepadInput:
         self.metrics['connects'] += 1
         print('GAMEPAD connected', hex(device.idVendor), hex(device.idProduct))
 
+    def _update_crank(self, report):
+        dx, dy = report[3] - 128, report[4] - 128
+        radius2 = dx * dx + dy * dy
+        limit = self.crank_engage if not self.crank_engaged else self.crank_engage - CRANK_HYSTERESIS
+        if radius2 < limit * limit:
+            self.crank_engaged = False  # released: hold the last angle, no movement
+            return
+        angle = stick_angle(report[3], report[4])
+        if self.crank_engaged:
+            change = angle_change(angle, self.stick_last) * self.crank_scale
+            self.crank_pending += change
+            self.crank_angle = (self.crank_angle + change) % 360.0
+        self.stick_last = angle  # re-engaging elsewhere adds no movement
+        self.crank_engaged = True
+
     def _drop(self, exc):
         self.device = None
         self.bits = 0
+        self.crank_engaged = False
+        self.crank_pending = 0.0
         self.metrics['disconnects'] += 1
         print('GAMEPAD disconnected', repr(exc))
 
@@ -135,10 +203,13 @@ class GamepadInput:
             return 0
         self.metrics['reports'] += 1
         self.bits = decode_ds4(self.report, self.stick, self.deadzone)
+        if self.crank is not None and len(self.report) >= 8 and self.report[0] == 1:
+            self._update_crank(self.report)
         return self.bits
 
     def close(self):
         if not self.closed:
             self.device = None
             self.bits = 0
+            self.crank_pending = 0.0
             self.closed = True

@@ -166,3 +166,19 @@ before copying Snake, the Mac saw CIRCUITPY as read-only ("Media Read-Only: Yes"
 even after remounting, while CircuitPython also reported its own mount read-only.
 cause not found. `microcontroller.reset()` (equivalent to the reset button)
 restored host write access.
+
+## addendum: right-stick crank (proof of concept, 2026-10-12)
+
+the DS4 right stick can drive the Playdate crank (`"crank": true` in
+`/gamepad.json`); details in `tools/gamepad/README.md`. no crank hardware was used.
+
+| check | pass / fail / not tested | notes |
+| --- | --- | --- |
+| angle maths on board (up 0, right 90, down 180, left 270; wrap across 0) | pass | REPL check on CircuitPython |
+| crank cost | pass | ~69us per pad report, ~21us per frame read |
+| Orbit Breaker paddle follows stick rotation, clockwise = right | pass | tester confirmed |
+| speed | pass at 70% | 100% (one-to-one) felt a little fast; `crank_scale` 70 adopted |
+| Orbit Breaker timing with stick crank (42s) | pass | 0 underruns, 0 dropped bytes, 0 missed deadlines, 0 errors; worst step 14ms, worst tick 32ms |
+| hardware crank (`/crank.json` seesaw/analog) | not tested | still no physical crank attached |
+
+31 gamepad host tests (11 stick-crank) pass; `verify.py` passes.

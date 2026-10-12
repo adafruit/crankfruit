@@ -28,6 +28,27 @@ file selects disabled mode; malformed JSON or invalid settings stop startup
 visibly. optional settings: `poll_ms` 8..100 (default 25), `read_timeout_ms` 2..5
 (default 2), `stick` true/false (default true), `stick_deadzone` 16..120 (default 64).
 
+## right-stick crank (proof of concept)
+
+with `"crank": true`, rotating the right stick drives the Playdate crank seen by
+Lua games (`getCrankPosition` / `getCrankChange`). the template enables it with
+`"crank_scale": 70`. a hardware crank enabled in `/crank.json` takes priority.
+
+- push the stick past `crank_engage` (40..127, default 80 of 128) and rotate.
+  clockwise is positive. release below engage-20 holds the crank still.
+- the stick's direction uses the Playdate convention (0 = up, clockwise), but the
+  crank keeps its own virtual angle that advances by stick rotation x
+  `crank_scale` percent (10..200, default 100 = one-to-one). re-grabbing the stick
+  at a different direction adds no movement and does not jump the angle.
+- movement is summed between game frames and delivered once per frame. movement
+  made while no game is reading (library, Sound Explorer) is dropped after 250ms.
+- only Orbit Breaker reads the crank among the bundled games.
+
+measured on the board (2026-10-12): crank update ~69us per pad report, read ~21us.
+Orbit Breaker with the stick crank: 42s, 0 underruns/dropped bytes/missed
+deadlines/errors, worst step 14ms, worst tick 32ms. tester: clockwise moves the
+paddle right; 100% felt a little fast, 70% "works pretty well for a proof of concept".
+
 ## timing
 
 the pad sends a 64-byte report every 5ms. a USB read waits for the next report,
