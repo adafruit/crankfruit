@@ -41,8 +41,10 @@ Lua games (`getCrankPosition` / `getCrankChange`). the template enables it with
   `crank_scale` percent (10..200, default 100 = one-to-one). re-grabbing the stick
   at a different direction adds no movement and does not jump the angle.
 - movement is summed between game frames and delivered once per frame. movement
-  made while no game is reading (library, Sound Explorer) is dropped after 250ms.
-- only Orbit Breaker reads the crank among the bundled games.
+  made while no scene is reading (e.g. the startup animation) is dropped after 250ms.
+- the crank (stick or hardware) reaches the library (highlight), Sound Explorer
+  (value changes), Orbit Breaker (paddle), Almost Tennis (flick to swing) and
+  Simple Snake (click to turn).
 
 measured on the board (2026-10-12): crank update ~69us per pad report, read ~21us.
 Orbit Breaker with the stick crank: 42s, 0 underruns/dropped bytes/missed

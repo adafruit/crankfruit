@@ -13,6 +13,7 @@ DECAYS = ('100 MS', '200 MS', '400 MS', '800 MS')
 WAVES = ('SQUARE', 'TRIANGLE', 'PDA SAMPLE')
 SAMPLES = ('BOOT CHIME', 'COIN RISE', 'SOFT SWOOP')
 SAMPLE_FILES = ('sample_boot.pcm', 'sample_coin.pcm', 'sample_swoop.pcm')
+CRANK_STEP = 18.0  # degrees per value change: one click of a 20-count encoder
 
 SOUND_SOURCE = b'''local p=playdate
 p.display.setRefreshRate(30)
@@ -73,6 +74,7 @@ class SoundExplorer:
         self.dirty = True
         self.closed = False
         self.auditions = 0
+        self.crank = 0.0  # accumulated crank degrees
 
     def refresh_rate(self):
         return 30
@@ -92,6 +94,14 @@ class SoundExplorer:
             self.b3_started = None
         audition = self.first or bool(pressed & 16)
         direction = -1 if pressed & 1 else (1 if pressed & 2 else 0)
+        # Crank: one 18-degree click acts like B2 (clockwise) or B1, one per frame.
+        self.crank += delta
+        if not direction and self.crank >= CRANK_STEP:
+            direction = 1
+        elif not direction and self.crank <= -CRANK_STEP:
+            direction = -1
+        if direction and abs(self.crank) >= CRANK_STEP:
+            self.crank = 0.0  # spent (or overridden by a button); no backlog
         if direction and not buttons & 16:
             if self.field == 0:
                 self.wave = (self.wave + direction) % 3

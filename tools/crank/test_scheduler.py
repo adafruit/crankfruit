@@ -249,12 +249,12 @@ class MainPolicyTests(unittest.TestCase):
         events, seen, crank = self.run_main('lua')
         self.assertIn(('config','/crank.json'), events)
         self.assertIsNone(seen[0][1].get('crank'))  # splash
-        self.assertIsNone(seen[1][1].get('crank'))  # library
+        self.assertIs(seen[1][1].get('crank'), crank)  # library: crank moves the highlight
         self.assertIs(seen[2][1]['crank'], crank)
         self.assertLess(events.index('crank_close'), events.index('hardware_close'))
-    def test_sound_builtin_does_not_receive_crank(self):
+    def test_sound_builtin_receives_crank(self):
         events, seen, crank = self.run_main('builtin')
-        self.assertIsNone(seen[2][1]['crank'])
+        self.assertIs(seen[2][1]['crank'], crank)  # Sound Explorer: crank changes values
     def test_only_missing_config_selects_disabled_default(self):
         events, _, _ = self.run_main('lua', OSError(2,'missing'))
         self.assertIn(('constructed',None), events)

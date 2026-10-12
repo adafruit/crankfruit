@@ -10,6 +10,7 @@
 --  * datastore highscore kept in memory only (resets when leaving the game).
 --  * round rects drawn as plain rects; getTextSize uses the 6px built-in font;
 --    *bold* markup removed; FillWhite image draw mode emulated with white text.
+--  * added (not upstream): relative crank steering, see crankPressed().
 local pd <const> = playdate
 local gfx <const> = playdate.graphics
 pd.display.setRefreshRate(30)
@@ -127,6 +128,28 @@ local frameCountVelocity = 0
 local movementBlocked = false -- This prevents snake eating itself when fast turning
 local difficulty = 4 -- from 4(low) to 1(high)
 
+-- Crankfruit addition: relative crank steering. One 18-degree click (one
+-- detent of a 20-count encoder) turns right (clockwise) or left; at most one
+-- turn per snake step, with one early click buffered.
+local CRANK_STEP <const> = 18
+local crankTurn = 0
+local turnRight <const> = { right = 'down', down = 'left', left = 'up', up = 'right' }
+local turnLeft <const> = { right = 'up', up = 'left', left = 'down', down = 'right' }
+
+function crankPressed()
+	local change = pd.getCrankChange() -- read every frame so it never goes stale
+	if gameRunning == false then
+		crankTurn = 0
+		return
+	end
+	crankTurn = math.max(-CRANK_STEP, math.min(CRANK_STEP, crankTurn + change))
+	if movementBlocked == false and math.abs(crankTurn) >= CRANK_STEP then
+		lastDirection = (crankTurn > 0 and turnRight or turnLeft)[lastDirection]
+		movementBlocked = true
+		crankTurn = 0
+	end
+end
+
 function buttonPressed()
 	if (pd.buttonIsPressed(pd.kButtonRight) and lastDirection ~= 'left' and movementBlocked == false) then
 		lastDirection = 'right'
@@ -203,6 +226,7 @@ end
 
 function pd.update()
 	buttonPressed()
+	crankPressed()
 
 	if (gameRunning == true) then
 		if (frameCountVelocity == difficulty) then

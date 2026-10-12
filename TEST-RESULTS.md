@@ -231,3 +231,48 @@ library idle stalls narrowed: a ~1.7h idle library session (prefill 4) again had
 underruns, 2 missed deadlines, worst library step 60ms, worst tick 77ms, 0 dropped
 bytes, while the gamepad's slowest poll was 3ms. the stall is in the library
 scene's own update step, not the gamepad or the encoder. not yet fixed.
+
+## addendum: crank in the library, Almost Tennis, Simple Snake and Sound Explorer (2026-10-12)
+
+with the STEMMA QT encoder as the crank (20 counts/turn, so one click = 18 degrees):
+
+- library: crank moves the highlight, one game per 18 degrees, clockwise = next,
+  with the navigation beep; at most 3 moves per frame, leftover of a fast spin
+  dropped; never launches a game.
+- Almost Tennis: a crank flick of 10 degrees or more in one frame swings, as in
+  upstream `player.lua` ("med" `CRANK_SENSE`), during play only. the crank change
+  is read every frame so stale movement cannot swing later.
+- Simple Snake (addition, not upstream): one click turns the snake right
+  (clockwise) or left relative to its heading; one turn per snake step, one early
+  click buffered.
+- Sound Explorer: one click acts like B2 (clockwise) or B1 on the selected field.
+- `crankfruit.py` now passes the crank to the library and Sound Explorer as well as
+  Lua games (not the splash).
+
+| check | pass / fail / not tested | notes |
+| --- | --- | --- |
+| library highlight by crank | pass | tester: "works well" |
+| Almost Tennis, Snake, Sound Explorer crank | pass | tester: "they felt good" |
+| Snake steering in the desktop host | pass | clockwise click at frame 40 turned down, counter-clockwise at 100 turned right; head positions matched |
+| Almost Tennis flick in the desktop host | pass | 12-degree flick produced the swing sound; no flick, no sound |
+| Snake / Sound Explorer timing | pass | Snake 83s, Sound Explorer 35s: 0 underruns, 0 dropped bytes, 0 missed deadlines |
+
+two problems found and fixed during this work:
+
+1. **Almost Tennis redraws.** the first version forced an immediate redraw on any
+   frame with a crank flick, defeating the port's 20Hz redraw budget while the
+   knob turned: 54s, 3 underruns, worst tick 45ms, worst service gap 86ms. now a
+   redraw is forced only when a swing actually starts.
+2. **encoder read glitch.** one Almost Tennis run ended after ~4s with
+   `CARTRIDGE_ERROR almost-tennis OSError(19,)`: a single I2C read got no answer
+   (cable checked, seated). the zero-delay encoder read now retries once, then
+   holds the last position (no movement) for that frame, and only fails after 30
+   consecutive failed frames (~1s) or on the very first read. each scene logs
+   `CRANK_DONE {retries_ok, held_frames, max_consecutive}`.
+
+after both fixes, Almost Tennis ran 298s: 0 errors, 1 underrun, 1 missed deadline,
+0 dropped bytes, worst step 18ms; encoder 0 retries / 0 held frames; gamepad max
+poll 3ms. the one underrun came from a single 73ms tick stall that matches the
+70-85ms stalls seen in idle library sessions; it is not the game step, gamepad or
+encoder. unconfirmed hypothesis: host (macOS) access to the mounted CIRCUITPY
+drive stalling flash. suggested test: eject CIRCUITPY and log a long idle session.

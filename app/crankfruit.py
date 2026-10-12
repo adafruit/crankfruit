@@ -82,6 +82,9 @@ def run_scene(hardware, item=None, items=None, selected=0, message='', duration=
         gamepad = getattr(hardware, 'gamepad', None)
         if gamepad is not None and gamepad.enabled:
             print('GAMEPAD_DONE',scene,gamepad.scene_metrics())
+        sensor = getattr(crank, 'sensor', None)
+        if hasattr(sensor, 'scene_metrics'):
+            print('CRANK_DONE',scene,sensor.scene_metrics())  # encoder read glitches
         if scripted:
             assert player.metrics['errors'] == player.metrics['deadline_failures'] == 0
             assert player.stream.metrics['errors'] == player.stream.metrics['dropped_bytes'] == player.stream.metrics['underrun_observations'] == 0
@@ -132,21 +135,21 @@ def main(test=False, endurance=0):
         if test:
             items = entries()
             assert len(items)>=3
-            route = run_scene(hardware,items=items,duration=3000,scripted=True)
+            route = run_scene(hardware,items=items,duration=3000,scripted=True,crank=crank)
             assert route == 1, 'dynamic library selection mismatch'
             for item in items:
                 if item['enabled']:
-                    run_scene(hardware,item,duration=endurance or 16000,scripted=True,crank=crank if item['kind']=='lua' else None)
+                    run_scene(hardware,item,duration=endurance or 16000,scripted=True,crank=crank)
             target = next(x for x in items if x['enabled'] and x['kind']=='lua')
             assert run_scene(hardware,target,duration=3000,scripted=True,name='return')=='library'
             print('IMPOSSIBLE_PLAYDATE_PASS (injected inputs, not physical button presses)')
             return
         while True:
             items = entries()
-            selected = run_scene(hardware,items=items,selected=selected,message=message)
+            selected = run_scene(hardware,items=items,selected=selected,message=message,crank=crank)  # crank moves the highlight
             message = ''
             try:
-                run_scene(hardware,items[selected],crank=crank if items[selected]['kind']=='lua' else None)
+                run_scene(hardware,items[selected],crank=crank)  # Lua games and Sound Explorer
             except Exception as exc:
                 if isinstance(exc,SceneCleanupError): raise
                 # Audio is stopped and runtime released by run_scene before UI recovery.

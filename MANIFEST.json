@@ -16,8 +16,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 5604,
-    "sha256": "130e2b1cdc185dcb3f08026c50719647b211b474c9019425ea6085ca8edcd61d"
+    "bytes": 6121,
+    "sha256": "39520bea09efc6005194ab7be0a1d5692c764b99b946bd8c38ad967acc5e66bc"
   },
   {
     "path": "RESULTS.md",
@@ -42,7 +42,7 @@
   {
     "path": "app-manifest.json",
     "bytes": 6319,
-    "sha256": "33ac2c67a8e7e7fe9f4133a6311607b6bf440e0d04d17632b873f0b7e66f0499"
+    "sha256": "977d37763c878040048abf691273859a29c158624e902f9fb238cb78317230aa"
   },
   {
     "path": "app/_crankfruit_blit.mpy",
@@ -96,13 +96,13 @@
   },
   {
     "path": "app/crank_input.py",
-    "bytes": 7518,
-    "sha256": "a5db2227ff2644edec7542680359465193b004d4f7975203e861387ff7eae565"
+    "bytes": 8872,
+    "sha256": "5be942b3f3544d492950c29eb3befb21412a2465c27df9b952384867b1f2d73c"
   },
   {
     "path": "app/crankfruit.py",
-    "bytes": 7655,
-    "sha256": "5589c59761c6ac63b943ccd608ff5788f030c65ddc7d6a0024c121e165dc7a73"
+    "bytes": 7842,
+    "sha256": "4d32304024ec5c0eb3dd5ccc84e453e5d1ee4d33e7ca2833535f7dee610c8348"
   },
   {
     "path": "app/direct_hardware.py",
@@ -121,13 +121,13 @@
   },
   {
     "path": "app/games/almost-tennis/main.lua",
-    "bytes": 7908,
-    "sha256": "11d66d2c4162c4b2b205a787452eb0e3d569d31a1982f675283ab3a4b0a1d58c"
+    "bytes": 8414,
+    "sha256": "4e9f8a5ba60e14caf487c43693bc813df5dd88fb2774daf3f7086e1edac990ea"
   },
   {
     "path": "app/games/almost-tennis/manifest.json",
-    "bytes": 270,
-    "sha256": "0a85f5463ac70c9c776c4ab4193702f79ec5300896a569c0017c1ee12b8d522a"
+    "bytes": 285,
+    "sha256": "ecd1c92f6e63eaa34c4646c34d3b6d477e03a1bf8767e04546fa6a6eea8da666"
   },
   {
     "path": "app/games/orbit-breaker/LICENSE",
@@ -156,8 +156,8 @@
   },
   {
     "path": "app/library.py",
-    "bytes": 3958,
-    "sha256": "7d390c0c4e26be2d657545983aea63d0ba862ca2b4785f7e9dd145ed4fafea49"
+    "bytes": 4966,
+    "sha256": "49e9fac5ce389c95012b8a0b898bff1abc8ee14a9d558f240b8b81d683977d8f"
   },
   {
     "path": "app/player.py",
@@ -251,8 +251,8 @@
   },
   {
     "path": "app/sound_explorer.py",
-    "bytes": 6455,
-    "sha256": "ea689bf65503b777fe1b10879d26aa1b8151e228fcf5b5dd275c9f1d19e68f0f"
+    "bytes": 7000,
+    "sha256": "4f0b770903f02feee6abedb95176276e5deaabb1b989824ba8ff285be4eacc50"
   },
   {
     "path": "app/stream.py",
@@ -1221,18 +1221,18 @@
   },
   {
     "path": "examples/snake/README.md",
-    "bytes": 2215,
-    "sha256": "f5f8d9c2e963c7adab3495fe721a0785522b89ecb900b0fe54181ec63891cc58"
+    "bytes": 2525,
+    "sha256": "7f924ba28b052c285690ccdb27b7b77731128323cb42a8b1c75f68f8d1694047"
   },
   {
     "path": "examples/snake/main.lua",
-    "bytes": 5654,
-    "sha256": "e28499f529e6d77b6add27350ff2bc32f60c25f14de6f87453dd08e901d08a4d"
+    "bytes": 6612,
+    "sha256": "5f54b257f7a4fe7378c0ba57f3d94acc6b3e9dbb996e5a956fc6ff47975cea0e"
   },
   {
     "path": "examples/snake/manifest.json",
-    "bytes": 392,
-    "sha256": "b70732c5694308e62b13f4cb7ba482f84a0c7e613026d4e50cc2edcf854f2833"
+    "bytes": 412,
+    "sha256": "e577087dbdb8e0b37dc78344860d85a9879031ed50c0adbb455f0cb9490783a7"
   },
   {
     "path": "firmware/impossible-playdate-fruit-jam.uf2",
@@ -1621,8 +1621,8 @@
   },
   {
     "path": "tools/cartridges/test_integration.py",
-    "bytes": 12579,
-    "sha256": "8dffcd04684456f1484d53d0eb0ffe22f7f7b1cc0fd6d398dfa573b51a193d9e"
+    "bytes": 14099,
+    "sha256": "46e96dfcfbaa453919c87044cf14d9926aece97fd36d4145b8d31d40e4ccb2d3"
   },
   {
     "path": "tools/cartridges/test_loader.py",
@@ -1636,8 +1636,8 @@
   },
   {
     "path": "tools/crank/README.md",
-    "bytes": 7837,
-    "sha256": "ce7cf88811fca76f3acbf355db4e5334596d9c1aeaa374b8292d12a96d554e44"
+    "bytes": 7965,
+    "sha256": "a67f804a27f5675da83e472878174a03c1fc9d745aef499a70acd842d1ea1c0a"
   },
   {
     "path": "tools/crank/crank-config.json",
@@ -1646,8 +1646,8 @@
   },
   {
     "path": "tools/crank/crank_input.py",
-    "bytes": 7518,
-    "sha256": "a5db2227ff2644edec7542680359465193b004d4f7975203e861387ff7eae565"
+    "bytes": 8872,
+    "sha256": "5be942b3f3544d492950c29eb3befb21412a2465c27df9b952384867b1f2d73c"
   },
   {
     "path": "tools/crank/crank_settings.py",
@@ -1656,13 +1656,13 @@
   },
   {
     "path": "tools/crank/test_crank_input.py",
-    "bytes": 8354,
-    "sha256": "c9f9191d2bb06dd528e78295c205fbbf87b22d9e9302f2327186bb6703adf7f4"
+    "bytes": 10677,
+    "sha256": "440604ae7d1619a9226d7757c277e2aac727ba18664a128c7916bac2c8fce222"
   },
   {
     "path": "tools/crank/test_scheduler.py",
-    "bytes": 10910,
-    "sha256": "aa8d8ae067aeed08d466e8aa6e421c1515301d5e543ca8d0bd98d6e7738e6ef6"
+    "bytes": 10975,
+    "sha256": "81fe35cdd6390396db46fb3916590f7b6d3d357e5733d076a1fb56834b5b7065"
   },
   {
     "path": "tools/gamepad/LICENSE",
@@ -1671,8 +1671,8 @@
   },
   {
     "path": "tools/gamepad/README.md",
-    "bytes": 3929,
-    "sha256": "baf9ec3cb5e28454c8b2abb732c01af3fbeca9102ad19a88e55ad46d760d9e15"
+    "bytes": 4061,
+    "sha256": "4d3b0b4a008db2ee11824c8600b7152aef8cce630f47c2f21039ca1321a725dd"
   },
   {
     "path": "tools/gamepad/gamepad-config.json",
@@ -1696,8 +1696,8 @@
   },
   {
     "path": "tools/sound/README.md",
-    "bytes": 4857,
-    "sha256": "6c0b4b69d3d764e5f66ca466817ef8a2ccd0d5f48ac2b84822c6984edd7c82a8"
+    "bytes": 4940,
+    "sha256": "5e4297e2ea331d12bca279fd702f2d981e24a21d4eb0ec73b22f98af4df6b497"
   },
   {
     "path": "tools/sound/assets/sample_boot.pcm",
@@ -1751,13 +1751,13 @@
   },
   {
     "path": "tools/sound/sound_explorer.py",
-    "bytes": 6455,
-    "sha256": "ea689bf65503b777fe1b10879d26aa1b8151e228fcf5b5dd275c9f1d19e68f0f"
+    "bytes": 7000,
+    "sha256": "4f0b770903f02feee6abedb95176276e5deaabb1b989824ba8ff285be4eacc50"
   },
   {
     "path": "tools/sound/test_sound.py",
-    "bytes": 7767,
-    "sha256": "a8c70f138e83d232fbc8c49320a1468bc9e27dac4922534b036fec83a6eca96a"
+    "bytes": 8716,
+    "sha256": "eaa024ce37756ba20db786b913b75d835292b1d35f5ef5deddd351f1bb3e1544"
   },
   {
     "path": "verify.py",

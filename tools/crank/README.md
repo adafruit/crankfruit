@@ -24,7 +24,8 @@ the parent's admission-time no-argument integration needs no token.
 the staged player now loads `/crank.json` after hardware initialization and before
 playback; only missing-file errno2 selects the disabled default. malformed JSON,
 permission errors and invalid settings are not silently ignored. input is passed
-to loaded Lua games only, not the splash, library or Sound Explorer. the app owns
+to loaded Lua games, the library (crank moves the highlight, 18 degrees per game)
+and Sound Explorer (18 degrees per value change), not the splash. the app owns
 the shared crank object and closes it after scene cleanup; individual scenes
 must not close it.
 
@@ -129,6 +130,6 @@ disabled, so no app cache files are generated.
 prefill and before-deadline loops do not sample; queue backpressure does not
 consume movement; each admitted frame receives the exact angle/delta once;
 explicit angle/delta still works with no hardware crank; input exceptions stop
-audio before runtime close; config handling is ENOENT-only; only Lua games
-receive crank input. this is scheduler/lifecycle evidence, not sensor/native
+audio before runtime close; config handling is ENOENT-only; Lua games, the
+library and Sound Explorer receive crank input (the splash does not). this is scheduler/lifecycle evidence, not sensor/native
 runtime or audio-output verification.

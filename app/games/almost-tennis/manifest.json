@@ -1,1 +1,1 @@
-{"kind":"lua","profile":"crankfruit-lua-v1","title":"Almost Tennis","author":"SquidGod; Crankfruit source adaptation","description":"TEN OPPONENTS. ONE LITTLE COURT.","controls":"B1/B2 move; B3 swing/start; B1+B2 dash; hold B3 library","target_fps":30,"heap_cap":65536}
+{"kind":"lua","profile":"crankfruit-lua-v1","title":"Almost Tennis","author":"SquidGod; Crankfruit source adaptation","description":"TEN OPPONENTS. ONE LITTLE COURT.","controls":"B1/B2 move; B3 or crank flick swing/start; B1+B2 dash; hold B3 library","target_fps":30,"heap_cap":65536}

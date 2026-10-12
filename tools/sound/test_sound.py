@@ -96,6 +96,26 @@ class ExplorerTests(unittest.TestCase):
         auditions = self.e.auditions
         self.tap(16)
         self.assertEqual(self.e.auditions, auditions + 1)
+    def test_crank_click_changes_selected_value_and_auditions(self):
+        self.step(0)
+        auditions = self.e.auditions
+        self.now += 33
+        self.e.step(0, 0, 10.0, self.now)        # under one click
+        self.assertEqual(self.e.wave, 0)
+        self.now += 33
+        self.e.step(0, 0, 8.0, self.now)         # 18 degrees: like B2
+        self.assertEqual(self.e.wave, 1)
+        self.assertEqual(self.e.auditions, auditions + 1)
+        self.tap(32)                             # next field: pitch
+        self.now += 33
+        self.e.step(0, 0, -18.0, self.now)       # counter-clockwise: like B1
+        self.assertEqual(self.e.pitch, 3)
+        self.now += 33
+        self.e.step(0, 0, 90.0, self.now)        # fast spin: one change per frame
+        self.assertEqual(self.e.pitch, 4)
+        self.now += 33
+        self.e.step(0, 0, 0.0, self.now)         # no backlog afterwards
+        self.assertEqual(self.e.pitch, 4)
     def test_long_b3_does_not_change_parameter(self):
         self.step(32)
         self.now += 1300

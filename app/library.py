@@ -8,6 +8,8 @@ s:setADSR(0.002,0.035,0,0.015)
 function p.update()
  if p.buttonJustPressed(p.kButtonA) then s:playNote(660,0.6,0.05) end
 end'''
+CRANK_STEP = 18.0  # degrees per highlight move: one click of a 20-count encoder
+CRANK_MAX_MOVES = 3  # per frame, so a fast spin cannot race through the list
 
 
 class Library:
@@ -17,6 +19,7 @@ class Library:
         self.items = items
         self.selected = min(max(0, selected), len(items)-1)
         self.previous = 0
+        self.crank = 0.0  # accumulated crank degrees not yet turned into moves
         self.action = None
         self.message = message[:60]
         self.dirty = True
@@ -59,6 +62,20 @@ class Library:
         if pressed & 2:
             self.selected = (self.selected+1) % len(self.items)
             self.error_page=None; self.dirty = True
+        # Crank: clockwise highlights the next game, counter-clockwise the previous.
+        self.crank += delta
+        moved = 0
+        while self.crank >= CRANK_STEP and moved < CRANK_MAX_MOVES:
+            self.crank -= CRANK_STEP; moved += 1
+            self.selected = (self.selected+1) % len(self.items)
+        while self.crank <= -CRANK_STEP and moved < CRANK_MAX_MOVES:
+            self.crank += CRANK_STEP; moved += 1
+            self.selected = (self.selected-1) % len(self.items)
+        if moved:
+            if moved == CRANK_MAX_MOVES:
+                self.crank = 0.0  # drop the rest of a fast spin instead of replaying it
+            self.error_page=None; self.dirty = True
+            pressed |= 64  # navigation beep below, without being a button
         if pressed & 32:
             item = self.items[self.selected]
             if item['enabled']: self.action = self.selected

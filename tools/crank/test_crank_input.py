@@ -134,6 +134,50 @@ class CrankTests(unittest.TestCase):
         self.assertEqual(reads[0], (0x11, 0x31, 0))
         self.assertEqual(len(reads), 3)
         self.assertFalse(any(isinstance(e, tuple) and len(e) == 2 for e in self.events))  # no IncrementalEncoder
+    def fast_device(self):
+        import struct
+        class Device:
+            raw = 0
+            fail = 0  # number of upcoming reads that raise
+            def read(self, base, register, buffer, delay):
+                if self.fail:
+                    self.fail -= 1
+                    raise OSError(19)
+                buffer[:] = struct.pack('>i', self.raw)
+        device = Device()
+        sys.modules['adafruit_seesaw.seesaw'] = types.SimpleNamespace(Seesaw=lambda bus, addr, reset: device)
+        return device
+    def test_fast_read_retry_and_hold_ride_out_glitches(self):
+        device = self.fast_device()
+        crank = self.encoder(counts_per_revolution=20, read_delay_ms=0)
+        crank.read()
+        device.raw = 1; device.fail = 1               # first read fails, retry succeeds
+        self.assertEqual(crank.read(), (18, 18))
+        device.raw = 2; device.fail = 2               # both fail: held, no movement
+        self.assertEqual(crank.read(), (18, 0))
+        self.assertEqual(crank.read(), (36, 18))      # recovers with the real movement
+        metrics = crank.sensor.scene_metrics()
+        self.assertEqual(metrics, dict(retries_ok=1, held_frames=1, max_consecutive=1))
+        self.assertEqual(crank.sensor.scene_metrics(), dict(retries_ok=0, held_frames=0, max_consecutive=0))
+    def test_fast_read_gives_up_after_consecutive_failures(self):
+        device = self.fast_device()
+        crank = self.encoder(counts_per_revolution=20, read_delay_ms=0)
+        crank.read()
+        device.fail = 2 * 29
+        for _ in range(29):
+            self.assertEqual(crank.read()[1], 0)
+        device.fail = 2
+        with self.assertRaises(OSError):
+            crank.read()                              # 30th failed frame: fail closed
+    def test_fast_read_first_failure_still_raises(self):
+        device = self.fast_device()
+        device.fail = 2
+        crank = self.encoder(counts_per_revolution=20, read_delay_ms=0)
+        with self.assertRaises(OSError):
+            crank.read()                              # no baseline to hold yet
+    def test_scene_logs_encoder_metrics(self):
+        self.assertIn("print('CRANK_DONE',scene,sensor.scene_metrics())",
+                      (pathlib.Path(__file__).resolve().parent.parent.parent / 'app' / 'crankfruit.py').read_text())
     def test_default_read_delay_keeps_library_encoder(self):
         self.encoder(read_delay_ms=8).read()
         self.assertIn(('seesaw-fixture', 0), self.events)

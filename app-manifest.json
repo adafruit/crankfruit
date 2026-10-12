@@ -51,13 +51,13 @@
   },
   {
     "path": "crank_input.py",
-    "bytes": 7518,
-    "sha256": "a5db2227ff2644edec7542680359465193b004d4f7975203e861387ff7eae565"
+    "bytes": 8872,
+    "sha256": "5be942b3f3544d492950c29eb3befb21412a2465c27df9b952384867b1f2d73c"
   },
   {
     "path": "crankfruit.py",
-    "bytes": 7655,
-    "sha256": "5589c59761c6ac63b943ccd608ff5788f030c65ddc7d6a0024c121e165dc7a73"
+    "bytes": 7842,
+    "sha256": "4d32304024ec5c0eb3dd5ccc84e453e5d1ee4d33e7ca2833535f7dee610c8348"
   },
   {
     "path": "direct_hardware.py",
@@ -76,13 +76,13 @@
   },
   {
     "path": "games/almost-tennis/main.lua",
-    "bytes": 7908,
-    "sha256": "11d66d2c4162c4b2b205a787452eb0e3d569d31a1982f675283ab3a4b0a1d58c"
+    "bytes": 8414,
+    "sha256": "4e9f8a5ba60e14caf487c43693bc813df5dd88fb2774daf3f7086e1edac990ea"
   },
   {
     "path": "games/almost-tennis/manifest.json",
-    "bytes": 270,
-    "sha256": "0a85f5463ac70c9c776c4ab4193702f79ec5300896a569c0017c1ee12b8d522a"
+    "bytes": 285,
+    "sha256": "ecd1c92f6e63eaa34c4646c34d3b6d477e03a1bf8767e04546fa6a6eea8da666"
   },
   {
     "path": "games/orbit-breaker/LICENSE",
@@ -111,8 +111,8 @@
   },
   {
     "path": "library.py",
-    "bytes": 3958,
-    "sha256": "7d390c0c4e26be2d657545983aea63d0ba862ca2b4785f7e9dd145ed4fafea49"
+    "bytes": 4966,
+    "sha256": "49e9fac5ce389c95012b8a0b898bff1abc8ee14a9d558f240b8b81d683977d8f"
   },
   {
     "path": "player.py",
@@ -206,8 +206,8 @@
   },
   {
     "path": "sound_explorer.py",
-    "bytes": 6455,
-    "sha256": "ea689bf65503b777fe1b10879d26aa1b8151e228fcf5b5dd275c9f1d19e68f0f"
+    "bytes": 7000,
+    "sha256": "4f0b770903f02feee6abedb95176276e5deaabb1b989824ba8ff285be4eacc50"
   },
   {
     "path": "stream.py",

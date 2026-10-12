@@ -180,6 +180,34 @@ class ParentPolicyTests(unittest.TestCase):
         self.press(library,2,200); self.assertEqual(library.selected,0)
         library.close()
 
+    def test_crank_moves_highlight_with_beep(self):
+        items=[dict(title='GAME%d'%i,description='',enabled=True,reason='') for i in range(5)]
+        library=self.library.Library(FakeRuntime,items)
+        beeps=[]
+        step=library.sound.step
+        def record(buttons, angle, delta, elapsed):
+            beeps.append(buttons); return step(buttons, angle, delta, elapsed)
+        library.sound.step=record
+        library.step(0,0,10.0,0)                      # below one 18-degree click
+        self.assertEqual(library.selected,0)
+        library.step(0,0,8.0,33)                      # accumulates to 18: next game
+        self.assertEqual(library.selected,1)
+        self.assertEqual(library.canvas.backgrounds['_page'],library.pages[1])
+        self.assertEqual(beeps[-1],32)
+        library.step(0,0,-18.0,66)                    # counter-clockwise: previous
+        self.assertEqual(library.selected,0)
+        library.step(0,0,-18.0,99)                    # wraps to the last game
+        self.assertEqual(library.selected,4)
+        library.step(0,0,0.0,132)
+        self.assertEqual(beeps[-1],0)
+        library.step(0,0,360.0,165)                   # fast spin: at most 3 moves
+        self.assertEqual(library.selected,2)
+        library.step(0,0,0.0,198)                     # leftover is capped, no runaway
+        library.step(0,0,0.0,231)
+        self.assertEqual(library.selected,2)
+        self.assertIsNone(library.action)             # crank never launches a game
+        library.close()
+
     def test_maximum_metadata_stays_below_command_budget(self):
         items=[dict(title='T'*48,description='D'*160,reason='R'*160,enabled=i%2==0) for i in range(33)]
         for selected in (0,1,2,3,30,32):

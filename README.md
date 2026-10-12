@@ -31,6 +31,10 @@ the first commit is the original review kit, unmodified (all files match its
 - **4-frame audio prefill:** the player pre-mixes 4 frames (was 3), giving ~33ms
   more buffer against heavy game frames at the cost of ~33ms more latency. the
   gamepad also logs its slowest poll per scene (`GAMEPAD_DONE`).
+- **crank everywhere it fits:** the crank (stick or encoder) moves the library
+  highlight, swings in almost tennis (upstream's flick rule), turns the snake in
+  simple snake, and changes values in sound explorer. encoder reads retry and
+  hold through brief I2C glitches (`CRANK_DONE` log line).
 - **simple snake:** a source adaptation of Mocchi Mochi's MIT playdate snake game,
   in `examples/snake/`. copy that folder to `/games/snake/` on the board and
   restart. up/down steering needs the gamepad. changes from upstream are listed
@@ -67,10 +71,13 @@ QT encoder and analog-pot backends are included, disabled by default. an optiona
 wired DualShock 4 USB gamepad is supported (see above); other USB controllers
 and touch input are not.
 
-almost tennis: B1/B2 move, B3 start/swing/restart, B1+B2 dash when available.
-orbit breaker: B1/B2 move, B3 start/restart, B1+B2 pause.
-sound explorer: B1/B2 change, short B3 next field, B1+B2 replay.
-simple snake: gamepad d-pad/stick steer, A restart (B1/B2 can only steer left/right).
+almost tennis: B1/B2 move, B3 start/swing/restart, B1+B2 dash when available;
+crank flick (10 degrees in a frame) swings, as in the original.
+orbit breaker: B1/B2 move, B3 start/restart, B1+B2 pause; crank moves the paddle.
+sound explorer: B1/B2 change, short B3 next field, B1+B2 replay; crank click changes.
+simple snake: gamepad d-pad/stick steer, A restart (B1/B2 can only steer left/right);
+crank click turns left/right.
+library: crank click (18 degrees) moves the highlight; it never launches a game.
 
 with the gamepad: d-pad = B1/B2 directions (plus up/down), cross = B3, circle =
 B1+B2, options = immediate return to the library.

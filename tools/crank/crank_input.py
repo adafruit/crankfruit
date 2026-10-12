@@ -41,6 +41,8 @@ class _EncoderPosition:
     8ms. On the Fruit Jam with product 4991, a 0ms delay read in ~1ms and matched
     default-delay reads across 3,711 samples including fast turning.
     """
+    MAX_FAILED_FRAMES = 30  # ~1s of consecutive failed reads before giving up
+
     def __init__(self, seesaw, channel, delay):
         import struct
         self.unpack = struct.unpack
@@ -48,11 +50,45 @@ class _EncoderPosition:
         self.register = 0x30 + channel  # _ENCODER_POSITION
         self.delay = delay
         self.buffer = bytearray(4)
+        self.last = None
+        self.consecutive = 0
+        self.reset_metrics()
+
+    def reset_metrics(self):
+        self.retries_ok = 0       # first read failed, immediate retry succeeded
+        self.held_frames = 0      # both failed: last position held (no movement)
+        self.max_consecutive = 0
+
+    def scene_metrics(self):
+        result = dict(retries_ok=self.retries_ok, held_frames=self.held_frames,
+                      max_consecutive=self.max_consecutive)
+        self.reset_metrics()
+        return result
+
+    def _read(self):
+        self.seesaw.read(0x11, self.register, self.buffer, self.delay)  # _ENCODER_BASE
+        return self.unpack('>i', self.buffer)[0]
 
     @property
     def position(self):
-        self.seesaw.read(0x11, self.register, self.buffer, self.delay)  # _ENCODER_BASE
-        return self.unpack('>i', self.buffer)[0]
+        # A Fruit Jam game once ended on a single OSError(19) (I2C no answer).
+        # Ride out brief bus glitches; a truly missing encoder still fails.
+        try:
+            value = self._read()
+        except OSError:
+            try:
+                value = self._read()
+                self.retries_ok += 1
+            except OSError:
+                self.consecutive += 1
+                self.held_frames += 1
+                self.max_consecutive = max(self.max_consecutive, self.consecutive)
+                if self.last is None or self.consecutive >= self.MAX_FAILED_FRAMES:
+                    raise
+                return self.last
+        self.consecutive = 0
+        self.last = value
+        return value
 
 
 class CrankInput:

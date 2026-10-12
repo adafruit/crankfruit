@@ -32,6 +32,7 @@ control changes. missing optional pictures do not prevent audio/control use.
 ## controls
 
 - B1/B2: decrease/increase the selected value and audition it.
+- crank: one 18-degree click acts like B2 (clockwise) or B1; one change per frame.
 - short B3: next field, applied on release; holds >=900ms do not change fields.
 - B1+B2: replay. expected mapped button bit is16, not raw mask3.
 - hold B3: library navigation stays with the parent application.

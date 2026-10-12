@@ -2,7 +2,9 @@
 -- Derived from SquidGodDev/almost-tennis, 69172662a659849c8b452e257c1f41f8cd240ad8.
 -- Copyright (c) 2025 SquidGod. MIT; see accompanying LICENSE.
 -- Adaptation/pixel primitives/synth audio: Copyright (c) 2026 PT and ints. MIT.
+-- Crankfruit 2026-10: crank swing restored from upstream player.lua ("med" sense).
 local pd,g=playdate,playdate.graphics
+local CRANK_SENSE=10 -- upstream default "med"; degrees per frame to swing
 pd.display.setRefreshRate(30)
 local hit=pd.sound.synth.new(pd.sound.kWaveSquare)
 local low=pd.sound.synth.new(pd.sound.kWaveTriangle)
@@ -156,6 +158,11 @@ function pd.update()
  local now=pd.getCurrentTimeMilliseconds(); clock=clock+1
  local a=pd.buttonJustPressed(pd.kButtonA)
  local b=pd.buttonJustPressed(pd.kButtonB)
+ -- Upstream player.lua: a crank flick of CRANK_SENSE degrees also swings.
+ -- Read every frame so movement outside play cannot swing later.
+ local _,crankChange=pd.getCrankChange()
+ local crankSwing=math.abs(crankChange)>=CRANK_SENSE
+ local swung=false
  if mode=="title" then
   bx=200+math.sin(now/600)*80; by=120+math.cos(now/410)*40
   ex=bx; px=200+math.sin(now/750)*80
@@ -169,11 +176,13 @@ function pd.update()
   local d=0
   if pd.buttonIsPressed(pd.kButtonLeft) then d=d-1 end
   if pd.buttonIsPressed(pd.kButtonRight) then d=d+1 end
-  tick(d,a,b,false)
+  local before=swing
+  tick(d,a or crankSwing,b,false)
+  swung=swing>before -- a swing actually started
  end
  -- Physics and sound remain30Hz. Redraw at20Hz to leave physical HDMI/audio
  -- service headroom, with immediate A/B edge feedback on swings/navigation.
  local drawSlot=math.floor(now/50)
- if drawSlot~=lastDrawSlot or a or b then draw(); lastDrawSlot=drawSlot end
+ if drawSlot~=lastDrawSlot or a or b or swung then draw(); lastDrawSlot=drawSlot end
  lastMs=now
 end

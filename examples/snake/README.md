@@ -14,13 +14,17 @@ upstream: https://gitlab.com/mocchimochi/playdate/playdate-snake-game at
   gamepad; see `tools/gamepad/README.md`). the Fruit Jam's onboard buttons only
   provide left / right, so the snake cannot be steered up or down without a pad.
 - A (gamepad cross, or B3): restart after game over.
+- crank (Crankfruit addition, not upstream): one 18-degree click turns the snake
+  right (clockwise) or left, relative to its heading; one turn per snake step,
+  one early click buffered. works with the stick crank or a hardware encoder.
 - gamepad options, or hold B3: return to the library.
 
 ## what changed from upstream
 
 gameplay logic, speeds (move every 5 frames at 30Hz, faster every 5 segments down
 to every 2 frames), 10px grid, collision rules, turn-blocking and game-over panel
-layout are kept. changes are limited to what the source profile requires:
+layout are kept. one feature is added, relative crank steering (see controls);
+all other changes are limited to what the source profile requires:
 
 - `snake.lua` inlined into `main.lua`; `CoreLibs`, `saveddata` and `music` imports removed.
 - Playdate-only `+=` / `-=` rewritten as standard Lua 5.4 assignments.
