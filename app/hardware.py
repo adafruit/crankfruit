@@ -54,6 +54,8 @@ class Hardware:
         self.display = None
         self.buttons = []  # fixed three entries, constructed before playback
         self.gamepad = None  # optional GamepadInput, owned and closed by the app
+        self.settings_previous = 0  # debounced onboard bits, for settings edges
+        self.color_depth = 1  # HDMI framebuffer bits per pixel (1 or 2-bit greyscale)
         self.displayio = None
         self.supervisor = None
         self.autoreload = None
@@ -74,7 +76,7 @@ class Hardware:
             640, 480, clk_dp=board.CKP, clk_dn=board.CKN,
             red_dp=board.D0P, red_dn=board.D0N,
             green_dp=board.D1P, green_dn=board.D1N,
-            blue_dp=board.D2P, blue_dn=board.D2N, color_depth=1)
+            blue_dp=board.D2P, blue_dn=board.D2N, color_depth=self.color_depth)
         # No dedicated reserve API: a nonempty 32 kHz write allocates BOTH banks.
         # Do this BEFORE Bitmap, UI, Runtime arena, source, or game PCM buffers.
         accepted = self.fb.audio_write(bytes(MAX_BANK_BYTES), sample_rate=RATE)
@@ -112,9 +114,25 @@ class Hardware:
         bits = self.debounce.update(raw)
         if self.gamepad is not None:
             now = self.clock.now()
-            bits |= self.gamepad.poll(now)
+            pad = self.gamepad.poll(now)
             self.gamepad.record_poll(self.clock.now() - now)
+            if self.gamepad.device is not None:
+                # Gamepad connected: onboard buttons become settings buttons and
+                # no longer drive games. Unplugged: they are game controls again.
+                stable = self.debounce.stable
+                pressed = stable & ~self.settings_previous
+                self.settings_previous = stable
+                for index in range(3):
+                    if pressed & (1 << index):
+                        self.settings_button(index)
+                return pad
+            self.settings_previous = self.debounce.stable
+            bits |= pad
         return bits
+
+    def settings_button(self, index):
+        """Onboard button index 0..2 (B1..B3) pressed while a gamepad drives games."""
+        pass
 
     def present(self, runtime):
         # Never gate this on audio_pending: that would freeze continuous games.

@@ -276,3 +276,54 @@ poll 3ms. the one underrun came from a single 73ms tick stall that matches the
 70-85ms stalls seen in idle library sessions; it is not the game step, gamepad or
 encoder. unconfirmed hypothesis: host (macOS) access to the mounted CIRCUITPY
 drive stalling flash. suggested test: eject CIRCUITPY and log a long idle session.
+
+## addendum: display scaling and smoothing (2026-10-13)
+
+firmware HDMI modes accepted by `picodvi.Framebuffer` (probe): 640x480 and 720x400
+at 1/2/8-bit; 320x240 and 360x200 at 8-bit only; 400x240, 800x480, 720x480,
+800x600 and 1280x720 rejected. a clean 2x of 400x240 is therefore impossible.
+
+**desktop preview** (`engine/host`, `--board-scale 1|1.5|1.6|1.6s`, Tab cycles):
+reproduces the board's 640x480 output and mappings; saved frames place the game
+exactly at 400x240@(120,120), 600x360@(20,60), 640x384@(0,48). tester chose 1.6x,
+then liked the smooth preview.
+
+**native scalers** (`native/blit`, reproducible toolchain: rebuilding the original
+helpers first gave byte-identical blit/sprite/pcm; sprite and pcm unchanged since):
+
+| function | output | board time / frame | verification |
+| --- | --- | --- | --- |
+| `blit` (kit) | 1-bit 1x | 1.57ms | kit suite |
+| `blit16` | 1-bit 1.6x | 2.43ms | per-pixel reference (297 frames); 3,000 on-board samples, 0 mismatches |
+| `blit2` mode 0 | 2-bit 1x | 1.1ms | per-pixel reference, both white levels |
+| `blit2` mode 1 | 2-bit 1.6x sharp | 3.2ms | per-pixel reference; 1,500 on-board samples, 0 mismatches |
+| `blit2` mode 2 | 2-bit 1.6x smooth | 6.0ms (from 8.1 before optimisation) | per-pixel reference; 1,500 on-board samples, 0 mismatches |
+
+host blit suite: 184,130,503 checks under ASAN/UBSAN (and `-Wshadow`).
+
+**2-bit probe on the TV:** 76,800-byte framebuffer allocated in SRAM; four bars
+black / dark grey / light grey / white as expected; HDMI audio accepted at exactly
+32kHz (1,281,064 bytes in 20s vs ~1,280,064) and the tone was heard throughout.
+the 2-bit level-3 white was visibly brighter than the 1-bit white: the HDMI encoder
+puts pixel bits at the top of each channel, so 1-bit white is ~50% (0x80), which
+the tester notes approximates the light grey of the Playdate's Sharp Memory LCD.
+hence `"white": "playdate"` (level 2, default) vs `"bright"` (level 3).
+
+| check | pass / fail / not tested | notes |
+| --- | --- | --- |
+| 1.6x (1-bit) on the TV | pass | tester: "it looks good"; Orbit Breaker 57s: 0 underruns, worst tick 36ms, worst present 4ms |
+| B1 live toggle (1-bit) | pass | 16 toggles incl. mid-game and across gamepad unplug/replug; 0 underruns |
+| onboard buttons as settings only while a pad is connected | pass | tester: "it all worked" |
+| 2-bit three-mode B1 cycle | pass | 9 presses cycled 1x / 1.6x / 1.6x smooth three times, no errors |
+| Playdate-like white default | pass | startup log `white 2` |
+| smooth-mode in-game timing | not tested | no game session in smooth mode was captured yet; splash showed worst present 7-8ms |
+
+**freeze and recovery:** one idle library session (2-bit) ended with
+`game scheduling deadline exceeded (100ms)`: worst tick 384ms, worst pump and
+present both 68ms, service gap 136ms, 1,072 dropped bytes. it coincided with the
+tester closing `code.py` (open from CIRCUITPY) in a text editor, which writes to
+the drive; flash writes stall code running from flash. this is the most likely
+cause of the earlier 70-89ms library stalls too. the library now reopens after
+such a failure with a "RECOVERED" footer (3 failures within 60s still stop the
+app; audio-stop failures stay fatal). after the fix the tester opened and closed
+`code.py` again: no crash. advice: don't keep CIRCUITPY files open while playing.

@@ -104,12 +104,18 @@ def run_scene(hardware, item=None, items=None, selected=0, message='', duration=
 
 
 def main(test=False, endurance=0):
+    import direct_hardware
     from direct_hardware import DirectHardware
     from crank_input import CrankInput, load_config
     from gamepad_input import GamepadInput, load_config as load_gamepad_config
     hardware = DirectHardware()
     crank = None
     try:
+        load_display = getattr(direct_hardware, 'load_display_config', None)
+        if load_display is not None:
+            try: hardware.configure(load_display('/display.json'))  # 2-bit greys, B1 cycles 3 modes
+            except OSError as exc:
+                if exc.args[0] != 2: raise  # missing file keeps 1x
         hardware.initialize()
         try: config=load_config('/crank.json')
         except OSError as exc:
@@ -144,9 +150,22 @@ def main(test=False, endurance=0):
             assert run_scene(hardware,target,duration=3000,scripted=True,name='return')=='library'
             print('IMPOSSIBLE_PLAYDATE_PASS (injected inputs, not physical button presses)')
             return
+        library_failures = []
         while True:
             items = entries()
-            selected = run_scene(hardware,items=items,selected=selected,message=message,crank=crank)  # crank moves the highlight
+            try:
+                selected = run_scene(hardware,items=items,selected=selected,message=message,crank=crank)  # crank moves the highlight
+            except Exception as exc:
+                if isinstance(exc,SceneCleanupError): raise
+                # e.g. a >100ms system freeze while the host writes to CIRCUITPY.
+                # run_scene already stopped audio; reopen the library unless it
+                # keeps failing (3 times within 60s).
+                now = hardware.clock.now()
+                library_failures = [t for t in library_failures if now-t < 60000]+[now]
+                print('LIBRARY_ERROR',repr(exc),'recent',len(library_failures))
+                if len(library_failures) >= 3: raise
+                message = 'RECOVERED: '+str(exc)
+                continue
             message = ''
             try:
                 run_scene(hardware,items[selected],crank=crank)  # Lua games and Sound Explorer

@@ -31,6 +31,14 @@ the first commit is the original review kit, unmodified (all files match its
 - **4-frame audio prefill:** the player pre-mixes 4 frames (was 3), giving ~33ms
   more buffer against heavy game frames at the cost of ~33ms more latency. the
   gamepad also logs its slowest poll per scene (`GAMEPAD_DONE`).
+- **bigger, smoother picture:** with `/display.json` the HDMI framebuffer runs at
+  2-bit greyscale and B1 cycles 1x, 1.6x sharp (640x384, exact 5:3, full width)
+  and 1.6x smooth (area-coverage antialiasing). white defaults to the kit's
+  Playdate-like grey (`"white": "bright"` for brighter). the desktop player
+  previews 1x/1.5x/1.6x/1.6x smooth with `--board-scale`. see
+  `tools/display/README.md`.
+- **library survives a system freeze:** a >100ms stall (for example the computer
+  writing to CIRCUITPY) reopens the library instead of stopping the app.
 - **crank everywhere it fits:** the crank (stick or encoder) moves the library
   highlight, swings in almost tennis (upstream's flick rule), turns the snake in
   simple snake, and changes values in sound explorer. encoder reads retry and
@@ -80,7 +88,9 @@ crank click turns left/right.
 library: crank click (18 degrees) moves the highlight; it never launches a game.
 
 with the gamepad: d-pad = B1/B2 directions (plus up/down), cross = B3, circle =
-B1+B2, options = immediate return to the library.
+B1+B2, options = immediate return to the library. while the gamepad is connected,
+the onboard buttons become settings buttons: B1 cycles the display modes (1x,
+1.6x sharp, 1.6x smooth with `/display.json`; B2/B3 reserved). unplug the gamepad and they are game controls again.
 
 ## start and review
 

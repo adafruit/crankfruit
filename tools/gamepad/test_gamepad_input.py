@@ -415,7 +415,8 @@ class PlayerIntegrationTests(unittest.TestCase):
         self.assertIn("if active & 64: route = 'library'", source)
         self.assertIn("load_gamepad_config('/gamepad.json')", source)
         hardware = (app / 'hardware.py').read_text()
-        self.assertIn('bits |= self.gamepad.poll(now)', hardware)
+        self.assertIn('pad = self.gamepad.poll(now)', hardware)
+        self.assertIn('bits |= pad', hardware)
         self.assertIn('self.gamepad.record_poll(self.clock.now() - now)', hardware)
 
     def test_hardware_read_buttons_merges_gamepad(self):
@@ -437,6 +438,7 @@ class PlayerIntegrationTests(unittest.TestCase):
 
         class Pad:
             bits = A | HOME
+            device = None  # enabled but not connected: onboard buttons still play
             recorded = []
             def poll(self, now):
                 hw.clock.t += 5  # a slow poll, measured by the caller
@@ -454,6 +456,58 @@ class PlayerIntegrationTests(unittest.TestCase):
         hw.gamepad = Pad()
         self.assertEqual(hw.read_buttons(), LEFT | A | HOME)
         self.assertEqual(hw.gamepad.recorded, [5])
+
+    def test_connected_gamepad_turns_onboard_buttons_into_settings(self):
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent.parent / 'app'))
+        try:
+            from hardware import Hardware
+            from player import Debounce
+        finally:
+            sys.path.pop(0)
+
+        class Clock:
+            t = 0
+            def now(self):
+                return self.t
+
+        class Pin:
+            def __init__(self):
+                self.value = True  # released (pull-up)
+
+        class Pad:
+            bits = RIGHT
+            device = object()  # connected
+            def poll(self, now):
+                return self.bits
+            def record_poll(self, spent):
+                pass
+
+        presses = []
+        hw = Hardware()
+        hw.settings_button = presses.append
+        hw.clock = Clock()
+        hw.debounce = Debounce(hw.clock)
+        hw.buttons = [Pin(), Pin(), Pin()]
+        hw.gamepad = Pad()
+        self.assertEqual(hw.read_buttons(), RIGHT)
+        hw.buttons[0].value = False                  # press B1
+        hw.clock.t = 20; hw.read_buttons()           # change seen, still debouncing
+        self.assertEqual(presses, [])
+        hw.clock.t = 40
+        self.assertEqual(hw.read_buttons(), RIGHT)   # stable: B1 is not LEFT any more
+        self.assertEqual(presses, [0])
+        hw.clock.t = 60
+        hw.read_buttons()                            # held: no repeat
+        self.assertEqual(presses, [0])
+        hw.buttons[0].value = True; hw.buttons[2].value = False  # release B1, press B3
+        hw.clock.t = 80; hw.read_buttons()
+        hw.clock.t = 100
+        self.assertEqual(hw.read_buttons(), RIGHT)   # B3 is not A any more
+        self.assertEqual(presses, [0, 2])
+        hw.gamepad.device = None                     # unplugged: B3 plays again
+        hw.clock.t = 120
+        self.assertEqual(hw.read_buttons(), RIGHT | A)
+        self.assertEqual(presses, [0, 2])
 
 
 class PollTimingTests(unittest.TestCase):

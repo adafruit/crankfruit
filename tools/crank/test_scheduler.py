@@ -266,6 +266,60 @@ class MainPolicyTests(unittest.TestCase):
         self.assertFalse(any(isinstance(x,tuple) and x[0]=='constructed' for x in events))
         self.assertIn('hardware_close', events)
 
+    def run_library(self, failures, error_type=RuntimeError, spacing_ms=0):
+        events = []
+        hardware = HardwareFixture(events)
+        library_calls = []
+        def scene(hw, item=None, **kw):
+            if kw.get('items') is not None:
+                library_calls.append(kw.get('message'))
+                hw.clock.advance(spacing_ms)
+                if len(library_calls) <= failures:
+                    raise error_type('game scheduling deadline exceeded (100ms)')
+                return 0
+            if item is not None and item.get('slug') == 'fixture':
+                raise StopMain()
+            return 0
+        out = io.StringIO()
+        with patch.dict(sys.modules, {
+            'direct_hardware': types.SimpleNamespace(DirectHardware=lambda: hardware),
+            'crank_input': types.SimpleNamespace(CrankInput=lambda value: CrankFixture(events),
+                                                 load_config=lambda path: {'enabled': False}),
+        }), patch.object(MAIN, 'entries', lambda: [dict(slug='fixture', kind='lua', enabled=True)]), \
+                patch.object(MAIN, 'run_scene', scene), contextlib.redirect_stdout(out):
+            try:
+                MAIN.main()
+                outcome = None
+            except StopMain:
+                outcome = 'game'
+            except BaseException as exc:
+                outcome = exc
+        return outcome, library_calls, out.getvalue(), events
+
+    def test_library_failure_reopens_library(self):
+        outcome, calls, output, events = self.run_library(2)
+        self.assertEqual(outcome, 'game')                       # reached the game after recovering
+        self.assertEqual(len(calls), 3)
+        self.assertTrue(calls[1].startswith('RECOVERED: '))     # footer explains the restart
+        self.assertEqual(output.count('LIBRARY_ERROR'), 2)
+        self.assertIn('hardware_close', events)
+
+    def test_repeated_library_failures_still_stop(self):
+        outcome, calls, output, events = self.run_library(5)
+        self.assertIsInstance(outcome, RuntimeError)            # 3 within 60s: give up
+        self.assertEqual(len(calls), 3)
+        self.assertIn('hardware_close', events)
+
+    def test_spaced_library_failures_keep_recovering(self):
+        outcome, calls, _, _ = self.run_library(4, spacing_ms=40000)
+        self.assertEqual(outcome, 'game')                       # never 3 inside one minute
+        self.assertEqual(len(calls), 5)
+
+    def test_audio_stop_failure_in_library_is_fatal(self):
+        outcome, calls, _, _ = self.run_library(1, error_type=MAIN.SceneCleanupError)
+        self.assertIsInstance(outcome, MAIN.SceneCleanupError)
+        self.assertEqual(len(calls), 1)
+
 
 if __name__ == '__main__':
     unittest.main()

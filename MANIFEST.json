@@ -16,8 +16,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 6121,
-    "sha256": "39520bea09efc6005194ab7be0a1d5692c764b99b946bd8c38ad967acc5e66bc"
+    "bytes": 6906,
+    "sha256": "a18ebd9614fda3a526f92301334ebf09a85e7e9260b2100dd37b5c5ab79abf21"
   },
   {
     "path": "RESULTS.md",
@@ -41,13 +41,13 @@
   },
   {
     "path": "app-manifest.json",
-    "bytes": 6319,
-    "sha256": "977d37763c878040048abf691273859a29c158624e902f9fb238cb78317230aa"
+    "bytes": 6320,
+    "sha256": "483a7c88cec4b1232aa0643455c3c0ee3650fbaeae1ef94e02d75e1f3be3ac5e"
   },
   {
     "path": "app/_crankfruit_blit.mpy",
-    "bytes": 474,
-    "sha256": "d05cc81cf38a3ca162081fbfae7017d65e97f4a7ae0b10b090c2e40a9abc3e95"
+    "bytes": 3214,
+    "sha256": "576e25d4152a8ea69c664646b8e1ef7788830b9832d1feeaa6b49c9d14eb8810"
   },
   {
     "path": "app/_crankfruit_pcm.mpy",
@@ -101,13 +101,13 @@
   },
   {
     "path": "app/crankfruit.py",
-    "bytes": 7842,
-    "sha256": "4d32304024ec5c0eb3dd5ccc84e453e5d1ee4d33e7ca2833535f7dee610c8348"
+    "bytes": 8889,
+    "sha256": "12022c1e92bd3ba2e64e83f56f06cdac997fd9a79e1047fd4ef38e4a37baee0d"
   },
   {
     "path": "app/direct_hardware.py",
-    "bytes": 1501,
-    "sha256": "e8032d984471004907a53cf2f7d63908b669c9e7d489f7f383831f0bc24e1d13"
+    "bytes": 5349,
+    "sha256": "4925040a2365277952ed3a4a25007ac5da9e3dd15518412fcbad3d380ffb1668"
   },
   {
     "path": "app/gamepad_input.py",
@@ -151,8 +151,8 @@
   },
   {
     "path": "app/hardware.py",
-    "bytes": 6871,
-    "sha256": "bbf5102ec705c3bb68e6b696e083195b580c546238a991869859a737c4038fba"
+    "bytes": 7802,
+    "sha256": "40b5fbaa3f1aa1d725b84d218b1ef17e0f9b617becd3949ad2f036b0d5269cdc"
   },
   {
     "path": "app/library.py",
@@ -306,8 +306,8 @@
   },
   {
     "path": "engine/README.md",
-    "bytes": 2444,
-    "sha256": "5e592749b74d5b69454ebc08c55dffca8cb423648e92b6e58923f0ef5c8ee9c7"
+    "bytes": 3551,
+    "sha256": "a33cd9006849e1bfbc3e2da89dba4354847a3311f912a5f16998aeb6d7276e99"
   },
   {
     "path": "engine/backends/circuitpython/crankjam/arena.h",
@@ -631,8 +631,8 @@
   },
   {
     "path": "engine/host/main.c",
-    "bytes": 10921,
-    "sha256": "17251fee578173f4d83676a95bb284639747db3c81d1009c43257fda1cda1b63"
+    "bytes": 16218,
+    "sha256": "b7c04e99cc8db84b7cc15304041d3f73fbb8ceff37601f772667843a0a6b9ff7"
   },
   {
     "path": "engine/include/crankjam.h",
@@ -1251,13 +1251,13 @@
   },
   {
     "path": "native/BUILD-RESULTS.json",
-    "bytes": 2855,
-    "sha256": "9e48c4e78a088abbec6701f196e89af27e224315e0ef988ce2be37f326512b64"
+    "bytes": 2971,
+    "sha256": "b3e6a82a5b617c04d78f171aa70c2e8a36cc4eb2f531ec6d4e79b95ee9193e9a"
   },
   {
     "path": "native/HOST-RESULTS.json",
-    "bytes": 1977,
-    "sha256": "548bfd9fb6c2ee31c09f12c91d1a6be3b5573b2371ccf9846048103022cdab20"
+    "bytes": 2092,
+    "sha256": "c78f992dbf106bc79e0756a560e228285e1e283c769195d5723e6c99a9abcedf"
   },
   {
     "path": "native/LICENSE",
@@ -1271,33 +1271,33 @@
   },
   {
     "path": "native/blit/_crankfruit_blit.mpy",
-    "bytes": 474,
-    "sha256": "d05cc81cf38a3ca162081fbfae7017d65e97f4a7ae0b10b090c2e40a9abc3e95"
+    "bytes": 3214,
+    "sha256": "576e25d4152a8ea69c664646b8e1ef7788830b9832d1feeaa6b49c9d14eb8810"
   },
   {
     "path": "native/blit/blit.c",
-    "bytes": 864,
-    "sha256": "4c3ff7e284a4fb5282d5a2b040f25c88fce265d7bb9001bef707cf56f4b4a628"
+    "bytes": 7986,
+    "sha256": "62c41c828212fc324dad1200915f2d12a97f5ecb6a1403ee192b16f04d169130"
   },
   {
     "path": "native/blit/blit.h",
-    "bytes": 450,
-    "sha256": "149a6381ceb6eb6f78c657584ec7b66bd4475e5b3e39ec40096a15d3dc195c0f"
+    "bytes": 1428,
+    "sha256": "efc7e118913ab91459ff33252512ad3fbfb0dccd6d0a9c1ee060bfb43f4314f4"
   },
   {
     "path": "native/blit/module.c",
-    "bytes": 878,
-    "sha256": "e2a976b3b5bde649565f793736605ead50362a34a9a23b2aff7ae8c2eee72d73"
+    "bytes": 2287,
+    "sha256": "4dc8cd34e6fd4013fcd80c6df15223d9181e7e6a1f16410057efa6e1f064696d"
   },
   {
     "path": "native/blit/reference.py",
-    "bytes": 726,
-    "sha256": "9aa0f8e2ef66db9e8dab3ef7dc295318188b0a939e43ab7538aa1a2e3ab91baf"
+    "bytes": 3100,
+    "sha256": "22c0a446ffb71214f25aafd197e7739c7f5bd735ca814919e5fc34ed05713f50"
   },
   {
     "path": "native/blit/test_blit.c",
-    "bytes": 2866,
-    "sha256": "133fcf6f4bd14ca7c51202c7d6048ff7848a83fad16da381aa78c8c9b998dcae"
+    "bytes": 8772,
+    "sha256": "dadc286ef181c5fbcfe53a401a601098098e29d9f67979e07c4ed9368ff1fe31"
   },
   {
     "path": "native/build.py",
@@ -1661,8 +1661,28 @@
   },
   {
     "path": "tools/crank/test_scheduler.py",
-    "bytes": 10975,
-    "sha256": "81fe35cdd6390396db46fb3916590f7b6d3d357e5733d076a1fb56834b5b7065"
+    "bytes": 13675,
+    "sha256": "94806795f2084a97b1c4a23df97de42fa2fa3c8d3cb74e255b09f98b3c4517f2"
+  },
+  {
+    "path": "tools/display/LICENSE",
+    "bytes": 1088,
+    "sha256": "73997029cb3fe9bddfcbfd0671388169920e5756c955f6dbd2a892e425526986"
+  },
+  {
+    "path": "tools/display/README.md",
+    "bytes": 2678,
+    "sha256": "b0451c1f9d1deae66464a9ab2174553707bbc33cd349523dad77a13edc4a6e97"
+  },
+  {
+    "path": "tools/display/display-config.json",
+    "bytes": 18,
+    "sha256": "650a1aad6e06bc0697f31d69a1b43dfc2a0be0474a3c8d148a91b49353edcd5b"
+  },
+  {
+    "path": "tools/display/test_display.py",
+    "bytes": 8830,
+    "sha256": "68a9bef3d46965cb5173946ba8a17551cf48a875780a826a4cc1ef04b1a483ba"
   },
   {
     "path": "tools/gamepad/LICENSE",
@@ -1686,8 +1706,8 @@
   },
   {
     "path": "tools/gamepad/test_gamepad_input.py",
-    "bytes": 19723,
-    "sha256": "3798d8b1d9854fa4511770ce5823fc719bd0f61948fb242df16991d61c81860f"
+    "bytes": 21810,
+    "sha256": "2e91a8fec3fe5c967c27e08d566ba642c9acba50600e5ddde5a24056e526b89c"
   },
   {
     "path": "tools/sound/LICENSE",
@@ -1761,7 +1781,7 @@
   },
   {
     "path": "verify.py",
-    "bytes": 1273,
-    "sha256": "acaa181597d2221f5bc3343e4b993bdd77434a19c7e798927600674de533daa5"
+    "bytes": 1289,
+    "sha256": "a5be59f1c1e0eb67af9aeeb57266feae4daf2d39c5cd23be794696f888491982"
   }
 ]

@@ -16,6 +16,8 @@ typedef struct { unsigned long frame; uint32_t buttons; float angle,delta; } eve
 static void usage(const char *exe) {
     fprintf(stderr,"Usage: %s SOURCE.lua [--headless] [--frames N] [--heap BYTES]\n"
         "  [--input-script FILE] [--pbm FINAL.pbm] [--wav AUDIO.wav] [--sample-rate HZ]\n"
+        "  [--board-scale 1|1.5|1.6|1.6s] [--scaled-pbm FINAL640x480.pbm]\n"
+        "--board-scale shows the Fruit Jam 640x480 HDMI output (Tab cycles scales in SDL).\n"
         "Input rows: frame buttons crank_degrees crank_delta; # comments allowed.\n"
         "Rows strictly increasing, zero-based; buttons/angle held, delta per event only.\n"
         "Buttons: Left=1 Right=2 Up=4 Down=8 B=16 A=32 (sum for combinations).\n"
@@ -41,6 +43,67 @@ static int pbm_write(const char *path,const uint8_t *fb) {
     if (fclose(f)) ok=0;
     return ok;
 }
+/* Board scanout emulation: the 400x240 game inside the Fruit Jam's 640x480 HDMI
+ * output, scaled num/den with a fixed nearest-neighbour mapping (the pattern a
+ * board blit helper would use). 1.5x alternates 2- and 1-pixel columns/rows;
+ * 1.6x maps every 5 game pixels to 8 output pixels. Border is black.
+ * "1.6x smooth" previews a 2-bit (4 grey level) framebuffer: each output pixel's
+ * grey is the exact area coverage of the game pixels under it, rounded to 4 levels. */
+#define BOARD_W 640
+#define BOARD_H 480
+#define BOARD_LEVELS 4
+typedef struct { int num, den, smooth; const char *key, *name; } board_scale;
+static const board_scale BOARD_SCALES[]={{1,1,0,"1","1x"},{3,2,0,"1.5","1.5x"},{8,5,0,"1.6","1.6x"},
+                                         {8,5,1,"1.6s","1.6x smooth"}};
+#define BOARD_SCALE_COUNT 4
+static int game_bit(const uint8_t *fb,int sx,int sy) {
+    return (fb[sy*CJ_STRIDE+sx/8]&(128u>>(unsigned)(sx&7))) ? 1 : 0;
+}
+/* Grey level 0 (black) .. BOARD_LEVELS-1 (white); -1 = border outside the game. */
+static int board_pixel(const uint8_t *fb,const board_scale *s,int x,int y) {
+    int w=CJ_WIDTH*s->num/s->den, h=CJ_HEIGHT*s->num/s->den;
+    int ox=(BOARD_W-w)/2, oy=(BOARD_H-h)/2;
+    if (x<ox || x>=ox+w || y<oy || y>=oy+h) return -1;
+    x-=ox; y-=oy;
+    if (!s->smooth) return game_bit(fb,x*s->den/s->num,y*s->den/s->num) ? BOARD_LEVELS-1 : 0;
+    /* Output pixel spans [x*den, (x+1)*den) in units of 1/num game pixel. */
+    int x0=x*s->den, x1=x0+s->den, y0=y*s->den, y1=y0+s->den, covered=0;
+    for (int sy=y0/s->num; sy*s->num<y1 && sy<CJ_HEIGHT; ++sy) {
+        int oy0=y0>sy*s->num ? y0 : sy*s->num, oy1=y1<(sy+1)*s->num ? y1 : (sy+1)*s->num;
+        for (int sx=x0/s->num; sx*s->num<x1 && sx<CJ_WIDTH; ++sx) {
+            if (!game_bit(fb,sx,sy)) continue;
+            int ox0=x0>sx*s->num ? x0 : sx*s->num, ox1=x1<(sx+1)*s->num ? x1 : (sx+1)*s->num;
+            covered+=(ox1-ox0)*(oy1-oy0);
+        }
+    }
+    int area=s->den*s->den; /* round(covered/area * (levels-1)) */
+    return (covered*(BOARD_LEVELS-1)*2+area)/(2*area);
+}
+static int board_pbm_write(const char *path,const uint8_t *fb,const board_scale *s) {
+    FILE *f=fopen(path,"wb"); if (!f) return 0;
+    int ok;
+    if (s->smooth) { /* grey levels need PGM */
+        ok=fprintf(f,"P5\n%d %d\n255\n",BOARD_W,BOARD_H)>0;
+        for (int y=0;y<BOARD_H && ok;++y) for (int x=0;x<BOARD_W && ok;++x) {
+            int level=board_pixel(fb,s,x,y);
+            ok=fputc(level<0 ? 0 : level*255/(BOARD_LEVELS-1),f)!=EOF;
+        }
+    } else {
+        ok=fprintf(f,"P4\n%d %d\n",BOARD_W,BOARD_H)>0;
+        for (int y=0;y<BOARD_H && ok;++y) for (int x=0;x<BOARD_W && ok;x+=8) {
+            unsigned byte=0;
+            for (int k=0;k<8;++k) if (board_pixel(fb,s,x+k,y)!=BOARD_LEVELS-1) byte|=128u>>(unsigned)k; /* PBM 1=black */
+            ok=fputc((int)byte,f)!=EOF;
+        }
+    }
+    if (fclose(f)) ok=0;
+    return ok;
+}
+static int board_scale_index(const char *s) {
+    for (int i=0;i<BOARD_SCALE_COUNT;++i)
+        if (!strcmp(s,BOARD_SCALES[i].key) || !strcmp(s,BOARD_SCALES[i].name)) return i;
+    fprintf(stderr,"invalid --board-scale: %s (use 1, 1.5, 1.6 or 1.6s)\n",s); exit(2);
+}
 static event *read_events(const char *path,size_t *count) {
     *count=0; if (!path) return NULL;
     FILE *f=fopen(path,"r"); if (!f) { perror(path); exit(2); }
@@ -64,8 +127,8 @@ static event *read_events(const char *path,size_t *count) {
 }
 int main(int argc,char **argv) {
     if (argc<2 || !strcmp(argv[1],"--help")) { usage(argv[0]); return argc<2 ? 2 : 0; }
-    const char *source_path=argv[1], *input_path=NULL, *pbm_path=NULL, *wav_path=NULL;
-    unsigned long frames=0, heap=HEAP_DEFAULT; unsigned rate=22050; int headless=0;
+    const char *source_path=argv[1], *input_path=NULL, *pbm_path=NULL, *wav_path=NULL, *scaled_pbm_path=NULL;
+    unsigned long frames=0, heap=HEAP_DEFAULT; unsigned rate=22050; int headless=0, board=-1;
     for (int i=2;i<argc;++i) {
         if (!strcmp(argv[i],"--headless")) { headless=1; continue; }
         if (i+1>=argc) { usage(argv[0]); return 2; }
@@ -76,8 +139,11 @@ int main(int argc,char **argv) {
         else if (!strcmp(opt,"--input-script")) input_path=value;
         else if (!strcmp(opt,"--pbm")) pbm_path=value;
         else if (!strcmp(opt,"--wav")) wav_path=value;
+        else if (!strcmp(opt,"--board-scale")) board=board_scale_index(value);
+        else if (!strcmp(opt,"--scaled-pbm")) scaled_pbm_path=value;
         else { usage(argv[0]); return 2; }
     }
+    if (scaled_pbm_path && board<0) { fprintf(stderr,"--scaled-pbm requires --board-scale\n"); return 2; }
 #ifdef CJ_NO_SDL
     headless=1;
 #endif
@@ -97,14 +163,23 @@ int main(int argc,char **argv) {
 #ifndef CJ_NO_SDL
     if (!headless) {
         if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_EVENTS)) { fprintf(stderr,"SDL init: %s\n",SDL_GetError()); goto done; }
-        window=SDL_CreateWindow("CrankJam — source Lua",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,800,480,SDL_WINDOW_RESIZABLE);
+        int view_w=board<0 ? CJ_WIDTH : BOARD_W, view_h=board<0 ? CJ_HEIGHT : BOARD_H;
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY,"nearest");
+        /* Board mode: each 640x480 output pixel is a whole 2x2 block of window pixels. */
+        window=SDL_CreateWindow("CrankJam — source Lua",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,
+                                board<0 ? 800 : 2*BOARD_W,board<0 ? 480 : 2*BOARD_H,SDL_WINDOW_RESIZABLE);
         if (!window) goto sdl_error;
         renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
         if (!renderer) renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_SOFTWARE);
         if (!renderer) goto sdl_error;
-        SDL_RenderSetLogicalSize(renderer,CJ_WIDTH,CJ_HEIGHT);
-        texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,CJ_WIDTH,CJ_HEIGHT);
-        pixels=malloc(CJ_WIDTH*CJ_HEIGHT*sizeof *pixels); if (!texture || !pixels) goto sdl_error;
+        SDL_RenderSetLogicalSize(renderer,view_w,view_h);
+        if (board>=0) {
+            SDL_RenderSetIntegerScale(renderer,SDL_TRUE);
+            char title[96]; snprintf(title,sizeof title,"CrankJam — Fruit Jam HDMI %s (Tab cycles)",BOARD_SCALES[board].name);
+            SDL_SetWindowTitle(window,title);
+        }
+        texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,view_w,view_h);
+        pixels=malloc((size_t)view_w*(size_t)view_h*sizeof *pixels); if (!texture || !pixels) goto sdl_error;
         SDL_AudioSpec wanted, obtained; SDL_zero(wanted);
         wanted.freq=(int)rate; wanted.format=AUDIO_S16SYS; wanted.channels=1; wanted.samples=1024; wanted.callback=NULL;
         device=SDL_OpenAudioDevice(NULL,0,&wanted,&obtained,0); if (!device) goto sdl_error;
@@ -124,7 +199,14 @@ int main(int argc,char **argv) {
 #ifndef CJ_NO_SDL
         if (!headless) {
             SDL_Event e;
-            while (SDL_PollEvent(&e)) if (e.type==SDL_QUIT || (e.type==SDL_KEYDOWN && e.key.keysym.sym==SDLK_ESCAPE)) running=0;
+            while (SDL_PollEvent(&e)) {
+                if (e.type==SDL_QUIT || (e.type==SDL_KEYDOWN && e.key.keysym.sym==SDLK_ESCAPE)) running=0;
+                else if (board>=0 && e.type==SDL_KEYDOWN && e.key.keysym.sym==SDLK_TAB && !e.key.repeat) {
+                    board=(board+1)%BOARD_SCALE_COUNT;
+                    char title[96]; snprintf(title,sizeof title,"CrankJam — Fruit Jam HDMI %s (Tab cycles)",BOARD_SCALES[board].name);
+                    SDL_SetWindowTitle(window,title);
+                }
+            }
             if (!running) break;
             const Uint8 *keys=SDL_GetKeyboardState(NULL);
             buttons=(keys[SDL_SCANCODE_LEFT]?CJ_LEFT:0u)|(keys[SDL_SCANCODE_RIGHT]?CJ_RIGHT:0u)|
@@ -154,9 +236,18 @@ int main(int argc,char **argv) {
         if (!headless) {
             if (SDL_QueueAudio(device,pcm,(Uint32)(count*sizeof *pcm))) goto sdl_error;
             const uint8_t *fb=cj_framebuffer(r);
-            for (int y=0;y<CJ_HEIGHT;++y) for (int x=0;x<CJ_WIDTH;++x)
-                pixels[y*CJ_WIDTH+x]=(fb[y*CJ_STRIDE+x/8]&(128u>>(unsigned)(x&7))) ? 0xffeeeeeeu : 0xff101810u;
-            if (SDL_UpdateTexture(texture,NULL,pixels,CJ_WIDTH*(int)sizeof *pixels) || SDL_RenderClear(renderer) || SDL_RenderCopy(renderer,texture,NULL,NULL)) goto sdl_error;
+            int pitch_w=CJ_WIDTH;
+            if (board<0) {
+                for (int y=0;y<CJ_HEIGHT;++y) for (int x=0;x<CJ_WIDTH;++x)
+                    pixels[y*CJ_WIDTH+x]=(fb[y*CJ_STRIDE+x/8]&(128u>>(unsigned)(x&7))) ? 0xffeeeeeeu : 0xff101810u;
+            } else {
+                /* border, then grey levels 0..3 from the host's black to its white */
+                static const uint32_t colour[1+BOARD_LEVELS]={0xff000000u,0xff101810u,0xff5a5f5au,0xffa4a6a4u,0xffeeeeeeu};
+                for (int y=0;y<BOARD_H;++y) for (int x=0;x<BOARD_W;++x)
+                    pixels[y*BOARD_W+x]=colour[board_pixel(fb,&BOARD_SCALES[board],x,y)+1];
+                pitch_w=BOARD_W;
+            }
+            if (SDL_UpdateTexture(texture,NULL,pixels,pitch_w*(int)sizeof *pixels) || SDL_RenderClear(renderer) || SDL_RenderCopy(renderer,texture,NULL,NULL)) goto sdl_error;
             SDL_RenderPresent(renderer);
             double used=(double)(SDL_GetPerformanceCounter()-begin)/(double)SDL_GetPerformanceFrequency();
             if (used<dt) SDL_Delay((Uint32)((dt-used)*1000));
@@ -167,6 +258,7 @@ int main(int argc,char **argv) {
         ++completed;
     }
     if (pbm_path && !pbm_write(pbm_path,cj_framebuffer(r))) { perror(pbm_path); goto done; }
+    if (scaled_pbm_path && !board_pbm_write(scaled_pbm_path,cj_framebuffer(r),&BOARD_SCALES[board])) { perror(scaled_pbm_path); goto done; }
     if (wav) {
         int ok=wav_header(wav,(uint32_t)sample_count,rate); if (fclose(wav)) ok=0; wav=NULL;
         if (!ok) { fprintf(stderr,"WAV finalize failed\n"); goto done; }

@@ -22,7 +22,7 @@ def run(*args):
     assert 'Ran 0 tests' not in result.stdout+result.stderr,'empty test discovery'
 run('install.py','--validate-only')
 run('test_installer.py')
-for folder in ('tools/cartridges','tools/sound','tools/crank','tools/gamepad','tests/audio','tools/art/tools'):
+for folder in ('tools/cartridges','tools/sound','tools/crank','tools/gamepad','tools/display','tests/audio','tools/art/tools'):
     run('-m','unittest','discover','-s',folder,'-v')
 run('tools/art/test_assets.py')
 print('PORTABLE_HOST_CHECKS_PASS; no hardware was accessed',flush=True)
