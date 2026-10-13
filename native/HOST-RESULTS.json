@@ -1,14 +1,14 @@
 [
   {
     "module": "blit",
-    "host_result": "PASS checks=184130503 exhaustive_byte_values=256 patterned_frames=1 invalid_sizes_nulls_overlap=12 guards_and_padding=passed; blit16 frames=297 per_pixel_reference invalid=7; blit2 frames=45 modes=3 whites=2 per_pixel_reference invalid=8",
+    "host_result": "PASS checks=184130532 exhaustive_byte_values=256 patterned_frames=1 invalid_sizes_nulls_overlap=12 guards_and_padding=passed; blit16 frames=297 per_pixel_reference invalid=7; blit2 frames=45 modes=3 whites=2 per_pixel_reference invalid=8; frame_changed positions=4 aligned_and_unaligned invalid=3",
     "host_sanitizers": "address,undefined",
     "source_sha256": {
-      "blit.c": "62c41c828212fc324dad1200915f2d12a97f5ecb6a1403ee192b16f04d169130",
-      "blit.h": "efc7e118913ab91459ff33252512ad3fbfb0dccd6d0a9c1ee060bfb43f4314f4",
-      "module.c": "4dc8cd34e6fd4013fcd80c6df15223d9181e7e6a1f16410057efa6e1f064696d",
-      "reference.py": "22c0a446ffb71214f25aafd197e7739c7f5bd735ca814919e5fc34ed05713f50",
-      "test_blit.c": "dadc286ef181c5fbcfe53a401a601098098e29d9f67979e07c4ed9368ff1fe31"
+      "blit.c": "d1c61c2e613b832cf2de020c657bdbbdc96e7d6dec96d45581c53670dfa1f31d",
+      "blit.h": "f6c4c491c2cd9e5892748e9890d2c3bc596e0b1c56e3ecb620bde885729a53b3",
+      "module.c": "d33e45b98418bcf2d824ef29f96c7bf1d71a10b4de9b5d57d1cfbbf2768c7339",
+      "reference.py": "ae7b5f8b9e22f90fcb877376d05e6dd44a65214002371b2b2ccabbf2fe14b3bf",
+      "test_blit.c": "2ba6a47dbcd1f3ad000821c1d9f50a237f38e353613ae1190b8926d191f2f9d4"
     }
   },
   {

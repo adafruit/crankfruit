@@ -316,7 +316,7 @@ hence `"white": "playdate"` (level 2, default) vs `"bright"` (level 3).
 | onboard buttons as settings only while a pad is connected | pass | tester: "it all worked" |
 | 2-bit three-mode B1 cycle | pass | 9 presses cycled 1x / 1.6x / 1.6x smooth three times, no errors |
 | Playdate-like white default | pass | startup log `white 2` |
-| smooth-mode in-game timing | not tested | no game session in smooth mode was captured yet; splash showed worst present 7-8ms |
+| smooth-mode in-game timing | pass (tight) | Almost Tennis, 2-bit, modes cycled during play: see frame-skip section below; 0 dropped bytes, but heaviest frames exceed 33ms |
 
 **freeze and recovery:** one idle library session (2-bit) ended with
 `game scheduling deadline exceeded (100ms)`: worst tick 384ms, worst pump and
@@ -327,3 +327,25 @@ cause of the earlier 70-89ms library stalls too. the library now reopens after
 such a failure with a "RECOVERED" footer (3 failures within 60s still stop the
 app; audio-stop failures stay fatal). after the fix the tester opened and closed
 `code.py` again: no crash. advice: don't keep CIRCUITPY files open while playing.
+
+### unchanged-frame skipping (2026-10-13)
+
+first Almost Tennis session in 2-bit (modes cycled 1x / 1.6x / 1.6x smooth during
+play, 93s): worst step 18ms, mix 14ms, present 8ms, tick 46ms; 1,572 late frames,
+6 missed deadlines, 1 underrun, 0 dropped bytes. the scaler ran on every frame
+although Almost Tennis draws at 20Hz.
+
+new native `frame_changed` (word-wise compare-and-copy; 0.23ms on the board for an
+identical frame, 0.11ms when changed; the Python buffers are in PSRAM, so a
+byte-wise version took 0.88ms) lets `present()` skip the scaler for unchanged
+frames, forcing a redraw at startup and after each B1 mode switch.
+
+| scene (2-bit, mostly smooth) | play | presents skipped | late frames | missed | underruns / dropped | worst tick / gap |
+| --- | --- | --- | --- | --- | --- | --- |
+| library | 33s | 828 of 997 (83%) | 770 | 0 | 0 / 0 | 30 / 31ms |
+| Almost Tennis (B1 cycled twice) | 87s | 970 of 2,617 (37%) | 303 | 5 | 0 / 0 | 46 / 94ms |
+
+remaining: Almost Tennis's heaviest frames (step 18 + mix 14 + smooth present 8ms)
+still exceed the 33ms frame; the 4-frame audio buffer absorbed them in this run.
+possible next step: cache each source row's 5-pixel groups to cut smooth from ~6
+to ~4ms.

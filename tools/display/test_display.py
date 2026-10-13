@@ -160,6 +160,70 @@ class TwoBitTests(unittest.TestCase):
             self.assertEqual((dst[y * 160 + x // 4] >> (2 * (x % 4))) & 3, level, (x, y))
 
 
+class SkipUnchangedTests(unittest.TestCase):
+    def make(self, with_helper=True):
+        from direct_hardware import DirectHardware
+        hw = DirectHardware()
+        hw.closed = False
+        hw.scan_view = bytearray(76800)
+        hw._frame = bytearray(12480)
+        hw._previous = bytearray(12480)
+        hw._changed = reference_module().frame_changed if with_helper else None
+        hw._force = True
+        hw.skipped_presents = 0
+        hw.blits = []
+        hw._blit = lambda src, dst: hw.blits.append(bytes(src[:4])) or 76800
+        hw._blit_bytes = 76800
+        return hw
+
+    def runtime(self, pattern):
+        class Runtime:
+            def copy_framebuffer_into(self, target, stride=52):
+                target[:] = bytes([pattern[0]]) * len(target)
+                return 12000
+        return Runtime()
+
+    def test_unchanged_frames_skip_the_scaler(self):
+        hw = self.make()
+        frame = [0]
+        rt = self.runtime(frame)
+        hw.present(rt)                     # first frame always drawn (forced)
+        hw.present(rt); hw.present(rt)     # identical: skipped
+        frame[0] = 9
+        hw.present(rt)                     # changed: drawn
+        hw.present(rt)
+        self.assertEqual(len(hw.blits), 2)
+        self.assertEqual(hw.skipped_presents, 3)
+
+    def test_mode_switch_forces_a_redraw(self):
+        import sys
+        hw = self.make()
+        rt = self.runtime([5])
+        hw.present(rt); hw.present(rt)
+        self.assertEqual(len(hw.blits), 1)
+        sys.modules['_crankfruit_blit'] = types.SimpleNamespace(
+            blit='one', blit16='scaled', blit2=lambda src, dst, mode, white: 76800)
+        try:
+            hw.color_depth = 2
+            hw.set_scale('1.6')
+        finally:
+            del sys.modules['_crankfruit_blit']
+        hw.present(rt)                     # same frame, new mode: drawn once
+        hw.present(rt)
+        self.assertEqual(hw.skipped_presents, 2)
+
+    def test_old_helper_without_frame_changed_draws_every_frame(self):
+        hw = self.make(with_helper=False)
+        rt = self.runtime([1])
+        for _ in range(3):
+            hw.present(rt)
+        self.assertEqual((len(hw.blits), hw.skipped_presents), (3, 0))
+
+    def test_scene_end_reports_skips(self):
+        source = (KIT / 'app' / 'crankfruit.py').read_text()
+        self.assertIn("print('DISPLAY_DONE',scene,'skipped_unchanged_presents',skipped)", source)
+
+
 class ReferenceTests(unittest.TestCase):
     def test_python_reference_matches_mapping(self):
         ref = reference_module()

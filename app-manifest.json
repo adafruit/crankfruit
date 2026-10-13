@@ -1,8 +1,8 @@
 [
   {
     "path": "_crankfruit_blit.mpy",
-    "bytes": 3214,
-    "sha256": "576e25d4152a8ea69c664646b8e1ef7788830b9832d1feeaa6b49c9d14eb8810"
+    "bytes": 3843,
+    "sha256": "3793218ce6496b625fe3d9b552a8f27ed3ea12dd9776d0bb06904216aa1efa95"
   },
   {
     "path": "_crankfruit_pcm.mpy",
@@ -56,13 +56,13 @@
   },
   {
     "path": "crankfruit.py",
-    "bytes": 8889,
-    "sha256": "12022c1e92bd3ba2e64e83f56f06cdac997fd9a79e1047fd4ef38e4a37baee0d"
+    "bytes": 9102,
+    "sha256": "1f280ff0ac659fade1d78e5ff6047fed71ca89b0177708af09b6d2321e123dbf"
   },
   {
     "path": "direct_hardware.py",
-    "bytes": 5349,
-    "sha256": "4925040a2365277952ed3a4a25007ac5da9e3dd15518412fcbad3d380ffb1668"
+    "bytes": 6081,
+    "sha256": "51fc2b799b7bd135f48ab520095a8ff6739c327d956f7307e71e75a271afc623"
   },
   {
     "path": "gamepad_input.py",

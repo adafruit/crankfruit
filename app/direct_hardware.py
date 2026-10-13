@@ -80,6 +80,12 @@ class DirectHardware(Hardware):
         if len(self.scan_view) != expected:
             raise HardwareError("direct scanout requires exactly %d bytes for 640x480 at %d-bit" % (expected, self.color_depth))
         self._zeros = bytes(38400) if self.color_depth == 1 else None  # 1-bit 1x leaves edges
+        # Skip scaling frames the game did not change (e.g. games drawing at 20Hz).
+        self._frame = bytearray(12480)      # this frame, copied out of the runtime
+        self._previous = bytearray(12480)   # last frame actually presented
+        self._changed = getattr(_crankfruit_blit, 'frame_changed', None)
+        self._force = True                   # first frame, and after mode switches
+        self.skipped_presents = 0
         print("DISPLAY_PATH", "native scanout", "640x480", "%d-bit" % self.color_depth, "scale", self.scale,
               "white", self.white if self.color_depth == 2 else 1)
         return self
@@ -100,14 +106,20 @@ class DirectHardware(Hardware):
         if scale == '1' and self.color_depth == 1 and self.scan_view is not None:
             self.scan_view[:] = self._zeros  # 1-bit 1x writes only the centre: drop old edges
         self.scale = scale
+        self._force = True  # show the new mode even if the game frame is unchanged
         print("DISPLAY_SCALE", scale)
 
     def present(self, runtime):
         if self.closed or self.scan_view is None:
             raise HardwareError("scanout already closed")
-        if runtime.copy_framebuffer_into(self.frame_view, stride=52) != 12000:
+        if runtime.copy_framebuffer_into(self._frame, stride=52) != 12000:
             raise HardwareError("Runtime framebuffer byte count mismatch")
-        if self._blit(self.frame_view, self.scan_view) != self._blit_bytes:
+        changed = self._changed is None or self._changed(self._frame, self._previous)
+        if not changed and not self._force:
+            self.skipped_presents += 1
+            return True
+        self._force = False
+        if self._blit(self._frame, self.scan_view) != self._blit_bytes:
             raise HardwareError("native scanout byte count mismatch")
         return True
 

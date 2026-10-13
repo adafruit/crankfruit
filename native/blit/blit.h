@@ -19,5 +19,9 @@ int cf_blit16(const uint8_t *src, size_t src_len, uint8_t *dst, size_t dst_len);
  * round(white * covered area / 25) in 1/8-source-pixel units. Writes the whole
  * destination. Returns 76800, -1 for size/null/mode/white, -2 for overlap. */
 enum { CF_DEST2_BYTES = 76800 };
+/* Compare a 12480-byte frame with the previously presented copy: returns 1 and
+ * copies src into prev if they differ, 0 if identical, -1 for size/null, -2 for
+ * overlap. Lets the player skip scaling frames the game did not change. */
+int cf_frame_changed(const uint8_t *src, size_t src_len, uint8_t *prev, size_t prev_len);
 int cf_blit2(const uint8_t *src, size_t src_len, uint8_t *dst, size_t dst_len, int mode, int white);
 #endif

@@ -85,6 +85,10 @@ def run_scene(hardware, item=None, items=None, selected=0, message='', duration=
         sensor = getattr(crank, 'sensor', None)
         if hasattr(sensor, 'scene_metrics'):
             print('CRANK_DONE',scene,sensor.scene_metrics())  # encoder read glitches
+        skipped = getattr(hardware, 'skipped_presents', None)
+        if skipped is not None:
+            print('DISPLAY_DONE',scene,'skipped_unchanged_presents',skipped)
+            hardware.skipped_presents = 0
         if scripted:
             assert player.metrics['errors'] == player.metrics['deadline_failures'] == 0
             assert player.stream.metrics['errors'] == player.stream.metrics['dropped_bytes'] == player.stream.metrics['underrun_observations'] == 0

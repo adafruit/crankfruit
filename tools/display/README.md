@@ -39,5 +39,12 @@ all pixel-exact in on-board samples; 3,000 sampled output pixels matched the map
 `native/build.py` (C sanitizer suite against a per-pixel reference) and
 `python3 -m unittest discover -s tools/display` (config, selection, Python reference).
 
+**unchanged frames are skipped:** each presented frame is compared with the last
+one drawn (native `frame_changed`, word-wise; ~0.23ms on the board for an identical
+frame, as the Python buffers sit in PSRAM). if nothing changed, the scaler is not
+run; a redraw is forced at startup and after each B1 mode switch. games that draw
+at 20Hz (Almost Tennis) and static screens save most of the scaling cost. each
+scene logs `DISPLAY_DONE <scene> skipped_unchanged_presents N`.
+
 for correct proportions, set the TV's picture size for this input to 4:3 /
 "Original" / "Just Scan"; many TVs stretch 640x480 to 16:9 by default.

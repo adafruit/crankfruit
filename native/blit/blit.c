@@ -167,3 +167,26 @@ int cf_blit2(const uint8_t *src, size_t src_len, uint8_t *dst, size_t dst_len, i
     }
     return CF_DEST2_BYTES;
 }
+
+int cf_frame_changed(const uint8_t *src, size_t src_len, uint8_t *prev, size_t prev_len) {
+    if (!src || !prev || src_len != CF_SOURCE_BYTES || prev_len != CF_SOURCE_BYTES) return -1;
+    uintptr_t s = (uintptr_t)src, d = (uintptr_t)prev;
+    if (s <= d ? d - s < src_len : s - d < prev_len) return -2;
+    size_t i = 0;
+    if (((s | d) & 3u) == 0) {
+        /* Word path: Python buffers on the board sit in slower PSRAM, so fewer,
+         * wider accesses matter. may_alias keeps the byte views well-defined. */
+        typedef uint32_t __attribute__((__may_alias__)) word_t;
+        const word_t *sw = (const word_t *)(const void *)src;
+        word_t *pw = (word_t *)(void *)prev;
+        size_t w = 0, words = CF_SOURCE_BYTES / 4;
+        while (w < words && sw[w] == pw[w]) ++w;
+        if (w == words) return 0;
+        for (; w < words; ++w) pw[w] = sw[w];
+        return 1;
+    }
+    while (i < CF_SOURCE_BYTES && src[i] == prev[i]) ++i;
+    if (i == CF_SOURCE_BYTES) return 0;
+    for (; i < CF_SOURCE_BYTES; ++i) prev[i] = src[i];  /* bytes before i already match */
+    return 1;
+}

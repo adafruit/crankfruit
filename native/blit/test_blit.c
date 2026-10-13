@@ -144,6 +144,33 @@ int main(void) {
     static uint8_t joined2[CF_SOURCE_BYTES + CF_DEST2_BYTES + 1];
     CHECK(cf_blit2(joined2, CF_SOURCE_BYTES, joined2 + CF_SOURCE_BYTES - 1, CF_DEST2_BYTES, 2, 3) == -2);
     CHECK(cf_blit2(joined2, CF_SOURCE_BYTES, joined2 + CF_SOURCE_BYTES, CF_DEST2_BYTES, 2, 2) == CF_DEST2_BYTES);
-    printf("PASS checks=%lu exhaustive_byte_values=256 patterned_frames=1 invalid_sizes_nulls_overlap=12 guards_and_padding=passed; blit16 frames=297 per_pixel_reference invalid=7; blit2 frames=%u modes=3 whites=2 per_pixel_reference invalid=8\n", checks, frames2);
+    /* cf_frame_changed: identical, first/last/middle byte differences, copy-back. */
+    {
+        static uint8_t a[CF_SOURCE_BYTES + 2], b[CF_SOURCE_BYTES + 2];
+        uint8_t *fa = a + 1, *fb = b + 1;
+        for (unsigned i = 0; i < CF_SOURCE_BYTES; ++i) fa[i] = fb[i] = (uint8_t)(i * 7);
+        CHECK(cf_frame_changed(fa, CF_SOURCE_BYTES, fb, CF_SOURCE_BYTES) == 0);
+        unsigned positions[] = {0, 1, 6239, CF_SOURCE_BYTES - 1};
+        for (unsigned p = 0; p < 4; ++p) {
+            fa[positions[p]] ^= 0x10;
+            CHECK(cf_frame_changed(fa, CF_SOURCE_BYTES, fb, CF_SOURCE_BYTES) == 1);
+            CHECK(memcmp(fa, fb, CF_SOURCE_BYTES) == 0);            /* prev now equals src */
+            CHECK(cf_frame_changed(fa, CF_SOURCE_BYTES, fb, CF_SOURCE_BYTES) == 0);
+        }
+        /* aligned buffers take the word path */
+        static _Alignas(4) uint8_t wa[CF_SOURCE_BYTES], wb[CF_SOURCE_BYTES];
+        for (unsigned i = 0; i < CF_SOURCE_BYTES; ++i) wa[i] = wb[i] = (uint8_t)(i * 13);
+        CHECK(cf_frame_changed(wa, CF_SOURCE_BYTES, wb, CF_SOURCE_BYTES) == 0);
+        for (unsigned p = 0; p < 4; ++p) {
+            wa[positions[p]] ^= 0x22;
+            CHECK(cf_frame_changed(wa, CF_SOURCE_BYTES, wb, CF_SOURCE_BYTES) == 1);
+            CHECK(memcmp(wa, wb, CF_SOURCE_BYTES) == 0);
+            CHECK(cf_frame_changed(wa, CF_SOURCE_BYTES, wb, CF_SOURCE_BYTES) == 0);
+        }
+        CHECK(cf_frame_changed(fa, CF_SOURCE_BYTES - 1, fb, CF_SOURCE_BYTES) == -1);
+        CHECK(cf_frame_changed(NULL, CF_SOURCE_BYTES, fb, CF_SOURCE_BYTES) == -1);
+        CHECK(cf_frame_changed(fa, CF_SOURCE_BYTES, fa + 1, CF_SOURCE_BYTES) == -2);
+    }
+    printf("PASS checks=%lu exhaustive_byte_values=256 patterned_frames=1 invalid_sizes_nulls_overlap=12 guards_and_padding=passed; blit16 frames=297 per_pixel_reference invalid=7; blit2 frames=%u modes=3 whites=2 per_pixel_reference invalid=8; frame_changed positions=4 aligned_and_unaligned invalid=3\n", checks, frames2);
     return 0;
 }

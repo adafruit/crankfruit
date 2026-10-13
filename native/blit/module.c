@@ -36,11 +36,23 @@ static mp_obj_t blit2(size_t n_args, const mp_obj_t *args) {
 }
 static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(blit2_obj, 3, 4, blit2);
 
+static mp_obj_t frame_changed(mp_obj_t src_obj, mp_obj_t prev_obj) {
+    mp_buffer_info_t src, prev;
+    mp_get_buffer_raise(src_obj, &src, MP_BUFFER_READ);
+    mp_get_buffer_raise(prev_obj, &prev, MP_BUFFER_WRITE);
+    int result = cf_frame_changed(src.buf, src.len, prev.buf, prev.len);
+    if (result == -1) mp_raise_ValueError("frame_changed needs two 12480-byte buffers");
+    if (result == -2) mp_raise_ValueError("frame_changed buffers must not overlap");
+    return mp_obj_new_bool(result);
+}
+static MP_DEFINE_CONST_FUN_OBJ_2(frame_changed_obj, frame_changed);
+
 mp_obj_t mpy_init(mp_obj_fun_bc_t *self, size_t n_args, size_t n_kw, mp_obj_t *args) {
     (void)n_args; (void)n_kw; (void)args;
     MP_DYNRUNTIME_INIT_ENTRY
     mp_store_global(MP_QSTR_blit, MP_OBJ_FROM_PTR(&blit_obj));
     mp_store_global(MP_QSTR_blit16, MP_OBJ_FROM_PTR(&blit16_obj));
     mp_store_global(MP_QSTR_blit2, MP_OBJ_FROM_PTR(&blit2_obj));
+    mp_store_global(MP_QSTR_frame_changed, MP_OBJ_FROM_PTR(&frame_changed_obj));
     MP_DYNRUNTIME_INIT_EXIT
 }

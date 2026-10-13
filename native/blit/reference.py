@@ -72,3 +72,13 @@ def blit2(src, dst, mode, white=3):
                     level = (covered * white * 2 + 25) // 50
             dst[y * 160 + x // 4] |= level << (2 * (x % 4))
     return 76800
+
+
+def frame_changed(src, prev):
+    """True (and prev updated to src) if the 12480-byte frames differ."""
+    if len(src) != 12480 or len(prev) != 12480:
+        raise ValueError("frame_changed needs two 12480-byte buffers")
+    if bytes(src) == bytes(prev):
+        return False
+    prev[:] = src
+    return True

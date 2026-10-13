@@ -42,12 +42,12 @@
   {
     "path": "app-manifest.json",
     "bytes": 6320,
-    "sha256": "483a7c88cec4b1232aa0643455c3c0ee3650fbaeae1ef94e02d75e1f3be3ac5e"
+    "sha256": "098f4508dcbc411d174e1176cfa59fa7cc46b2a409640b1a68d1aa1a07309db4"
   },
   {
     "path": "app/_crankfruit_blit.mpy",
-    "bytes": 3214,
-    "sha256": "576e25d4152a8ea69c664646b8e1ef7788830b9832d1feeaa6b49c9d14eb8810"
+    "bytes": 3843,
+    "sha256": "3793218ce6496b625fe3d9b552a8f27ed3ea12dd9776d0bb06904216aa1efa95"
   },
   {
     "path": "app/_crankfruit_pcm.mpy",
@@ -101,13 +101,13 @@
   },
   {
     "path": "app/crankfruit.py",
-    "bytes": 8889,
-    "sha256": "12022c1e92bd3ba2e64e83f56f06cdac997fd9a79e1047fd4ef38e4a37baee0d"
+    "bytes": 9102,
+    "sha256": "1f280ff0ac659fade1d78e5ff6047fed71ca89b0177708af09b6d2321e123dbf"
   },
   {
     "path": "app/direct_hardware.py",
-    "bytes": 5349,
-    "sha256": "4925040a2365277952ed3a4a25007ac5da9e3dd15518412fcbad3d380ffb1668"
+    "bytes": 6081,
+    "sha256": "51fc2b799b7bd135f48ab520095a8ff6739c327d956f7307e71e75a271afc623"
   },
   {
     "path": "app/gamepad_input.py",
@@ -1251,13 +1251,13 @@
   },
   {
     "path": "native/BUILD-RESULTS.json",
-    "bytes": 2971,
-    "sha256": "b3e6a82a5b617c04d78f171aa70c2e8a36cc4eb2f531ec6d4e79b95ee9193e9a"
+    "bytes": 3030,
+    "sha256": "8587013633d2c8b85cb828301df98d55e563a7ac930c55e0c7a4027c3c7357ed"
   },
   {
     "path": "native/HOST-RESULTS.json",
-    "bytes": 2092,
-    "sha256": "c78f992dbf106bc79e0756a560e228285e1e283c769195d5723e6c99a9abcedf"
+    "bytes": 2151,
+    "sha256": "547929e7ba4e80a5bfa1875137e0e3e1ce392e4073cd43d27ffcd47b33c849e6"
   },
   {
     "path": "native/LICENSE",
@@ -1271,33 +1271,33 @@
   },
   {
     "path": "native/blit/_crankfruit_blit.mpy",
-    "bytes": 3214,
-    "sha256": "576e25d4152a8ea69c664646b8e1ef7788830b9832d1feeaa6b49c9d14eb8810"
+    "bytes": 3843,
+    "sha256": "3793218ce6496b625fe3d9b552a8f27ed3ea12dd9776d0bb06904216aa1efa95"
   },
   {
     "path": "native/blit/blit.c",
-    "bytes": 7986,
-    "sha256": "62c41c828212fc324dad1200915f2d12a97f5ecb6a1403ee192b16f04d169130"
+    "bytes": 9084,
+    "sha256": "d1c61c2e613b832cf2de020c657bdbbdc96e7d6dec96d45581c53670dfa1f31d"
   },
   {
     "path": "native/blit/blit.h",
-    "bytes": 1428,
-    "sha256": "efc7e118913ab91459ff33252512ad3fbfb0dccd6d0a9c1ee060bfb43f4314f4"
+    "bytes": 1755,
+    "sha256": "f6c4c491c2cd9e5892748e9890d2c3bc596e0b1c56e3ecb620bde885729a53b3"
   },
   {
     "path": "native/blit/module.c",
-    "bytes": 2287,
-    "sha256": "4dc8cd34e6fd4013fcd80c6df15223d9181e7e6a1f16410057efa6e1f064696d"
+    "bytes": 2938,
+    "sha256": "d33e45b98418bcf2d824ef29f96c7bf1d71a10b4de9b5d57d1cfbbf2768c7339"
   },
   {
     "path": "native/blit/reference.py",
-    "bytes": 3100,
-    "sha256": "22c0a446ffb71214f25aafd197e7739c7f5bd735ca814919e5fc34ed05713f50"
+    "bytes": 3414,
+    "sha256": "ae7b5f8b9e22f90fcb877376d05e6dd44a65214002371b2b2ccabbf2fe14b3bf"
   },
   {
     "path": "native/blit/test_blit.c",
-    "bytes": 8772,
-    "sha256": "dadc286ef181c5fbcfe53a401a601098098e29d9f67979e07c4ed9368ff1fe31"
+    "bytes": 10495,
+    "sha256": "2ba6a47dbcd1f3ad000821c1d9f50a237f38e353613ae1190b8926d191f2f9d4"
   },
   {
     "path": "native/build.py",
@@ -1671,8 +1671,8 @@
   },
   {
     "path": "tools/display/README.md",
-    "bytes": 2678,
-    "sha256": "b0451c1f9d1deae66464a9ab2174553707bbc33cd349523dad77a13edc4a6e97"
+    "bytes": 3151,
+    "sha256": "cae786423dcf5feca2c6b20e15b63c151946b214b3dfe0f30abc23b99f844a74"
   },
   {
     "path": "tools/display/display-config.json",
@@ -1681,8 +1681,8 @@
   },
   {
     "path": "tools/display/test_display.py",
-    "bytes": 8830,
-    "sha256": "68a9bef3d46965cb5173946ba8a17551cf48a875780a826a4cc1ef04b1a483ba"
+    "bytes": 11251,
+    "sha256": "98fc47a173bd38e25d2d68b13445bcf008580066eab6681d70f8696c053a138a"
   },
   {
     "path": "tools/gamepad/LICENSE",
