@@ -349,3 +349,32 @@ remaining: Almost Tennis's heaviest frames (step 18 + mix 14 + smooth present 8m
 still exceed the 33ms frame; the 4-frame audio buffer absorbed them in this run.
 possible next step: cache each source row's 5-pixel groups to cut smooth from ~6
 to ~4ms.
+
+## addendum: 100-pulse handwheel crank, step sizes, safe-mode fix (2026-10-13..15)
+
+hardware: MBL600/800-100P line-driver handwheel (datasheet: 5V +/-5%, 100 pulses,
+A/B/A-/B-), powered at 3.3V from the Fruit Jam STEMMA QT port, A/B on SDA/SCL
+(GPIO20/21, consecutive as rotaryio needs). powered at 3.3V its outputs cannot
+exceed 3.3V; it is not to be powered at 5V on these pins (shared bus with the
+onboard audio chip and HDMI DDC).
+
+| check | pass / fail / not tested | notes |
+| --- | --- | --- |
+| counts per click / per turn | pass | 10 clicks -10, 10 back +10, one turn -100 (repeated 2026-10-15: -10 / +10) |
+| signal quality | pass | 587 changes while spinning fast, never more than 1 count between 5ms reads |
+| `kind: "rotaryio"` crank | pass | `direction: -1` so clockwise is positive; reads are a PIO counter, no bus traffic |
+| Orbit Breaker with handwheel (2-bit) | pass | 63s: 0 underruns, 0 missed deadlines, worst tick 43ms |
+| per-crank `step_degrees` | pass | handwheel set to 3.6 = one click per library highlight / Sound Explorer value |
+| Simple Snake one-click turns | pass (host) | step 3.6 degrees; one 3.6 or one 18 degree click each give exactly one turn |
+| standalone power-on with handwheel | fail -> fixed | see below; re-test on the demo power supply pending |
+
+**safe mode at power-on:** powered from a supply (not the computer) with the
+handwheel connected, the board blinked yellow and did not start. on the computer:
+`safe_mode_reason = GC_ALLOC_OUTSIDE_VM`. cause: at boot the firmware's
+`picodvi_autoconstruct()` opens I2C on SDA/SCL to probe the TV's EDID (0x50); with
+the encoder holding a line low (depends on wheel rest position) the I2C setup fails
+outside the VM. earlier, opening `board.I2C()` with the encoder attached had raised
+"No pull up found on SDA or SCL". fix: `CIRCUITPY_PICODVI_ENABLE = "never"` in the
+board's `settings.toml` (string present in the installed firmware). after a hard
+reset with the setting, the app started on its own and the encoder read correctly.
+this also confirms the STEMMA QT I2C bus is shared with the HDMI DDC lines.

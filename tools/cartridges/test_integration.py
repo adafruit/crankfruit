@@ -208,6 +208,16 @@ class ParentPolicyTests(unittest.TestCase):
         self.assertIsNone(library.action)             # crank never launches a game
         library.close()
 
+    def test_crank_step_follows_the_crank(self):
+        items=[dict(title='GAME%d'%i,description='',enabled=True,reason='') for i in range(5)]
+        library=self.library.Library(FakeRuntime,items)
+        library.crank_step=3.6                        # one click of a 100-pulse handwheel
+        library.step(0,0,3.6,0)
+        self.assertEqual(library.selected,1)
+        library.step(0,0,-7.2,33)
+        self.assertEqual(library.selected,4)
+        library.close()
+
     def test_maximum_metadata_stays_below_command_budget(self):
         items=[dict(title='T'*48,description='D'*160,reason='R'*160,enabled=i%2==0) for i in range(33)]
         for selected in (0,1,2,3,30,32):

@@ -42,6 +42,8 @@ Lua games (`getCrankPosition` / `getCrankChange`). the template enables it with
   at a different direction adds no movement and does not jump the angle.
 - movement is summed between game frames and delivered once per frame. movement
   made while no scene is reading (e.g. the startup animation) is dropped after 250ms.
+- `crank_step_degrees` (1..90, default 18) sets the stick crank's degrees per
+  library/Sound Explorer step.
 - the crank (stick or hardware) reaches the library (highlight), Sound Explorer
   (value changes), Orbit Breaker (paddle), Almost Tennis (flick to swing) and
   Simple Snake (click to turn).

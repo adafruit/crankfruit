@@ -14,9 +14,11 @@ upstream: https://gitlab.com/mocchimochi/playdate/playdate-snake-game at
   gamepad; see `tools/gamepad/README.md`). the Fruit Jam's onboard buttons only
   provide left / right, so the snake cannot be steered up or down without a pad.
 - A (gamepad cross, or B3): restart after game over.
-- crank (Crankfruit addition, not upstream): one 18-degree click turns the snake
-  right (clockwise) or left, relative to its heading; one turn per snake step,
-  one early click buffered. works with the stick crank or a hardware encoder.
+- crank (Crankfruit addition, not upstream): 3.6 degrees (one click of a
+  100-pulse handwheel; any larger click, e.g. a 20-count encoder's 18, also gives
+  exactly one turn) turns the snake right (clockwise) or left, relative to its
+  heading; one turn per snake step, one early click buffered. with the right-stick
+  crank this is sensitive: a slight stick rotation turns.
 - gamepad options, or hold B3: return to the library.
 
 ## what changed from upstream

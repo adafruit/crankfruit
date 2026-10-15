@@ -73,6 +73,10 @@ class StickCrank:
     kind = 'ds4_right_stick'
     enabled = True
 
+    @property
+    def step_degrees(self):
+        return self.pad.crank_step  # degrees per library/Sound Explorer step
+
     def __init__(self, pad):
         self.pad = pad
         self.read_at = None
@@ -114,7 +118,8 @@ class GamepadInput:
         if not config.get('enabled', False):
             return
         unknown = [key for key in config if key not in ('enabled', 'kind', 'poll_ms', 'read_timeout_ms', 'stick', 'stick_deadzone',
-                                                        'crank', 'crank_engage', 'crank_scale')]
+                                                        'crank', 'crank_engage', 'crank_scale',
+                                                        'crank_step_degrees')]
         if unknown:
             raise ValueError('unknown gamepad setting: ' + unknown[0])
         self.kind = config.get('kind')
@@ -131,6 +136,10 @@ class GamepadInput:
             raise ValueError('invalid gamepad setting: crank')
         self.crank_engage = _integer(config, 'crank_engage', 40, 127, 80)
         self.crank_scale = _integer(config, 'crank_scale', 10, 200, 100) / 100  # percent
+        step = config.get('crank_step_degrees', 18)
+        if type(step) not in (int, float) or not 1 <= step <= 90:
+            raise ValueError('invalid gamepad setting: crank_step_degrees (1..90 degrees)')
+        self.crank_step = float(step)
         if crank:
             self.crank = StickCrank(self)
         if usb_core is None:

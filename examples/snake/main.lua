@@ -128,10 +128,11 @@ local frameCountVelocity = 0
 local movementBlocked = false -- This prevents snake eating itself when fast turning
 local difficulty = 4 -- from 4(low) to 1(high)
 
--- Crankfruit addition: relative crank steering. One 18-degree click (one
--- detent of a 20-count encoder) turns right (clockwise) or left; at most one
--- turn per snake step, with one early click buffered.
-local CRANK_STEP <const> = 18
+-- Crankfruit addition: relative crank steering. One 3.6-degree click (one
+-- detent of a 100-pulse handwheel; larger clicks, e.g. a 20-count encoder's 18,
+-- also give exactly one turn) turns right (clockwise) or left; at most one turn
+-- per snake step, with one early click buffered.
+local CRANK_STEP <const> = 3.6
 local crankTurn = 0
 local turnRight <const> = { right = 'down', down = 'left', left = 'up', up = 'right' }
 local turnLeft <const> = { right = 'up', up = 'left', left = 'down', down = 'right' }
@@ -143,7 +144,7 @@ function crankPressed()
 		return
 	end
 	crankTurn = math.max(-CRANK_STEP, math.min(CRANK_STEP, crankTurn + change))
-	if movementBlocked == false and math.abs(crankTurn) >= CRANK_STEP then
+	if movementBlocked == false and math.abs(crankTurn) >= CRANK_STEP - 0.001 then
 		lastDirection = (crankTurn > 0 and turnRight or turnLeft)[lastDirection]
 		movementBlocked = true
 		crankTurn = 0

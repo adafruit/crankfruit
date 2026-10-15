@@ -75,6 +75,7 @@ class SoundExplorer:
         self.closed = False
         self.auditions = 0
         self.crank = 0.0  # accumulated crank degrees
+        self.crank_step = CRANK_STEP  # replaced by the crank's step_degrees
 
     def refresh_rate(self):
         return 30
@@ -96,11 +97,12 @@ class SoundExplorer:
         direction = -1 if pressed & 1 else (1 if pressed & 2 else 0)
         # Crank: one 18-degree click acts like B2 (clockwise) or B1, one per frame.
         self.crank += delta
-        if not direction and self.crank >= CRANK_STEP:
+        step = self.crank_step - 0.001  # single-precision floats: a whole click must count
+        if not direction and self.crank >= step:
             direction = 1
-        elif not direction and self.crank <= -CRANK_STEP:
+        elif not direction and self.crank <= -step:
             direction = -1
-        if direction and abs(self.crank) >= CRANK_STEP:
+        if direction and abs(self.crank) >= step:
             self.crank = 0.0  # spent (or overridden by a button); no backlog
         if direction and not buttons & 16:
             if self.field == 0:

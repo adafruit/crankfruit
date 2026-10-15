@@ -91,6 +91,14 @@ class _EncoderPosition:
         return value
 
 
+def _step(config, name):
+    """Degrees of crank per discrete step (library highlight, Sound Explorer value)."""
+    value = config.get(name, 18)
+    if type(value) not in (int, float) or not 1 <= value <= 90:
+        raise ValueError('invalid crank setting: ' + name + ' (1..90 degrees)')
+    return float(value)
+
+
 class CrankInput:
     def __init__(self, config=None):
         self.closed = False
@@ -104,6 +112,7 @@ class CrankInput:
         self.phase = 0
         self.last_frame = None
         self.cached = (0.0, 0.0)
+        self.step_degrees = 18.0  # per discrete step; set per crank in /crank.json
         if config is None:
             return
         if not isinstance(config, dict) or type(config.get('enabled', False)) is not bool:
@@ -115,6 +124,7 @@ class CrankInput:
         if not self.direction:
             raise ValueError('crank direction must be -1 or 1')
         self.zero = _integer(config, 'zero_degrees', 0, 359, 0)
+        self.step_degrees = _step(config, 'step_degrees')
         if self.kind == 'seesaw':
             bus_name = _name(config, 'bus_factory')
             address = _integer(config, 'address', 8, 119)
@@ -144,8 +154,21 @@ class CrankInput:
             import board
             import analogio
             self.sensor = analogio.AnalogIn(getattr(board, pin_name))
+        elif self.kind == 'rotaryio':
+            # Quadrature encoder counted by the chip's PIO (no bus transfers).
+            # The two pins must be consecutive GPIOs on RP2350, e.g. STEMMA QT
+            # SDA/SCL (GPIO20/21) for a 3.3V encoder, or D6/D7.
+            pin_a = _name(config, 'pin_a')
+            pin_b = _name(config, 'pin_b')
+            self.counts = _integer(config, 'counts_per_revolution', 1, 1048576)
+            divisor = _integer(config, 'divisor', 1, 4, 4)
+            if divisor == 3:
+                raise ValueError('rotaryio divisor must be 1, 2 or 4')
+            import board
+            import rotaryio
+            self.sensor = rotaryio.IncrementalEncoder(getattr(board, pin_a), getattr(board, pin_b), divisor=divisor)
         else:
-            raise ValueError('crank kind must be seesaw or analog')
+            raise ValueError('crank kind must be seesaw, analog or rotaryio')
         self.enabled = True
 
     def read(self, frame_id=None):
@@ -166,10 +189,10 @@ class CrankInput:
                 return self.cached
             if self.last_frame is not None and frame_id < self.last_frame:
                 raise ValueError('frame_id must not move backwards')
-        if self.kind == 'seesaw':
+        if self.kind in ('seesaw', 'rotaryio'):
             raw = self.sensor.position
             if type(raw) is not int or not -(1 << 31) <= raw < (1 << 31):
-                raise ValueError('invalid signed32 seesaw position')
+                raise ValueError('invalid signed32 encoder position')
             steps = 0 if self.previous is None else raw - self.previous
             if steps > 2147483647:
                 steps -= 4294967296
@@ -202,7 +225,7 @@ class CrankInput:
 
     def close(self):
         if not self.closed:
-            if self.kind == 'analog' and self.sensor is not None:
-                self.sensor.deinit()
+            if self.kind in ('analog', 'rotaryio') and self.sensor is not None:
+                self.sensor.deinit()  # owned pins (the seesaw I2C bus is shared, not owned)
             self.sensor = self.seesaw = self.bus = None
             self.closed = True

@@ -178,6 +178,57 @@ class CrankTests(unittest.TestCase):
     def test_scene_logs_encoder_metrics(self):
         self.assertIn("print('CRANK_DONE',scene,sensor.scene_metrics())",
                       (pathlib.Path(__file__).resolve().parent.parent.parent / 'app' / 'crankfruit.py').read_text())
+    def rotary(self, **kw):
+        made = []
+        class Encoder:
+            def __init__(self, a, b, divisor=4):
+                made.append((a, b, divisor))
+                self.position = 0
+                self.closed = False
+            def deinit(self):
+                self.closed = True
+        sys.modules['rotaryio'] = types.SimpleNamespace(IncrementalEncoder=Encoder)
+        sys.modules['board'] = types.SimpleNamespace(SDA='gpio20', SCL='gpio21', D6='gpio6', D7='gpio7')
+        config = dict(enabled=True, kind='rotaryio', pin_a='SDA', pin_b='SCL', counts_per_revolution=100)
+        config.update(kw)
+        return CrankInput(config), made
+    def test_rotaryio_100_ppr_handwheel(self):
+        # measured on the Fruit Jam: 10 clockwise clicks read -10, one turn -100
+        crank, made = self.rotary(direction=-1)
+        self.assertEqual(made, [('gpio20', 'gpio21', 4)])
+        self.assertEqual(crank.kind, 'rotaryio')
+        self.assertEqual(crank.read(), (0, 0))
+        crank.sensor.position = -10                 # 10 clicks clockwise
+        angle, delta = crank.read()
+        self.assertAlmostEqual(delta, 36.0)
+        self.assertAlmostEqual(angle, 36.0)
+        crank.sensor.position = -110                # one more full turn clockwise
+        angle, delta = crank.read()
+        self.assertAlmostEqual(delta, 360.0)
+        self.assertAlmostEqual(angle, 36.0)
+        crank.sensor.position = -100                # 10 clicks back
+        self.assertAlmostEqual(crank.read()[1], -36.0)
+        sensor = crank.sensor
+        crank.close()
+        self.assertTrue(sensor.closed)              # owned PIO encoder released
+    def test_rotaryio_divisor_and_pins(self):
+        _, made = self.rotary(pin_a='D6', pin_b='D7', divisor=1, counts_per_revolution=400)
+        self.assertEqual(made, [('gpio6', 'gpio7', 1)])
+        for bad in (dict(divisor=3), dict(divisor=0), dict(divisor=8), dict(pin_a='6'),
+                    dict(counts_per_revolution=None), dict(pin_b=None)):
+            with self.assertRaises(ValueError, msg=repr(bad)):
+                self.rotary(**bad)
+    def test_step_degrees_per_crank(self):
+        self.assertEqual(CrankInput(None).step_degrees, 18.0)
+        crank, _ = self.rotary(direction=-1, step_degrees=3.6)
+        self.assertAlmostEqual(crank.step_degrees, 3.6)
+        self.assertEqual(self.rotary()[0].step_degrees, 18.0)
+        for bad in (0, 0.5, 91, '5', True, None):
+            with self.assertRaises(ValueError, msg=repr(bad)):
+                self.rotary(step_degrees=bad)
+    def test_scenes_take_the_cranks_step(self):
+        source = (pathlib.Path(__file__).resolve().parent.parent.parent / 'app' / 'crankfruit.py').read_text()
+        self.assertIn("runtime.crank_step = crank.step_degrees", source)
     def test_default_read_delay_keeps_library_encoder(self):
         self.encoder(read_delay_ms=8).read()
         self.assertIn(('seesaw-fixture', 0), self.events)

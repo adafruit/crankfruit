@@ -116,6 +116,12 @@ class ExplorerTests(unittest.TestCase):
         self.now += 33
         self.e.step(0, 0, 0.0, self.now)         # no backlog afterwards
         self.assertEqual(self.e.pitch, 4)
+    def test_crank_step_follows_the_crank(self):
+        self.step(0)
+        self.e.crank_step = 3.6
+        self.now += 33
+        self.e.step(0, 0, 3.6, self.now)
+        self.assertEqual(self.e.wave, 1)
     def test_long_b3_does_not_change_parameter(self):
         self.step(32)
         self.now += 1300

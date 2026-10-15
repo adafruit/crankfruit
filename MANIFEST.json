@@ -16,8 +16,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 6906,
-    "sha256": "a18ebd9614fda3a526f92301334ebf09a85e7e9260b2100dd37b5c5ab79abf21"
+    "bytes": 7281,
+    "sha256": "1f745d8d95894d436e8371787a4e29355500afcaad9141c24af3f622dc925884"
   },
   {
     "path": "RESULTS.md",
@@ -41,8 +41,8 @@
   },
   {
     "path": "app-manifest.json",
-    "bytes": 6320,
-    "sha256": "098f4508dcbc411d174e1176cfa59fa7cc46b2a409640b1a68d1aa1a07309db4"
+    "bytes": 6321,
+    "sha256": "e7092117ab27cb8d864ea7e7b5452e63f622d77246a38331eb48cfc4f01a55f4"
   },
   {
     "path": "app/_crankfruit_blit.mpy",
@@ -96,13 +96,13 @@
   },
   {
     "path": "app/crank_input.py",
-    "bytes": 8872,
-    "sha256": "5be942b3f3544d492950c29eb3befb21412a2465c27df9b952384867b1f2d73c"
+    "bytes": 10180,
+    "sha256": "4b82c409e191a751b08eba7d7a1c202e1aab72307eadaad4716f02a3ddd62502"
   },
   {
     "path": "app/crankfruit.py",
-    "bytes": 9102,
-    "sha256": "1f280ff0ac659fade1d78e5ff6047fed71ca89b0177708af09b6d2321e123dbf"
+    "bytes": 9285,
+    "sha256": "9a1de438f06543e3edaab352cbb7e1cfee9e1cf7c8aba75969b3cccdc55e8809"
   },
   {
     "path": "app/direct_hardware.py",
@@ -111,8 +111,8 @@
   },
   {
     "path": "app/gamepad_input.py",
-    "bytes": 9035,
-    "sha256": "3e797e37df775cfc1267060d7f5fe65ed80d2739cc5dc0d3718bde9882e55e84"
+    "bytes": 9482,
+    "sha256": "710207172c694a5a1b92ecb06147506778ff582350a986c5fafc483f029a1f16"
   },
   {
     "path": "app/games/almost-tennis/LICENSE",
@@ -156,8 +156,8 @@
   },
   {
     "path": "app/library.py",
-    "bytes": 4966,
-    "sha256": "49e9fac5ce389c95012b8a0b898bff1abc8ee14a9d558f240b8b81d683977d8f"
+    "bytes": 5133,
+    "sha256": "685fae1486efc77f6e037be2edcc01a46bba566b663f7ef3949153ddeb62f32f"
   },
   {
     "path": "app/player.py",
@@ -251,8 +251,8 @@
   },
   {
     "path": "app/sound_explorer.py",
-    "bytes": 7000,
-    "sha256": "4f0b770903f02feee6abedb95176276e5deaabb1b989824ba8ff285be4eacc50"
+    "bytes": 7151,
+    "sha256": "23cfaba6dddb9f47f846fcc126078457dd62289ddc8ff7f4b4376441fc90e7f3"
   },
   {
     "path": "app/stream.py",
@@ -1221,13 +1221,13 @@
   },
   {
     "path": "examples/snake/README.md",
-    "bytes": 2525,
-    "sha256": "7f924ba28b052c285690ccdb27b7b77731128323cb42a8b1c75f68f8d1694047"
+    "bytes": 2662,
+    "sha256": "281cd5994e7192f0cf237b46c38c9f1682d562d644384da3f67ecd98ade80031"
   },
   {
     "path": "examples/snake/main.lua",
-    "bytes": 6612,
-    "sha256": "5f54b257f7a4fe7378c0ba57f3d94acc6b3e9dbb996e5a956fc6ff47975cea0e"
+    "bytes": 6701,
+    "sha256": "906b7bacf9d541840b87e892e15d6d2dcf9169a8fd9c04edf0318bea13ab6d69"
   },
   {
     "path": "examples/snake/manifest.json",
@@ -1621,8 +1621,8 @@
   },
   {
     "path": "tools/cartridges/test_integration.py",
-    "bytes": 14099,
-    "sha256": "46e96dfcfbaa453919c87044cf14d9926aece97fd36d4145b8d31d40e4ccb2d3"
+    "bytes": 14571,
+    "sha256": "363d4b95813514a1e2ca39080364c0c62885d8597933b7391f86f669cb45ca08"
   },
   {
     "path": "tools/cartridges/test_loader.py",
@@ -1636,8 +1636,8 @@
   },
   {
     "path": "tools/crank/README.md",
-    "bytes": 7965,
-    "sha256": "a67f804a27f5675da83e472878174a03c1fc9d745aef499a70acd842d1ea1c0a"
+    "bytes": 10624,
+    "sha256": "b5965bb26486febd2335f8ae80d4d0585a3e288d663cef82edada66808772398"
   },
   {
     "path": "tools/crank/crank-config.json",
@@ -1646,8 +1646,8 @@
   },
   {
     "path": "tools/crank/crank_input.py",
-    "bytes": 8872,
-    "sha256": "5be942b3f3544d492950c29eb3befb21412a2465c27df9b952384867b1f2d73c"
+    "bytes": 10180,
+    "sha256": "4b82c409e191a751b08eba7d7a1c202e1aab72307eadaad4716f02a3ddd62502"
   },
   {
     "path": "tools/crank/crank_settings.py",
@@ -1656,8 +1656,8 @@
   },
   {
     "path": "tools/crank/test_crank_input.py",
-    "bytes": 10677,
-    "sha256": "440604ae7d1619a9226d7757c277e2aac727ba18664a128c7916bac2c8fce222"
+    "bytes": 13459,
+    "sha256": "3c631e8a9911f74fee1152ea117791c2357ec5371bf4030a9b06898a5974c758"
   },
   {
     "path": "tools/crank/test_scheduler.py",
@@ -1691,8 +1691,8 @@
   },
   {
     "path": "tools/gamepad/README.md",
-    "bytes": 4061,
-    "sha256": "4d3b0b4a008db2ee11824c8600b7152aef8cce630f47c2f21039ca1321a725dd"
+    "bytes": 4170,
+    "sha256": "e60038483cad25202f1aacca07b0d27fbd08abc5808df6983726ace855b8ccf6"
   },
   {
     "path": "tools/gamepad/gamepad-config.json",
@@ -1701,13 +1701,13 @@
   },
   {
     "path": "tools/gamepad/gamepad_input.py",
-    "bytes": 9035,
-    "sha256": "3e797e37df775cfc1267060d7f5fe65ed80d2739cc5dc0d3718bde9882e55e84"
+    "bytes": 9482,
+    "sha256": "710207172c694a5a1b92ecb06147506778ff582350a986c5fafc483f029a1f16"
   },
   {
     "path": "tools/gamepad/test_gamepad_input.py",
-    "bytes": 21810,
-    "sha256": "2e91a8fec3fe5c967c27e08d566ba642c9acba50600e5ddde5a24056e526b89c"
+    "bytes": 22243,
+    "sha256": "d00c13a3c1d0a3063439e297e97f916011eb927e00e616b5a257d7ca6ee9a234"
   },
   {
     "path": "tools/sound/LICENSE",
@@ -1771,13 +1771,13 @@
   },
   {
     "path": "tools/sound/sound_explorer.py",
-    "bytes": 7000,
-    "sha256": "4f0b770903f02feee6abedb95176276e5deaabb1b989824ba8ff285be4eacc50"
+    "bytes": 7151,
+    "sha256": "23cfaba6dddb9f47f846fcc126078457dd62289ddc8ff7f4b4376441fc90e7f3"
   },
   {
     "path": "tools/sound/test_sound.py",
-    "bytes": 8716,
-    "sha256": "eaa024ce37756ba20db786b913b75d835292b1d35f5ef5deddd351f1bb3e1544"
+    "bytes": 8923,
+    "sha256": "d44123ce95ec0f569725c323358a3f37a628c5c547f42f9334b8793a22cdf5c3"
   },
   {
     "path": "verify.py",

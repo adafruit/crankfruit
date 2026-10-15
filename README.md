@@ -37,6 +37,11 @@ the first commit is the original review kit, unmodified (all files match its
   Playdate-like grey (`"white": "bright"` for brighter). the desktop player
   previews 1x/1.5x/1.6x/1.6x smooth with `--board-scale`. see
   `tools/display/README.md`.
+- **100-pulse CNC handwheel crank:** `"kind": "rotaryio"` reads a quadrature
+  encoder in hardware (3.6 degrees per click on a 100-pulse handwheel at 3.3V on
+  STEMMA QT); per-crank `step_degrees` sets library/Sound Explorer steps, and
+  Simple Snake turns on one click. on SDA/SCL, `settings.toml` needs
+  `CIRCUITPY_PICODVI_ENABLE = "never"` (see `tools/crank/README.md`).
 - **library survives a system freeze:** a >100ms stall (for example the computer
   writing to CIRCUITPY) reopens the library instead of stopping the app.
 - **crank everywhere it fits:** the crank (stick or encoder) moves the library

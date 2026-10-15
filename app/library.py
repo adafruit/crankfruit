@@ -20,6 +20,7 @@ class Library:
         self.selected = min(max(0, selected), len(items)-1)
         self.previous = 0
         self.crank = 0.0  # accumulated crank degrees not yet turned into moves
+        self.crank_step = CRANK_STEP  # replaced by the crank's step_degrees
         self.action = None
         self.message = message[:60]
         self.dirty = True
@@ -65,11 +66,12 @@ class Library:
         # Crank: clockwise highlights the next game, counter-clockwise the previous.
         self.crank += delta
         moved = 0
-        while self.crank >= CRANK_STEP and moved < CRANK_MAX_MOVES:
-            self.crank -= CRANK_STEP; moved += 1
+        step = self.crank_step - 0.001  # single-precision floats: a whole click must count
+        while self.crank >= step and moved < CRANK_MAX_MOVES:
+            self.crank -= self.crank_step; moved += 1
             self.selected = (self.selected+1) % len(self.items)
-        while self.crank <= -CRANK_STEP and moved < CRANK_MAX_MOVES:
-            self.crank += CRANK_STEP; moved += 1
+        while self.crank <= -step and moved < CRANK_MAX_MOVES:
+            self.crank += self.crank_step; moved += 1
             self.selected = (self.selected-1) % len(self.items)
         if moved:
             if moved == CRANK_MAX_MOVES:

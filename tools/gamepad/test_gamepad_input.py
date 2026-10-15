@@ -392,6 +392,14 @@ class StickCrankTests(unittest.TestCase):
         self.assertEqual(pad.crank.read()[1], 0.0)
         self.assertFalse(pad.crank_engaged)
 
+    def test_crank_step_degrees_setting(self):
+        self.assertEqual(enabled(USBCore(Device()), crank=True).crank.step_degrees, 18.0)
+        pad = enabled(USBCore(Device()), crank=True, crank_step_degrees=9)
+        self.assertEqual(pad.crank.step_degrees, 9.0)
+        for bad in (0, 95, '9', True):
+            with self.assertRaises(ValueError):
+                enabled(USBCore(Device()), crank=True, crank_step_degrees=bad)
+
     def test_left_stick_and_buttons_unaffected(self):
         pad, device = self.crank_pad()
         data = stick_report(90)

@@ -47,6 +47,8 @@ def run_scene(hardware, item=None, items=None, selected=0, message='', duration=
             source = load(item)
             runtime = hardware.runtime_class(source,heap_cap=item['heap_cap'])
             del source
+        if hasattr(runtime, 'crank_step') and getattr(crank, 'step_degrees', None):
+            runtime.crank_step = crank.step_degrees  # per crank type (/crank.json, /gamepad.json)
         gc.collect()
         print('SCENE',scene,'heap',runtime.heap_stats(),'python_free',gc.mem_free())
         player = GamePlayer(runtime,hardware,hardware.fb,hardware.clock,present_every=1,prefill_frames=4,crank=crank)
