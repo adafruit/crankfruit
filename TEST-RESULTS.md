@@ -23,7 +23,7 @@ optional crank disabled / hardware + settings: disabled; no `/crank.json` on the
 | game error returns to library | not tested | |
 | 10-minute play/audio continuity | partial | one scene ran ~36 min (65,857 presentations) before a Ctrl-C: 0 dropped bytes, 0 errors, 0 missed deadlines, but 1 underrun observation; worst service gap 53ms, worst tick 27ms. which scene was not captured |
 | optional crank direction/calibration/latency | pass (later) | seesaw STEMMA QT encoder (product 4991) measured and played; see encoder addendum below |
-| standalone power, computer unplugged | not tested | board stayed on host USB power |
+| standalone power, computer unplugged | pass (later) | 2026-10-15 demo on a power supply with no computer: app, gamepad and handwheel crank all worked; see handwheel addendum |
 
 the five "everything works" rows record the tester's overall report, not separate
 per-item notes.
@@ -366,7 +366,7 @@ onboard audio chip and HDMI DDC).
 | Orbit Breaker with handwheel (2-bit) | pass | 63s: 0 underruns, 0 missed deadlines, worst tick 43ms |
 | per-crank `step_degrees` | pass | handwheel set to 3.6 = one click per library highlight / Sound Explorer value |
 | Simple Snake one-click turns | pass (host) | step 3.6 degrees; one 3.6 or one 18 degree click each give exactly one turn |
-| standalone power-on with handwheel | fail -> fixed | see below; re-test on the demo power supply pending |
+| standalone power-on with handwheel | pass (after fix) | first attempt fell into safe mode (see below); with the `settings.toml` fix the 2026-10-15 standalone demo worked (tester report) |
 
 **safe mode at power-on:** powered from a supply (not the computer) with the
 handwheel connected, the board blinked yellow and did not start. on the computer:
