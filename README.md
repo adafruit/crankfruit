@@ -95,8 +95,10 @@ engine's test suite.
 
 1. **Back up the board.** Flashing replaces CircuitPython and may reset the
    CIRCUITPY drive.
-2. **Flash the firmware.** Hold BOOT/BUTTON1 while pressing reset, wait for the
-   `RP2350` drive, then copy `firmware/crankfruit-fruit-jam.uf2` onto it. This is a
+2. **Flash the firmware.** Download `crankfruit-fruit-jam.uf2` from the
+   [latest release](https://github.com/adafruit/crankfruit/releases/latest/download/crankfruit-fruit-jam.uf2)
+   (also in this repo's `firmware/` folder). Hold BOOT/BUTTON1 while pressing
+   reset, wait for the `RP2350` drive, then copy the UF2 onto it. This is a
    custom CircuitPython 10 build with the Lua engine and HDMI audio built in; stock
    CircuitPython will not run Crankfruit. Check that `boot_out.txt` on CIRCUITPY
    reports `10.3.0-55-geb49ac4141`.
