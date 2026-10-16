@@ -1,6 +1,6 @@
 # player interface assets
 
-Original deterministic one-bit UI for Crankfruit / Impossible Playdate.
+Original deterministic one-bit UI for Crankfruit.
 The existing visual system is extended directly: its previously approved
 beveled startup wordmark is compiled into the header, while a new tiny mean-apple
 mascot and turning crank are authored as deterministic pixel code. No new image
@@ -19,7 +19,7 @@ All input and output paths are relative to these scripts. `vendor/font.h` is the
 original MIT CrankJam font, with its license in `vendor/LICENSE-CrankJam`.
 `tools/pd_assets.py` is the original bounded offline codec from the player work,
 based on Cranksters' CC0 format notes at the commit named in that file. The
-remaining UI drawing code and art are MIT, copyright 2026 Crankfruit contributors.
+remaining UI drawing code and art are MIT, copyright 2026 Adafruit Industries.
 The portable `raster_source/approved-startup-lockup.png` retains the previously
 approved original generated artwork used for the startup. Its wordmark is
 compiled with nearest-neighbor scaling; the build receipt records its source

@@ -41,8 +41,8 @@
   },
   {
     "path": "cartridges.py",
-    "bytes": 11285,
-    "sha256": "a4de77631cf3b6df774d8fd38b30fe57bc58fd33380c1d01cf1123f1228813ca"
+    "bytes": 11294,
+    "sha256": "4fccd977d735a0e4e09606bb20e5d3e839d8a618923338eb5dcc82ad1740bcb6"
   },
   {
     "path": "code.py",
@@ -56,8 +56,8 @@
   },
   {
     "path": "crankfruit.py",
-    "bytes": 9285,
-    "sha256": "9a1de438f06543e3edaab352cbb7e1cfee9e1cf7c8aba75969b3cccdc55e8809"
+    "bytes": 9279,
+    "sha256": "17ee006b982ff1041c63a2aeabf259fc88e53b8418fa506790f1efe36690b601"
   },
   {
     "path": "direct_hardware.py",
@@ -76,8 +76,8 @@
   },
   {
     "path": "games/almost-tennis/main.lua",
-    "bytes": 8414,
-    "sha256": "4e9f8a5ba60e14caf487c43693bc813df5dd88fb2774daf3f7086e1edac990ea"
+    "bytes": 8422,
+    "sha256": "cc4860e5f19503cc12ed4905c1ecd1964bdc575db3d09f4760265cb5354ce954"
   },
   {
     "path": "games/almost-tennis/manifest.json",
@@ -86,28 +86,28 @@
   },
   {
     "path": "games/orbit-breaker/LICENSE",
-    "bytes": 1080,
-    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+    "bytes": 1076,
+    "sha256": "68fb173379fe8036926551c387d8477ae3c9323800e23a92a0e56f9aefc96d58"
   },
   {
     "path": "games/orbit-breaker/README.md",
-    "bytes": 2607,
-    "sha256": "aabe5e016fd7c08ddb676dd61b10ca7f57ae594d40374c8b348605c9564bf894"
+    "bytes": 2603,
+    "sha256": "cc4ac2dab22fb728e90542229d62d5f9ed4d8ac6f3ea7fad84d094d51f2d6e7a"
   },
   {
     "path": "games/orbit-breaker/main.lua",
-    "bytes": 6168,
-    "sha256": "208aee68235e068863884df3e4e285fc6826fe0f0c2732f8cb110f001703a2cf"
+    "bytes": 6164,
+    "sha256": "58837cc566d00422c8251049b0460de41ae979241c346c0eb1fa33923914c7a7"
   },
   {
     "path": "games/orbit-breaker/manifest.json",
-    "bytes": 356,
-    "sha256": "c6bc12a10105c01ddd9cc26262657c05cd0da97ea8637051f0a811f0b41172ce"
+    "bytes": 352,
+    "sha256": "48a60c725736fab9cb9d0f40bf424ea7914d98e222e228481546944cd7ff1563"
   },
   {
     "path": "hardware.py",
-    "bytes": 7802,
-    "sha256": "40b5fbaa3f1aa1d725b84d218b1ef17e0f9b617becd3949ad2f036b0d5269cdc"
+    "bytes": 7799,
+    "sha256": "1a318a838b4caa5121300c77a3b254c0e31107f39d2815d59d9b919e75a815f0"
   },
   {
     "path": "library.py",
@@ -122,32 +122,32 @@
   {
     "path": "player/assets/error.bin",
     "bytes": 12000,
-    "sha256": "b98b15f0fba3f26f6c916136d26f495b81f59d90f1c3d8f533cb03839fada7f4"
+    "sha256": "97e81955a13799d67b90c91e206614cd7bef3594ac2dd0c2f83e6f0a46c670d0"
   },
   {
     "path": "player/assets/error.pdi",
-    "bytes": 1419,
-    "sha256": "32f0c7c02fa2a16e9de88e219dab54e4efdcf977337a2381e9c8d1155827d654"
+    "bytes": 1438,
+    "sha256": "ebdcf519150583587c2369d053f289293d22b45e2aa33fd2216dba34de2d2b47"
   },
   {
     "path": "player/assets/explorer.bin",
     "bytes": 12000,
-    "sha256": "7e59c06374f3e027af54bd841c637d84784526a1065e243fb166a2e5db2739d5"
+    "sha256": "a47213416fe5ceeb8c8f1dd499355a627a495ed80a86b22f3301dd79ecc22277"
   },
   {
     "path": "player/assets/explorer.pdi",
-    "bytes": 1321,
-    "sha256": "cc35359c53c271c533b7d848f31f797e90969f2ca08b694e79443bf65d3de914"
+    "bytes": 1330,
+    "sha256": "a4bcd7a363dbd37a69650a4d494f759ea09835addba3368b7b40102858ecd13e"
   },
   {
     "path": "player/assets/library.bin",
     "bytes": 12000,
-    "sha256": "fcc47a72c077e2d23f2b9eb1dc3ff1ad87f1de521db449a31125c3673649ed76"
+    "sha256": "62d8f1f8b5f0e3a1c158f943694d76e6b37d6802818d85525e5c3822bf794409"
   },
   {
     "path": "player/assets/library.pdi",
-    "bytes": 1294,
-    "sha256": "c839b9719cddbcf50e3b0d70efdbdd04ed65cca41e3adc1ea5549dcfe442b96d"
+    "bytes": 1309,
+    "sha256": "e91f1420cd6b00a442e8d59ea199fcbb4c629a9ea5de3dde5bc61d78e432e16b"
   },
   {
     "path": "player/assets/manifest.json",

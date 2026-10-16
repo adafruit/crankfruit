@@ -1,6 +1,6 @@
 """Opt-in Fruit Jam hardware adapter. Importing this module touches NO devices.
 
-Physical qualification and remaining limits are recorded in the kit RESULTS.md.
+Physical qualification and remaining limits are recorded in docs/RESULTS.md.
 """
 import sys
 from stream import RATE, MAX_BANK_BYTES, Clock

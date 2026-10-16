@@ -11,7 +11,7 @@ function p.update()
     local t=p.getCurrentTimeMilliseconds()
     g.clear(g.kColorWhite)
     g.setColor(g.kColorBlack)
-    g.drawText("IMPOSSIBLE PLAYDATE: HELLO",20,20)
+    g.drawText("CRANKFRUIT: HELLO",20,20)
     g.drawRect(10,10,380,220)
     g.fillRect(20+math.floor(t/10)%330,110,24,24)
     if not started then tone:playNote(440,0.7,0.2);started=true end

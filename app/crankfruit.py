@@ -1,4 +1,4 @@
-"""Impossible Playdate: standalone Crankfruit compatible-source game player."""
+"""Crankfruit: standalone compatible-source game player for Adafruit Fruit Jam."""
 import gc
 import time
 from player import GamePlayer
@@ -154,7 +154,7 @@ def main(test=False, endurance=0):
                     run_scene(hardware,item,duration=endurance or 16000,scripted=True,crank=crank)
             target = next(x for x in items if x['enabled'] and x['kind']=='lua')
             assert run_scene(hardware,target,duration=3000,scripted=True,name='return')=='library'
-            print('IMPOSSIBLE_PLAYDATE_PASS (injected inputs, not physical button presses)')
+            print('CRANKFRUIT_PASS (injected inputs, not physical button presses)')
             return
         library_failures = []
         while True:

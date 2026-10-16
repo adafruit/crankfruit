@@ -1,7 +1,7 @@
 -- Almost Tennis: Crankfruit source adaptation, not the original PDX.
 -- Derived from SquidGodDev/almost-tennis, 69172662a659849c8b452e257c1f41f8cd240ad8.
 -- Copyright (c) 2025 SquidGod. MIT; see accompanying LICENSE.
--- Adaptation/pixel primitives/synth audio: Copyright (c) 2026 PT and ints. MIT.
+-- Adaptation/pixel primitives/synth audio: Copyright (c) 2026 Adafruit Industries. MIT.
 -- Crankfruit 2026-10: crank swing restored from upstream player.lua ("med" sense).
 local pd,g=playdate,playdate.graphics
 local CRANK_SENSE=10 -- upstream default "med"; degrees per frame to swing

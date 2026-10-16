@@ -1,5 +1,5 @@
 -- Orbit Breaker: original compatible-source sample, not an imported PDX.
--- Copyright (c) 2026 Crankfruit contributors. SPDX-License-Identifier: MIT
+-- Copyright (c) 2026 Adafruit Industries. SPDX-License-Identifier: MIT
 local pd,g=playdate,playdate.graphics
 pd.display.setRefreshRate(30)
 local tone=pd.sound.synth.new(pd.sound.kWaveSquare)

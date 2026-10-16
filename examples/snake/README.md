@@ -1,7 +1,7 @@
 # Simple Snake
 
 A source adaptation of Mocchi Mochi's (TauchMe) MIT-licensed Playdate snake game
-for the experimental Impossible Playdate player on Fruit Jam. This is **not the
+for the Crankfruit player on Adafruit Fruit Jam. This is **not the
 original PDX**; it is a port to the `crankfruit-lua-v1` source profile.
 
 upstream: https://gitlab.com/mocchimochi/playdate/playdate-snake-game at

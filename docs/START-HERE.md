@@ -1,3 +1,7 @@
+> **historical document:** written for the original Crankfruit review kit (2026-09).
+> paths are relative to the repository root. for current setup see the main
+> [README](../README.md).
+
 # start here
 
 this review kit is for **adafruit fruit jam RP2350B only**. it includes experimental
@@ -16,7 +20,7 @@ to re-scan game folders. a computer is not needed during play.
 
 1. back up the board; close programs holding its serial connection.
 2. deliberately enter RP2350 bootloader mode and copy
-   `firmware/impossible-playdate-fruit-jam.uf2` to RP2350. this replaces firmware
+   `firmware/crankfruit-fruit-jam.uf2` to RP2350. this replaces firmware
    and may affect filesystem layout. the app installer never performs this step.
 3. wait for CIRCUITPY. confirm its serial port and UID using both `boot_out.txt`
    and the serial device descriptor.

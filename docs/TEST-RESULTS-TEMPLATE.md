@@ -1,3 +1,7 @@
+> **historical document:** written for the original Crankfruit review kit (2026-09).
+> paths are relative to the repository root. for current setup see the main
+> [README](../README.md).
+
 # independent review results
 
 date / tester:

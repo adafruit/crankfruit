@@ -80,7 +80,7 @@ needed in `/lib`. working configuration:
 ```
 
 played in Orbit Breaker: paddle follows the knob, clockwise right. in-game encoder
-reads: max 1.9ms, 99% under 1.5ms. see the kit `TEST-RESULTS.md` encoder addendum.
+reads: max 1.9ms, 99% under 1.5ms. see `docs/TEST-RESULTS.md` (encoder addendum).
 
 ## step size per crank: `step_degrees`
 

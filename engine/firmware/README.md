@@ -53,7 +53,7 @@ the board configuration enables native MPY loading, reserves 2MiB firmware in
 16MiB external flash, and includes the patched HDMI audio methods plus static
 `crankjam` runtime. stock CircuitPython is not a substitute.
 
-output: `circuitpython/ports/raspberrypi/build-impossible-playdate/firmware.uf2`.
+output: `circuitpython/ports/raspberrypi/build-crankfruit/firmware.uf2`.
 path-remapping flags reduce accidental local build metadata. re-audit the actual
 output, validate UF2 target/ranges, and rerun hardware checks before using it.
 version strings/build timestamps can change hashes. a rebuilt image is not

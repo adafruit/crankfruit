@@ -1,120 +1,168 @@
-# impossible playdate / crankfruit
+# Crankfruit
 
-an open-source, standalone game player for adafruit fruit jam. copy a compatible
-source game into `/games/<slug>/`, restart, and it appears in the library. no
-computer, network, account or cloud service is needed during play.
+Crankfruit turns an Adafruit Fruit Jam into a tiny Playdate-inspired game console.
+Copy an open-source, Playdate-style Lua game into a folder, plug the board into a TV,
+and play with a USB gamepad and a real crank. Everything runs on the Fruit Jam's
+RP2350: no computer, network or account is needed while playing. Games draw the
+Playdate's 400x240 one-bit screen over HDMI, with synth sound over HDMI audio.
 
-this is a **source-compatible subset**, not a universal playdate emulator.
-it does not run arbitrary `.pdx`/`.pdz` bundles, compiled lua, native playdate
-binaries, catalog games, the playdate operating system, or SDK/CoreLibs unchanged.
-it is an independent experiment, not endorsed by panic or cranksters.
-
-## what this repo adds
-
-the first commit is the original review kit, unmodified (all files match its
-`SHA256SUMS`). later commits add:
-
-- **optional USB gamepad:** a wired Sony DualShock 4 on the fruit jam USB-A host
-  port. d-pad/left stick move in all four directions, cross = A, circle = B,
-  options = back to the library. onboard buttons keep working. off unless
-  `/gamepad.json` exists: copy `tools/gamepad/gamepad-config.json` there and
-  restart. mapping, timing measurements and tests: `tools/gamepad/README.md`.
-- **right-stick crank (proof of concept):** with `"crank": true` in
-  `/gamepad.json` (on in the template), rotating the right stick drives the
-  playdate crank for lua games; orbit breaker's paddle follows it. speed is set by
-  `crank_scale` (template: 70%).
-- **STEMMA QT rotary encoder crank:** the kit's seesaw crank backend, tested with
-  adafruit's I2C rotary encoder breakout (product 4991). new optional
-  `read_delay_ms` makes each read ~1ms instead of ~9ms; working `/crank.json` and
-  measurements are in `tools/crank/README.md`. needs `adafruit_seesaw` (10.x
-  bundle) in `/lib`. a hardware crank takes priority over the stick crank.
-- **4-frame audio prefill:** the player pre-mixes 4 frames (was 3), giving ~33ms
-  more buffer against heavy game frames at the cost of ~33ms more latency. the
-  gamepad also logs its slowest poll per scene (`GAMEPAD_DONE`).
-- **bigger, smoother picture:** with `/display.json` the HDMI framebuffer runs at
-  2-bit greyscale and B1 cycles 1x, 1.6x sharp (640x384, exact 5:3, full width)
-  and 1.6x smooth (area-coverage antialiasing). white defaults to the kit's
-  Playdate-like grey (`"white": "bright"` for brighter). the desktop player
-  previews 1x/1.5x/1.6x/1.6x smooth with `--board-scale`. see
-  `tools/display/README.md`.
-- **100-pulse CNC handwheel crank:** `"kind": "rotaryio"` reads a quadrature
-  encoder in hardware (3.6 degrees per click on a 100-pulse handwheel at 3.3V on
-  STEMMA QT); per-crank `step_degrees` sets library/Sound Explorer steps, and
-  Simple Snake turns on one click. on SDA/SCL, `settings.toml` needs
-  `CIRCUITPY_PICODVI_ENABLE = "never"` (see `tools/crank/README.md`).
-- **library survives a system freeze:** a >100ms stall (for example the computer
-  writing to CIRCUITPY) reopens the library instead of stopping the app.
-- **crank everywhere it fits:** the crank (stick or encoder) moves the library
-  highlight, swings in almost tennis (upstream's flick rule), turns the snake in
-  simple snake, and changes values in sound explorer. encoder reads retry and
-  hold through brief I2C glitches (`CRANK_DONE` log line).
-- **simple snake:** a source adaptation of Mocchi Mochi's MIT playdate snake game,
-  in `examples/snake/`. copy that folder to `/games/snake/` on the board and
-  restart. up/down steering needs the gamepad. changes from upstream are listed
-  in `examples/snake/README.md`.
-- **`TEST-RESULTS.md`:** independent results on one fruit jam and a TV over HDMI:
-  physical buttons, both games, HDMI audio, gamepad timing, unplug/replug, the
-  snake port, and which HDMI modes this firmware accepts.
-
-`app-manifest.json`, `MANIFEST.json` and `SHA256SUMS` are regenerated for these
-changes; `python3 verify.py` passes and `install.py` installs the gamepad code.
+Crankfruit is a **source-game player, not an emulator**: it runs compatible Lua
+games from source, not `.pdx`/`.pdz` bundles or catalog games. It is an independent
+project and is not affiliated with or endorsed by Panic, makers of the Playdate.
 
 ## what's included
 
-- crankfruit player: bad-apple startup animation, dynamic game library, per-game
-  error recovery, standalone 400x240 monochrome graphics inside 640x480 HDMI.
-- almost tennis: a source adaptation of SquidGod's MIT game, with ten opponents.
-  its original external art/audio/libraries are not included. this is a port,
-  not a binary compatibility demonstration.
-- orbit breaker: original 16-brick paddle game, loaded by exactly the same
-  manifest/source path, with no special launcher branch.
-- sound explorer: square/triangle synthesizers and three original samples decoded
-  from playdate PDA files on the development computer, then played locally.
-- cranksters-format tools: PDI images and PDT image tables roundtrip into bounded
-  native sprite assets; PDA PCM audio converts to cached 32kHz mono PCM16.
+- **Crankfruit player:** startup animation, a game library that finds games
+  automatically, per-game error recovery, HDMI video and audio.
+- **Games:** Orbit Breaker (original), Almost Tennis (a source adaptation of
+  SquidGod's MIT game) and Simple Snake (a port of Mocchi Mochi's MIT game, in
+  `examples/snake/`). Sound Explorer is a built-in synth and sample toy.
+- **Controls:** the Fruit Jam's three buttons, an optional wired PlayStation 4
+  (DualShock 4) USB controller, and an optional crank: a STEMMA QT rotary encoder,
+  a quadrature encoder such as a 100-pulse CNC handwheel, or the controller's right
+  stick.
+- **Display modes:** 1x, or 1.6x (640x384, full width, exact aspect ratio) sharp or
+  antialiased, switchable while playing.
+- **Source and tools:** the portable C/Lua engine (with a desktop player), native
+  helpers, the custom CircuitPython firmware build recipe, cartridge, art and sound
+  tools, and tests.
+
+## hardware
+
+- Adafruit Fruit Jam (RP2350B)
+- HDMI display that plays HDMI audio (a TV or monitor with speakers; DVI-only
+  monitors show the picture without sound)
+- USB-C power: the computer, or a supply of at least 2A for standalone play
+- optional: wired Sony DualShock 4 controller (USB-A host port)
+- optional crank:
+  - Adafruit I2C STEMMA QT Rotary Encoder breakout (product 4991), or
+  - a quadrature encoder on two consecutive GPIOs, e.g. a 100-pulse CNC handwheel
+    powered at 3.3V from the STEMMA QT port (see [crank notes](tools/crank/README.md))
+
+## setup
+
+1. **Back up the board.** Flashing replaces CircuitPython and may reset the
+   CIRCUITPY drive.
+2. **Flash the firmware.** Hold BOOT/BUTTON1 while pressing reset, wait for the
+   `RP2350` drive, then copy `firmware/crankfruit-fruit-jam.uf2` onto it. This is a
+   custom CircuitPython 10 build with the Lua engine and HDMI audio built in; stock
+   CircuitPython will not run Crankfruit. Check that `boot_out.txt` on CIRCUITPY
+   reports `10.3.0-55-geb49ac4141`.
+3. **Install the app.** With Python 3.9+ and `pyserial==3.5`:
+
+   ```sh
+   python3 install.py --validate-only
+   python3 install.py --kit . --port SERIAL_PORT --mount /Volumes/CIRCUITPY \
+     --uid BOARD_UID --backup-dir ~/fruitjam-backup --start
+   ```
+
+   The board's UID is in `boot_out.txt`. The installer verifies the board and
+   firmware, backs up every file it replaces, writes `code.py` last and reads every
+   byte back. It never deletes files or flashes firmware. See
+   [TOOLS-README.md](TOOLS-README.md).
+4. **Add Snake (optional):** copy `examples/snake/` to `/games/snake/` on CIRCUITPY.
+5. Connect HDMI, then restart. The startup animation plays, then the library.
+
+Autoreload is off: restart the board after changing files. Don't keep files on
+CIRCUITPY open in an editor while playing (see known limitations).
 
 ## controls
 
-fruit jam B1/B2 select a game; B3 opens it. hold B3 for 1.2 seconds to return.
-the library re-scans on entry, so new source folders do not need launcher edits.
-games describe their controls in their manifests. the three onboard buttons are
-input path, exercised with injected states during automated tests. physical
-button presses and a physical crank are separate manual checks. optional STEMMA
-QT encoder and analog-pot backends are included, disabled by default. an optional
-wired DualShock 4 USB gamepad is supported (see above); other USB controllers
-and touch input are not.
+| action | Fruit Jam buttons | DualShock 4 |
+| --- | --- | --- |
+| move / choose a game | B1 / B2 | d-pad or left stick (all four directions) |
+| A: open, start, swing, restart | B3 | cross |
+| B: pause, dash | B1 + B2 | circle |
+| back to the library | hold B3 for 1.2s | options |
+| crank | - | crank hardware, or the right stick if enabled |
 
-almost tennis: B1/B2 move, B3 start/swing/restart, B1+B2 dash when available;
-crank flick (10 degrees in a frame) swings, as in the original.
-orbit breaker: B1/B2 move, B3 start/restart, B1+B2 pause; crank moves the paddle.
-sound explorer: B1/B2 change, short B3 next field, B1+B2 replay; crank click changes.
-simple snake: gamepad d-pad/stick steer, A restart (B1/B2 can only steer left/right);
-crank click turns left/right.
-library: crank click (18 degrees) moves the highlight; it never launches a game.
+While the controller is connected, the Fruit Jam buttons become **settings
+buttons**: B1 cycles the display mode (B2 and B3 are reserved). Unplug the
+controller and they are game controls again.
 
-with the gamepad: d-pad = B1/B2 directions (plus up/down), cross = B3, circle =
-B1+B2, options = immediate return to the library. while the gamepad is connected,
-the onboard buttons become settings buttons: B1 cycles the display modes (1x,
-1.6x sharp, 1.6x smooth with `/display.json`; B2/B3 reserved). unplug the gamepad and they are game controls again.
+The crank moves the library highlight, steers Orbit Breaker's paddle, swings in
+Almost Tennis (a quick flick), turns the snake in Simple Snake, and changes values
+in Sound Explorer.
 
-## start and review
+## optional configuration files
 
-read `START-HERE.md` before installation and `RESULTS.md` for the exact observed
-tests and remaining limits. `app/` contains the application payload, not firmware.
-`firmware/` contains the reviewed custom Fruit Jam UF2. stock CircuitPython lacks
-the built-in crankjam engine and this HDMI-audio extension.
+Copy these to the root of CIRCUITPY. A missing file selects the default; an invalid
+one stops startup with an error so mistakes are visible.
 
-`AUTHORING.md` defines the bounded source profile and loading workflow.
-`engine/`, `native/`, and the format tools contain editable source and licenses.
-all tools run locally. optional host tests require the documented build tools.
+| file | template | what it does |
+| --- | --- | --- |
+| `/gamepad.json` | `tools/gamepad/gamepad-config.json` | enables the DualShock 4; `"crank": true` makes the right stick a crank (`crank_scale` sets its speed) |
+| `/crank.json` | see `tools/crank/README.md` | a hardware crank: `seesaw` (I2C breakout), `rotaryio` (quadrature encoder) or `analog`; `step_degrees` sets degrees per library/Sound Explorer step. A hardware crank takes priority over the stick |
+| `/display.json` | `tools/display/display-config.json` | 2-bit greyscale output with three modes (1x, 1.6x sharp, 1.6x smooth); `"white": "playdate"` (default, the Playdate-like light grey) or `"bright"` |
+| `/settings.toml` | - | **required for an encoder on STEMMA QT SDA/SCL:** `CIRCUITPY_PICODVI_ENABLE = "never"` (see known limitations) |
 
-## attribution
+Example for a 100-pulse handwheel on STEMMA QT:
 
-almost tennis upstream: https://github.com/SquidGodDev/almost-tennis
-at revision `69172662a659849c8b452e257c1f41f8cd240ad8`.
-simple snake upstream: https://gitlab.com/mocchimochi/playdate/playdate-snake-game
-at revision `c9cc2a924dcbe31156529ae37326940360865530` (MIT, Mocchi Mochi).
-format research: https://github.com/cranksters/playdate-reverse-engineering
-at revision `e7be3ff0141b7cd3b9f008737eda1f0539aca45c`.
-format references are community documentation, not an SDK compatibility guarantee.
-required third-party notices remain in their source directories.
+```json
+{"enabled": true, "kind": "rotaryio", "pin_a": "SDA", "pin_b": "SCL",
+ "counts_per_revolution": 100, "direction": -1, "step_degrees": 3.6}
+```
+
+## adding games
+
+Make `/games/<name>/manifest.json` and `/games/<name>/main.lua`, then return to the
+library or restart: new games appear automatically. Games use a bounded,
+Playdate-style Lua 5.4 API (drawing primitives, text, buttons, crank, time and a
+small synth). Imports, CoreLibs, sprites and image loading are not available, so
+existing Playdate games need porting. See [AUTHORING.md](AUTHORING.md) and
+[docs/COMPATIBILITY.md](docs/COMPATIBILITY.md); `examples/snake/README.md` shows a
+real port.
+
+## desktop player and tests
+
+The engine builds on a computer with CMake and a C11 compiler (`engine/README.md`).
+The optional SDL2 player runs games in a window, and `--board-scale 1|1.5|1.6|1.6s`
+previews the Fruit Jam's HDMI output (Tab cycles the modes).
+
+`python3 verify.py` runs the portable checks (package hashes, installer, loader,
+sound, crank, gamepad, display, audio stream and art tests) without hardware. The
+engine, native helpers and boot animation have their own test suites; see their
+READMEs. Hardware results are in [docs/TEST-RESULTS.md](docs/TEST-RESULTS.md).
+
+## known limitations
+
+- **Not an emulator.** Only compatible Lua source games run; compiled Playdate
+  games, CoreLibs, sprites, images, timers and sample playback are not supported.
+- **Brief freezes when the computer writes to CIRCUITPY.** Writing to the board's
+  flash (for example an editor closing a file on the drive) pauses the board for
+  up to a few hundred ms, which can cause an audio dropout. The library recovers by
+  itself. For play, eject the drive or use standalone power.
+- **Encoder on STEMMA QT needs `settings.toml`.** At power-on the firmware probes
+  the TV over I2C on the STEMMA QT pins (shared with HDMI's data lines). An encoder
+  holding a line low then sends the board into safe mode (blinking yellow). Add
+  `CIRCUITPY_PICODVI_ENABLE = "never"` to `settings.toml`.
+- **Only 3.3V devices on STEMMA QT.** Never power a 5V encoder there: its outputs
+  would put 5V on the shared bus. Use D6/D7 with resistor dividers instead (not yet
+  tested).
+- **Heavy games are close to the frame budget in 1.6x smooth.** Almost Tennis's
+  busiest frames can run late; the audio buffer has absorbed it in testing. Use
+  1.6x sharp for the most headroom.
+- **Fixed 30 fps, 64KB Lua heap by default (256KB maximum), no save data.**
+- **Wired DualShock 4 only.** Other USB controllers, Bluetooth and touch are not
+  supported.
+- **Untested:** the analog potentiometer crank and D6/D7 encoder wiring.
+- **The 1.6x and 2-bit modes and HDMI audio** are tested on one TV; other displays
+  may differ. The firmware is a patched CircuitPython build; its full rebuild from
+  source has not been re-run since packaging.
+
+## credits and license
+
+Crankfruit is MIT licensed, copyright 2026 Adafruit Industries (see `LICENSE`).
+Third-party code keeps its own notices:
+
+- Almost Tennis: adapted from https://github.com/SquidGodDev/almost-tennis
+  (`69172662a659849c8b452e257c1f41f8cd240ad8`), MIT, SquidGod.
+- Simple Snake: adapted from https://gitlab.com/mocchimochi/playdate/playdate-snake-game
+  (`c9cc2a924dcbe31156529ae37326940360865530`), MIT, Mocchi Mochi.
+- Playdate file-format research: https://github.com/cranksters/playdate-reverse-engineering
+  (`e7be3ff0141b7cd3b9f008737eda1f0539aca45c`), CC0. Format notes are community
+  documentation, not an SDK compatibility guarantee.
+- CircuitPython, Lua 5.4.9, TinyUSB, Pico-PIO-USB, fast_float, stb_sprintf and
+  other components: see `engine/licenses/` and the notices in their source folders.
+
+Playdate is a trademark of Panic Inc.

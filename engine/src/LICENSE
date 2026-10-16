@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 CrankJam contributors
+Copyright (c) 2026 Adafruit Industries
 
 Applies to the original CrankJam implementation in src/, host/, tests/runtime/
 (excluding generated build dependency files), and the root CMakeLists.txt.

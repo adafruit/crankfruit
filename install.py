@@ -137,7 +137,7 @@ def install(console,root,mount,uid,backup_root,files,manifest_hash,start=False):
     pause(console);verify_identity(console,uid);disable_autoreload(console)
     boot_identity(mount,uid)
     backup_root.mkdir(parents=True,exist_ok=True)
-    backup=Path(tempfile.mkdtemp(prefix='impossible-playdate-',dir=backup_root))
+    backup=Path(tempfile.mkdtemp(prefix='crankfruit-',dir=backup_root))
     receipt=dict(uid=uid,port=console.port,manifest_sha256=manifest_hash,firmware_flashed=False,
                  files=[],state='stopped at REPL; autoreload disabled',status='preparing backups')
     def save():write_bytes(backup/'install.json',(json.dumps(receipt,indent=2)+'\n').encode())

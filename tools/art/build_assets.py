@@ -1,6 +1,6 @@
 """Portable code-native one-bit player UI, with exact PDI/PDT roundtrips.
 
-Copyright (c) 2026 Crankfruit contributors. SPDX-License-Identifier: MIT
+Copyright (c) 2026 Adafruit Industries. SPDX-License-Identifier: MIT
 Build dependency: Pillow. All inputs and outputs are relative to this file.
 """
 from pathlib import Path
@@ -90,7 +90,7 @@ def base(page):
     im = Image.new("1", (400, 240), 1)
     d = ImageDraw.Draw(im)
     im.paste(wordmark, (18, 5))
-    text(im, "IMPOSSIBLE PLAYDATE", 20, 43)
+    text(im, "GAMES FOR FRUIT JAM", 20, 43)
     im.paste(mascots[0], (300, 8))
     text(im, page, 300, 43)
     d.line((18, 52, 381, 52), fill=0)

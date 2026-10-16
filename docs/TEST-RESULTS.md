@@ -44,7 +44,7 @@ per-item notes.
    `boot_out.txt` still reported stock CircuitPython 11.0.0-alpha.1 and no app files
    were present. the installer wrote nothing to that board, as expected.
 4. re-entered the bootloader (BOOT/BUTTON1 + reset), copied
-   `firmware/impossible-playdate-fruit-jam.uf2` to RP2350. `boot_out.txt` then
+   `firmware/crankfruit-fruit-jam.uf2` to RP2350. `boot_out.txt` then
    reported 10.3.0-55-geb49ac4141-dirty. flashing reset the CIRCUITPY filesystem;
    previous board files were removed (not needed by the tester).
 5. `python3 install.py --validate-only` passed, then

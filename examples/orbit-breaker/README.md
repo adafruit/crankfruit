@@ -51,4 +51,4 @@ Observed host result: 1,800 matching frames, 1,920,600 matching PCM samples,
 799 changing frames, 176 nonzero PCM blocks. Instrumented heap peak 46,011 of 65,536
 bytes. These are host results, not proof of physical video or audible sound.
 
-Copyright (c) 2026 Crankfruit contributors. See `LICENSE`.
+Copyright (c) 2026 Adafruit Industries. See `LICENSE`.

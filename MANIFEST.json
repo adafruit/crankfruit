@@ -1,38 +1,23 @@
 [
   {
+    "path": ".gitignore",
+    "bytes": 41,
+    "sha256": "852ff27831343dd61143fa8af6c9f321124433dff563e9207cdf1e0c17b779a6"
+  },
+  {
     "path": "AUTHORING.md",
     "bytes": 3564,
     "sha256": "00ac24e68ee366f695c267e07da76208048befd88edf2cfa29ae2680b5c568e1"
   },
   {
-    "path": "COMPATIBILITY.md",
-    "bytes": 1894,
-    "sha256": "27b1e3e3d2148a0ab8211ff5448c5c39995d6c125e6461e26063aa7c6f75c93d"
-  },
-  {
     "path": "LICENSE",
-    "bytes": 1080,
-    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+    "bytes": 1076,
+    "sha256": "68fb173379fe8036926551c387d8477ae3c9323800e23a92a0e56f9aefc96d58"
   },
   {
     "path": "README.md",
-    "bytes": 7281,
-    "sha256": "1f745d8d95894d436e8371787a4e29355500afcaad9141c24af3f622dc925884"
-  },
-  {
-    "path": "RESULTS.md",
-    "bytes": 6573,
-    "sha256": "46c0e3fd2a0e3be114a4b6bebef8b5c532b1452a50a3a194ec16cb2b73b65d2e"
-  },
-  {
-    "path": "START-HERE.md",
-    "bytes": 3985,
-    "sha256": "40cfd7b5475bd0124d48edd18e894d3481f3f227e4f4c10426d728bbdd7079dc"
-  },
-  {
-    "path": "TEST-RESULTS-TEMPLATE.md",
-    "bytes": 967,
-    "sha256": "54e68a911cbfa14cb185c9fc2b82e336aaf3ea58c0bb3966b0d210f825fc8d97"
+    "bytes": 8992,
+    "sha256": "5130a5b1373ce443b3677266516b22e9b642aa9b82f014f5f7bee58ba5f57df0"
   },
   {
     "path": "TOOLS-README.md",
@@ -42,7 +27,7 @@
   {
     "path": "app-manifest.json",
     "bytes": 6321,
-    "sha256": "e7092117ab27cb8d864ea7e7b5452e63f622d77246a38331eb48cfc4f01a55f4"
+    "sha256": "dd27d7be93172dd380db4e8b6a0604f701c2e8f43cdcb584e68cf67e3f675863"
   },
   {
     "path": "app/_crankfruit_blit.mpy",
@@ -86,8 +71,8 @@
   },
   {
     "path": "app/cartridges.py",
-    "bytes": 11285,
-    "sha256": "a4de77631cf3b6df774d8fd38b30fe57bc58fd33380c1d01cf1123f1228813ca"
+    "bytes": 11294,
+    "sha256": "4fccd977d735a0e4e09606bb20e5d3e839d8a618923338eb5dcc82ad1740bcb6"
   },
   {
     "path": "app/code.py",
@@ -101,8 +86,8 @@
   },
   {
     "path": "app/crankfruit.py",
-    "bytes": 9285,
-    "sha256": "9a1de438f06543e3edaab352cbb7e1cfee9e1cf7c8aba75969b3cccdc55e8809"
+    "bytes": 9279,
+    "sha256": "17ee006b982ff1041c63a2aeabf259fc88e53b8418fa506790f1efe36690b601"
   },
   {
     "path": "app/direct_hardware.py",
@@ -121,8 +106,8 @@
   },
   {
     "path": "app/games/almost-tennis/main.lua",
-    "bytes": 8414,
-    "sha256": "4e9f8a5ba60e14caf487c43693bc813df5dd88fb2774daf3f7086e1edac990ea"
+    "bytes": 8422,
+    "sha256": "cc4860e5f19503cc12ed4905c1ecd1964bdc575db3d09f4760265cb5354ce954"
   },
   {
     "path": "app/games/almost-tennis/manifest.json",
@@ -131,28 +116,28 @@
   },
   {
     "path": "app/games/orbit-breaker/LICENSE",
-    "bytes": 1080,
-    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+    "bytes": 1076,
+    "sha256": "68fb173379fe8036926551c387d8477ae3c9323800e23a92a0e56f9aefc96d58"
   },
   {
     "path": "app/games/orbit-breaker/README.md",
-    "bytes": 2607,
-    "sha256": "aabe5e016fd7c08ddb676dd61b10ca7f57ae594d40374c8b348605c9564bf894"
+    "bytes": 2603,
+    "sha256": "cc4ac2dab22fb728e90542229d62d5f9ed4d8ac6f3ea7fad84d094d51f2d6e7a"
   },
   {
     "path": "app/games/orbit-breaker/main.lua",
-    "bytes": 6168,
-    "sha256": "208aee68235e068863884df3e4e285fc6826fe0f0c2732f8cb110f001703a2cf"
+    "bytes": 6164,
+    "sha256": "58837cc566d00422c8251049b0460de41ae979241c346c0eb1fa33923914c7a7"
   },
   {
     "path": "app/games/orbit-breaker/manifest.json",
-    "bytes": 356,
-    "sha256": "c6bc12a10105c01ddd9cc26262657c05cd0da97ea8637051f0a811f0b41172ce"
+    "bytes": 352,
+    "sha256": "48a60c725736fab9cb9d0f40bf424ea7914d98e222e228481546944cd7ff1563"
   },
   {
     "path": "app/hardware.py",
-    "bytes": 7802,
-    "sha256": "40b5fbaa3f1aa1d725b84d218b1ef17e0f9b617becd3949ad2f036b0d5269cdc"
+    "bytes": 7799,
+    "sha256": "1a318a838b4caa5121300c77a3b254c0e31107f39d2815d59d9b919e75a815f0"
   },
   {
     "path": "app/library.py",
@@ -167,32 +152,32 @@
   {
     "path": "app/player/assets/error.bin",
     "bytes": 12000,
-    "sha256": "b98b15f0fba3f26f6c916136d26f495b81f59d90f1c3d8f533cb03839fada7f4"
+    "sha256": "97e81955a13799d67b90c91e206614cd7bef3594ac2dd0c2f83e6f0a46c670d0"
   },
   {
     "path": "app/player/assets/error.pdi",
-    "bytes": 1419,
-    "sha256": "32f0c7c02fa2a16e9de88e219dab54e4efdcf977337a2381e9c8d1155827d654"
+    "bytes": 1438,
+    "sha256": "ebdcf519150583587c2369d053f289293d22b45e2aa33fd2216dba34de2d2b47"
   },
   {
     "path": "app/player/assets/explorer.bin",
     "bytes": 12000,
-    "sha256": "7e59c06374f3e027af54bd841c637d84784526a1065e243fb166a2e5db2739d5"
+    "sha256": "a47213416fe5ceeb8c8f1dd499355a627a495ed80a86b22f3301dd79ecc22277"
   },
   {
     "path": "app/player/assets/explorer.pdi",
-    "bytes": 1321,
-    "sha256": "cc35359c53c271c533b7d848f31f797e90969f2ca08b694e79443bf65d3de914"
+    "bytes": 1330,
+    "sha256": "a4bcd7a363dbd37a69650a4d494f759ea09835addba3368b7b40102858ecd13e"
   },
   {
     "path": "app/player/assets/library.bin",
     "bytes": 12000,
-    "sha256": "fcc47a72c077e2d23f2b9eb1dc3ff1ad87f1de521db449a31125c3673649ed76"
+    "sha256": "62d8f1f8b5f0e3a1c158f943694d76e6b37d6802818d85525e5c3822bf794409"
   },
   {
     "path": "app/player/assets/library.pdi",
-    "bytes": 1294,
-    "sha256": "c839b9719cddbcf50e3b0d70efdbdd04ed65cca41e3adc1ea5549dcfe442b96d"
+    "bytes": 1309,
+    "sha256": "e91f1420cd6b00a442e8d59ea199fcbb4c629a9ea5de3dde5bc61d78e432e16b"
   },
   {
     "path": "app/player/assets/manifest.json",
@@ -266,8 +251,8 @@
   },
   {
     "path": "boot-source/LICENSE",
-    "bytes": 1094,
-    "sha256": "611da24e6c123d09aef043f4bccbcd617802a2f5e99716dfcd0ba8c88983788b"
+    "bytes": 1076,
+    "sha256": "37a204e573a53304e333021406749142489f89b15f1e909f80d35ece7a0f3798"
   },
   {
     "path": "boot-source/README.md",
@@ -276,8 +261,8 @@
   },
   {
     "path": "boot-source/boot-splash.lua",
-    "bytes": 30409,
-    "sha256": "a1556f333eee7c021f32e2c6ed8735fb00ff86327a41ce71e3d6d50d699abe1b"
+    "bytes": 30417,
+    "sha256": "b530fe071b5bb122ea53d52db035ebc80c7bf194b76dc7a3d805220129115a33"
   },
   {
     "path": "boot-source/build.py",
@@ -296,8 +281,43 @@
   },
   {
     "path": "boot-source/render_boot.c",
-    "bytes": 6133,
-    "sha256": "3f2e801fda20e1c3d639a1cf5d5766804ece7f1c98ade994c645a458c1ad15ba"
+    "bytes": 6129,
+    "sha256": "c21a3ba762412f1b24e89dacad231f0912163965b2dd6d0b1d686ac9ae7ca84f"
+  },
+  {
+    "path": "docs/COMPATIBILITY.md",
+    "bytes": 1894,
+    "sha256": "27b1e3e3d2148a0ab8211ff5448c5c39995d6c125e6461e26063aa7c6f75c93d"
+  },
+  {
+    "path": "docs/README.md",
+    "bytes": 765,
+    "sha256": "3788eb4da39e8e4bc024382ae4c4e67f66d0cd11c764543ce39375faa13f64d2"
+  },
+  {
+    "path": "docs/RESULTS.md",
+    "bytes": 6761,
+    "sha256": "9e0191f60eba9221e82822a31e966d146d26803002c9fef5b8dfd560c10fa459"
+  },
+  {
+    "path": "docs/START-HERE.md",
+    "bytes": 4164,
+    "sha256": "75325164dcb7143fc8700e2dc4eadddfd0424748adbc38afe4d97872b2cf2975"
+  },
+  {
+    "path": "docs/TEST-RESULTS-TEMPLATE.md",
+    "bytes": 1155,
+    "sha256": "aa57946dd5aa72a812f52e312da40c1249bc4cb385b0e4f7391355be19e0f4f5"
+  },
+  {
+    "path": "docs/TEST-RESULTS.md",
+    "bytes": 24131,
+    "sha256": "675b8697a25e3584caaa5a8792cc3e83fa847f00c4db24257ddc658579d554b2"
+  },
+  {
+    "path": "docs/physical-results.json",
+    "bytes": 29457,
+    "sha256": "81b0da6186e046e14b43c4e701d6be591cdc45af813f01b465481d8e63e9888d"
   },
   {
     "path": "engine/CMakeLists.txt",
@@ -566,13 +586,13 @@
   },
   {
     "path": "engine/examples/hello.lua",
-    "bytes": 618,
-    "sha256": "0b2920178958fba5de97d9d7ed3bb4017ac8bc58812f34d241f1fe2f2a9ff109"
+    "bytes": 609,
+    "sha256": "3709cfc234a081a09c91f7c9a73d671841379ce0f66e5277c471655451412e3e"
   },
   {
     "path": "engine/firmware/README.md",
-    "bytes": 3444,
-    "sha256": "1546bdc21f0d03abf593cd64bb9c1af69f89fed79fd0ee7f3bd42df340107490"
+    "bytes": 3435,
+    "sha256": "e6f95264cf2ec9cd8fe3449ec71fe63ad0177cfea3cd9ac8344154ca6ff294d5"
   },
   {
     "path": "engine/firmware/build-integration.patch",
@@ -581,8 +601,8 @@
   },
   {
     "path": "engine/firmware/build.py",
-    "bytes": 2282,
-    "sha256": "86d5880740fb604c82923454086b0b78f7330a4666459f06f50df8fea2308629"
+    "bytes": 2264,
+    "sha256": "283e6360ab196d87a1150cccab0fd3ee325643129eba678de0ebb5364f805e15"
   },
   {
     "path": "engine/firmware/fast-float-provenance.json",
@@ -841,8 +861,8 @@
   },
   {
     "path": "engine/src/LICENSE",
-    "bytes": 1305,
-    "sha256": "2a78bb21d8dcf368a7e7066df3bd3c01d72c2833e8636c79f3edb2280e155a2c"
+    "bytes": 1303,
+    "sha256": "6dee2a978e344ac0759da6daa934e4b015ec23912d4e0b5a61ce30dc684ebca5"
   },
   {
     "path": "engine/src/font.h",
@@ -1186,23 +1206,23 @@
   },
   {
     "path": "examples/orbit-breaker/LICENSE",
-    "bytes": 1080,
-    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+    "bytes": 1076,
+    "sha256": "68fb173379fe8036926551c387d8477ae3c9323800e23a92a0e56f9aefc96d58"
   },
   {
     "path": "examples/orbit-breaker/README.md",
-    "bytes": 2607,
-    "sha256": "aabe5e016fd7c08ddb676dd61b10ca7f57ae594d40374c8b348605c9564bf894"
+    "bytes": 2603,
+    "sha256": "cc4ac2dab22fb728e90542229d62d5f9ed4d8ac6f3ea7fad84d094d51f2d6e7a"
   },
   {
     "path": "examples/orbit-breaker/main.lua",
-    "bytes": 6168,
-    "sha256": "208aee68235e068863884df3e4e285fc6826fe0f0c2732f8cb110f001703a2cf"
+    "bytes": 6164,
+    "sha256": "58837cc566d00422c8251049b0460de41ae979241c346c0eb1fa33923914c7a7"
   },
   {
     "path": "examples/orbit-breaker/manifest.json",
-    "bytes": 356,
-    "sha256": "c6bc12a10105c01ddd9cc26262657c05cd0da97ea8637051f0a811f0b41172ce"
+    "bytes": 352,
+    "sha256": "48a60c725736fab9cb9d0f40bf424ea7914d98e222e228481546944cd7ff1563"
   },
   {
     "path": "examples/orbit-breaker/native_check.py",
@@ -1221,8 +1241,8 @@
   },
   {
     "path": "examples/snake/README.md",
-    "bytes": 2662,
-    "sha256": "281cd5994e7192f0cf237b46c38c9f1682d562d644384da3f67ecd98ade80031"
+    "bytes": 2649,
+    "sha256": "d664b2ed99a146e3b2e6b7a917a05a460daa177352aaa06a7519c2c163eb3c50"
   },
   {
     "path": "examples/snake/main.lua",
@@ -1235,14 +1255,14 @@
     "sha256": "e577087dbdb8e0b37dc78344860d85a9879031ed50c0adbb455f0cb9490783a7"
   },
   {
-    "path": "firmware/impossible-playdate-fruit-jam.uf2",
+    "path": "firmware/crankfruit-fruit-jam.uf2",
     "bytes": 2380800,
     "sha256": "fe3f629d83609e900fe12d5e8f183ab59a6b708918abed26bcc9b506b57f49af"
   },
   {
     "path": "install.py",
-    "bytes": 10919,
-    "sha256": "10d72de0f6202c01604b3fc69fa5b4d3b70564e4c8e04cee0b626563bdb1de50"
+    "bytes": 10910,
+    "sha256": "9f00efdf25c4659c4b89d63a8c25d43c5a146fbee41f79aec2ff285d39f9bb8f"
   },
   {
     "path": "media/hardware-demo.mp4",
@@ -1261,8 +1281,8 @@
   },
   {
     "path": "native/LICENSE",
-    "bytes": 1080,
-    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+    "bytes": 1076,
+    "sha256": "68fb173379fe8036926551c387d8477ae3c9323800e23a92a0e56f9aefc96d58"
   },
   {
     "path": "native/README.md",
@@ -1365,11 +1385,6 @@
     "sha256": "8f0e18bacc9d0d950561729a98619e929593848de8f4c468d96f4b0103f95d6d"
   },
   {
-    "path": "physical-results.json",
-    "bytes": 29457,
-    "sha256": "81b0da6186e046e14b43c4e701d6be591cdc45af813f01b465481d8e63e9888d"
-  },
-  {
     "path": "test_installer.py",
     "bytes": 4529,
     "sha256": "e0cc01f8f3788a6dd7c31232b20c2a27c488717e6db4576e0a0fdc1da4d0a038"
@@ -1446,53 +1461,53 @@
   },
   {
     "path": "tools/art/LICENSE",
-    "bytes": 1080,
-    "sha256": "cb2c116adf72a6256b6d893b5c9cdd68032e00d6bc38673be91801e4213a350b"
+    "bytes": 1076,
+    "sha256": "68fb173379fe8036926551c387d8477ae3c9323800e23a92a0e56f9aefc96d58"
   },
   {
     "path": "tools/art/README.md",
-    "bytes": 4721,
-    "sha256": "4f448d41cc8b19ec297f9ba90f435e166c680f5ab0654c982fb2e2105a6fa0fc"
+    "bytes": 4695,
+    "sha256": "c622d6f31e118f8ab3e251f55e3fbdccbdbe1034020e54506f147970303cbdf7"
   },
   {
     "path": "tools/art/UPSTREAM-ORACLE.json",
     "bytes": 1678,
-    "sha256": "890a22831eb35e3bf0070fc76dafd621bbd8f173cdf4993f3622c26bc3d92b24"
+    "sha256": "050e85d81b28aad70255882e10d28e7d5d384b688c026c9b403ae33762312da0"
   },
   {
     "path": "tools/art/asset-build.json",
-    "bytes": 1726,
-    "sha256": "9c54db1cf69b94f1099ac4cafdc9576a8cd04c6a71d05052fa9f3918189619a1"
+    "bytes": 1646,
+    "sha256": "691d6989bbc18044189a5cacaf63d696f924b3bdb1b8f8a87eb80e12bfe94c29"
   },
   {
     "path": "tools/art/assets/error.bin",
     "bytes": 12000,
-    "sha256": "b98b15f0fba3f26f6c916136d26f495b81f59d90f1c3d8f533cb03839fada7f4"
+    "sha256": "97e81955a13799d67b90c91e206614cd7bef3594ac2dd0c2f83e6f0a46c670d0"
   },
   {
     "path": "tools/art/assets/error.pdi",
-    "bytes": 1419,
-    "sha256": "32f0c7c02fa2a16e9de88e219dab54e4efdcf977337a2381e9c8d1155827d654"
+    "bytes": 1438,
+    "sha256": "ebdcf519150583587c2369d053f289293d22b45e2aa33fd2216dba34de2d2b47"
   },
   {
     "path": "tools/art/assets/explorer.bin",
     "bytes": 12000,
-    "sha256": "7e59c06374f3e027af54bd841c637d84784526a1065e243fb166a2e5db2739d5"
+    "sha256": "a47213416fe5ceeb8c8f1dd499355a627a495ed80a86b22f3301dd79ecc22277"
   },
   {
     "path": "tools/art/assets/explorer.pdi",
-    "bytes": 1321,
-    "sha256": "cc35359c53c271c533b7d848f31f797e90969f2ca08b694e79443bf65d3de914"
+    "bytes": 1330,
+    "sha256": "a4bcd7a363dbd37a69650a4d494f759ea09835addba3368b7b40102858ecd13e"
   },
   {
     "path": "tools/art/assets/library.bin",
     "bytes": 12000,
-    "sha256": "fcc47a72c077e2d23f2b9eb1dc3ff1ad87f1de521db449a31125c3673649ed76"
+    "sha256": "62d8f1f8b5f0e3a1c158f943694d76e6b37d6802818d85525e5c3822bf794409"
   },
   {
     "path": "tools/art/assets/library.pdi",
-    "bytes": 1294,
-    "sha256": "c839b9719cddbcf50e3b0d70efdbdd04ed65cca41e3adc1ea5549dcfe442b96d"
+    "bytes": 1309,
+    "sha256": "e91f1420cd6b00a442e8d59ea199fcbb4c629a9ea5de3dde5bc61d78e432e16b"
   },
   {
     "path": "tools/art/assets/manifest.json",
@@ -1516,43 +1531,43 @@
   },
   {
     "path": "tools/art/build_assets.py",
-    "bytes": 11258,
-    "sha256": "1e5b511801eed39bc67338e9aabe078370bf71b50ea2719d8f25d97145e3bf31"
+    "bytes": 11254,
+    "sha256": "377ddc87c0e89cfe12485fff752ba8da10c69125bea2303a572db1866a59fa33"
   },
   {
     "path": "tools/art/previews/error.png",
-    "bytes": 1603,
-    "sha256": "7e3876c628a0b346f1c01952c1ca8c4e2b4b725491de39ed043c0592bcebc731"
+    "bytes": 1618,
+    "sha256": "3ff2c2727329d9042dd4033b1c60f6390921052fab0bf4b50c899775444f5d29"
   },
   {
     "path": "tools/art/previews/explorer-populated.png",
-    "bytes": 2121,
-    "sha256": "24b1d57f05776cd6ed96cc244b15c0b7a3a05cf2bf1cb2c8c3d6bfa87d8c0db1"
+    "bytes": 2130,
+    "sha256": "b0e30ad91a7c09ac537c963870f5a73801369bc22347fe1514dd172f4de720d1"
   },
   {
     "path": "tools/art/previews/explorer.png",
-    "bytes": 1448,
-    "sha256": "bf8cc3fa01038057209bd7a773ee8ed2055361a0ceb9fb77af31ec455eaafef2"
+    "bytes": 1447,
+    "sha256": "46816de04190b706e3af3b1ea79eaf5c3a00e4dcf272a5e9042c4caf463dc323"
   },
   {
     "path": "tools/art/previews/library-crank.gif",
-    "bytes": 4913,
-    "sha256": "c49e4f0f94de56b3bbd780ffd61544bff299241caa9977249653c8a737e21487"
+    "bytes": 4912,
+    "sha256": "3f0a814cdcb27002e5c1bce7d4689ebdd9e0a6103d7c3c208ea9a3fab2f2d41a"
   },
   {
     "path": "tools/art/previews/library-populated.png",
-    "bytes": 2226,
-    "sha256": "97e2f29df670a4500114a43aed47f265fd2b38f4dce79d2fe58594cc14e5c699"
+    "bytes": 2231,
+    "sha256": "8af48f95e01b839a902cc2fb19920af9c8e2b790563e1ffcf92584dc7cfe030b"
   },
   {
     "path": "tools/art/previews/library.png",
-    "bytes": 1398,
-    "sha256": "eaba7dd84b7a0be1ea36be0931823e54482ad22dd325d53fefe6317d81100a19"
+    "bytes": 1407,
+    "sha256": "4eb82d7d28d07f2a704ab785beb18eb6b81abf0e1ea96e3e872ea013cec41326"
   },
   {
     "path": "tools/art/raster_source/README.md",
-    "bytes": 709,
-    "sha256": "d9aa5d3dd437d4871a420567e5a73a669c36887426285130cecf1be37277bd25"
+    "bytes": 705,
+    "sha256": "77d6ff6a3a1e3e4fd4fabba963391a7d4e899c44735773c0b9c097b2675b6070"
   },
   {
     "path": "tools/art/raster_source/approved-startup-lockup.png",
@@ -1586,8 +1601,8 @@
   },
   {
     "path": "tools/art/vendor/LICENSE-CrankJam",
-    "bytes": 1305,
-    "sha256": "2a78bb21d8dcf368a7e7066df3bd3c01d72c2833e8636c79f3edb2280e155a2c"
+    "bytes": 1303,
+    "sha256": "6dee2a978e344ac0759da6daa934e4b015ec23912d4e0b5a61ce30dc684ebca5"
   },
   {
     "path": "tools/art/vendor/font.h",
@@ -1601,8 +1616,8 @@
   },
   {
     "path": "tools/cartridges/LICENSE",
-    "bytes": 1068,
-    "sha256": "0ae780769bb1da399661faa8756a598654dae9e57edf6a6b5511170eaeb8f006"
+    "bytes": 1076,
+    "sha256": "37a204e573a53304e333021406749142489f89b15f1e909f80d35ece7a0f3798"
   },
   {
     "path": "tools/cartridges/README.md",
@@ -1616,8 +1631,8 @@
   },
   {
     "path": "tools/cartridges/cartridge_loader.py",
-    "bytes": 11285,
-    "sha256": "a4de77631cf3b6df774d8fd38b30fe57bc58fd33380c1d01cf1123f1228813ca"
+    "bytes": 11294,
+    "sha256": "4fccd977d735a0e4e09606bb20e5d3e839d8a618923338eb5dcc82ad1740bcb6"
   },
   {
     "path": "tools/cartridges/test_integration.py",
@@ -1631,13 +1646,13 @@
   },
   {
     "path": "tools/crank/LICENSE",
-    "bytes": 1081,
-    "sha256": "bfe20f81e8256d830b3e685114b11aa6795154a0f9c8c90d1f4a09a425525ffe"
+    "bytes": 1076,
+    "sha256": "37a204e573a53304e333021406749142489f89b15f1e909f80d35ece7a0f3798"
   },
   {
     "path": "tools/crank/README.md",
-    "bytes": 10624,
-    "sha256": "b5965bb26486febd2335f8ae80d4d0585a3e288d663cef82edada66808772398"
+    "bytes": 10623,
+    "sha256": "de3f5c4db31a6707d16b4901767cea8f9654bd8697d62d4b977132709b880bd2"
   },
   {
     "path": "tools/crank/crank-config.json",
@@ -1666,8 +1681,8 @@
   },
   {
     "path": "tools/display/LICENSE",
-    "bytes": 1088,
-    "sha256": "73997029cb3fe9bddfcbfd0671388169920e5756c955f6dbd2a892e425526986"
+    "bytes": 1076,
+    "sha256": "37a204e573a53304e333021406749142489f89b15f1e909f80d35ece7a0f3798"
   },
   {
     "path": "tools/display/README.md",
@@ -1686,8 +1701,8 @@
   },
   {
     "path": "tools/gamepad/LICENSE",
-    "bytes": 1088,
-    "sha256": "df04d74d3a6de602d1d576f8fc59157dbac4edef3bca8d1c777e10a40e5b1f94"
+    "bytes": 1076,
+    "sha256": "37a204e573a53304e333021406749142489f89b15f1e909f80d35ece7a0f3798"
   },
   {
     "path": "tools/gamepad/README.md",
@@ -1711,8 +1726,8 @@
   },
   {
     "path": "tools/sound/LICENSE",
-    "bytes": 1084,
-    "sha256": "71cac7ec76100ec75a6029cab45d016fe64360daad8e254a1365000fa050a3fe"
+    "bytes": 1076,
+    "sha256": "37a204e573a53304e333021406749142489f89b15f1e909f80d35ece7a0f3798"
   },
   {
     "path": "tools/sound/README.md",

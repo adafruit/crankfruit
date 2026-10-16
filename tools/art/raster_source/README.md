@@ -10,5 +10,5 @@ The UI compiler uses only the CRANKFRUIT wordmark rectangle at x8..391,
 y171..221, scaled to258x34 logical pixels with nearest-neighbor sampling.
 Its animated tiny apple is separate original code-native artwork.
 
-Copyright (c) 2026 Crankfruit contributors. Released under the MIT license in
+Copyright (c) 2026 Adafruit Industries. Released under the MIT license in
 `../LICENSE`.

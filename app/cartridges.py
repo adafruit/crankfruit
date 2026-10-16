@@ -1,6 +1,6 @@
 """Read-only CircuitPython-compatible source-cartridge discovery/preflight.
 
-Original code, copyright2026 PT and ints. SPDX-License-Identifier: MIT.
+Original code, copyright 2026 Adafruit Industries. SPDX-License-Identifier: MIT.
 No Python import/eval from cartridges, no Lua execution, no filesystem writes.
 Passing this check means source candidate, NOT verified API compatibility.
 """

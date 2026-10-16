@@ -1,5 +1,5 @@
 -- Crankfruit: original 1-bit boot mark, animation and synthesized jingle.
--- Copyright (c) 2026 PT and ints. SPDX-License-Identifier: MIT
+-- Copyright (c) 2026 Adafruit Industries. SPDX-License-Identifier: MIT
 -- OFFLINE BOOT CLIP PRODUCTION SOURCE: 30Hz graphics/audio rendered on host.
 -- Do not deploy as live boot: physical hardware timing qualification failed.
 -- Not a Panic logo/sound or Pulp export. Clip duration exactly2500ms.

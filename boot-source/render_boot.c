@@ -1,5 +1,5 @@
 /* Offline source-complete startup renderer using only the public engine API.
- * Copyright (c) 2026 Crankfruit contributors. SPDX-License-Identifier: MIT.
+ * Copyright (c) 2026 Adafruit Industries. SPDX-License-Identifier: MIT.
  * This is host tooling, not code to execute on the Fruit Jam during startup.
  */
 #include "crankjam.h"

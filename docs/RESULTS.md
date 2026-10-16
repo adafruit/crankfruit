@@ -1,3 +1,7 @@
+> **historical document:** written for the original Crankfruit review kit (2026-09).
+> paths are relative to the repository root. for current setup see the main
+> [README](../README.md).
+
 # review evidence and limits
 
 qualification date:2026-09-20. target: one Adafruit Fruit Jam RP2350B.

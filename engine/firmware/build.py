@@ -19,12 +19,12 @@ def main():
     # Remap build locations so a new build need not expose local source paths.
     maps='-fstack-usage -ffile-prefix-map='+str(R)+'=engine -fmacro-prefix-map='+str(R)+'=engine -ffile-prefix-map='+str(cp)+'=circuitpython -fmacro-prefix-map='+str(cp)+'=circuitpython'
     command=[a.make,'-j'+str(a.jobs),'-C',str(cp/'ports/raspberrypi'),
-             'BOARD=adafruit_fruit_jam','BUILD=build-impossible-playdate',
+             'BOARD=adafruit_fruit_jam','BUILD=build-crankfruit',
              'CROSS_COMPILE='+a.cross_prefix,'USER_C_MODULES='+str(R/'backends/circuitpython'),
              'PYTHON='+sys.executable,'CFLAGS_EXTRA='+maps,'V=commands']
     if a.plan:
         print('PLAN ONLY: RP2350 Adafruit Fruit Jam, USER_C_MODULES=engine/backends/circuitpython, jobs='+str(a.jobs))
-        print('prepared source required; output ports/raspberrypi/build-impossible-playdate/firmware.uf2; no flash')
+        print('prepared source required; output ports/raspberrypi/build-crankfruit/firmware.uf2; no flash')
         return
     if not (cp/'py').is_dir():raise SystemExit('prepare pinned CircuitPython sources first')
     env=dict(os.environ)
