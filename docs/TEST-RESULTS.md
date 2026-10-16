@@ -19,8 +19,8 @@ optional crank disabled / hardware + settings: disabled; no `/crank.json` on the
 | sound explorer synthesis | pass | tester summary: "everything works" |
 | sound explorer three samples | pass | tester summary: "everything works" |
 | independent source-game insertion | pass | Simple Snake port copied by hand to `/games/snake/` (no installer, no launcher edit); appeared in library and played. see Snake section below |
-| malformed/unsupported entry disabled | not tested | |
-| game error returns to library | not tested | |
+| malformed/unsupported entry disabled | pass (later) | 2026-10-16 on the board: invalid JSON, an unknown manifest key and a bytecode main.lua were each listed but disabled with a reason; A on one showed the reason instead of launching; real games stayed enabled (12/12 checks) |
+| game error returns to library | pass (later) | 2026-10-16 `tests/hardware/003_recovery.py`: load-time and mid-game (during audio) failures rejected, audio stopped, library rendered, Orbit Breaker played afterwards (10/10, `~~END~~`); test folders removed |
 | 10-minute play/audio continuity | partial | one scene ran ~36 min (65,857 presentations) before a Ctrl-C: 0 dropped bytes, 0 errors, 0 missed deadlines, but 1 underrun observation; worst service gap 53ms, worst tick 27ms. which scene was not captured |
 | optional crank direction/calibration/latency | pass (later) | seesaw STEMMA QT encoder (product 4991) measured and played; see encoder addendum below |
 | standalone power, computer unplugged | pass (later) | 2026-10-15 demo on a power supply with no computer: app, gamepad and handwheel crank all worked; see handwheel addendum |
