@@ -1,6 +1,6 @@
 # Crankfruit
 
-Crankfruit turns an Adafruit Fruit Jam into a tiny Playdate-inspired game console.
+Crankfruit turns an Adafruit Fruit Jam into a Playdate-inspired game console.
 Copy an open-source, Playdate-style Lua game into a folder, plug the board into a TV,
 and play with a USB gamepad and a real crank. Everything runs on the Fruit Jam's
 RP2350: no computer, network or account is needed while playing. Games draw the
@@ -26,6 +26,58 @@ project and is not affiliated with or endorsed by Panic, makers of the Playdate.
 - **Source and tools:** the portable C/Lua engine (with a desktop player), native
   helpers, the custom CircuitPython firmware build recipe, cartridge, art and sound
   tools, and tests.
+
+## how it works
+
+Crankfruit is not stock CircuitPython plus a few libraries. It has three layers:
+
+1. **Custom CircuitPython firmware** (`firmware/crankfruit-fruit-jam.uf2`, built
+   from CircuitPython 10.3 with the patches in `engine/firmware/`):
+   - the **`crankjam` Lua engine** is compiled into the firmware as a C module
+     (`USER_C_MODULES`): Lua 5.4.9 plus Crankfruit's Playdate-style API for drawing,
+     text, buttons, crank, time and synth sound (`engine/src/`,
+     `engine/backends/circuitpython/`).
+   - **HDMI audio:** the `picodvi` display driver gains `audio_write()`,
+     `audio_pending` and `audio_stop()`, sending 32kHz PCM to the TV inside the HDMI
+     signal (based on pico-hdmi's packet code).
+   - **native `.mpy` loading** is enabled so the app can import compiled C helpers.
+   - small fixes in CircuitPython's USB host (`usb.core`), TinyUSB and
+     Pico-PIO-USB, and a flash layout that reserves 2MiB for the firmware.
+
+   The firmware is reproducible: `engine/firmware/prepare.py` and `build.py` rebuild
+   it from pinned public sources (see `engine/firmware/README.md`).
+2. **Native helpers** (`app/_crankfruit_*.mpy`): small C functions compiled for the
+   RP2350 as CircuitPython native modules (MPY ABI 0x1f06, ARMv7EMSP) from
+   `native/`, for work too slow in Python:
+   - `_crankfruit_blit`: copies and scales each frame into the HDMI framebuffer (1x,
+     1.6x sharp, 1.6x antialiased) and skips unchanged frames.
+   - `_crankfruit_sprite`: draws the menu artwork and sprites.
+   - `_crankfruit_pcm`: moves audio buffers without Python per-sample loops.
+3. **The CircuitPython app** (`app/`, installed to CIRCUITPY): the player itself,
+   in Python.
+   - `crankfruit.py` runs the scenes: startup animation, library, games, Sound
+     Explorer.
+   - `cartridges.py` finds games in `/games/` and checks their manifests and source
+     without running them.
+   - `player.py` keeps everything at 30 frames per second and mixes audio a few
+     frames ahead.
+   - `stream.py` feeds that audio to HDMI.
+   - `hardware.py` / `direct_hardware.py` set up HDMI and present frames.
+   - `gamepad_input.py` and `crank_input.py` read the USB controller and crank.
+
+**Each frame:** the player reads the buttons, gamepad and crank, then calls the
+game's `playdate.update()` inside `crankjam`. The Lua game draws into a 400x240
+one-bit framebuffer and plays notes on its synth voices. The engine mixes the audio,
+which `stream.py` queues for HDMI; `_crankfruit_blit` copies and scales the frame
+onto the TV.
+
+**Games** are plain Lua source. When a game starts, the engine compiles it with Lua's
+own parser in a fresh, sandboxed interpreter with a memory cap and an
+instruction budget per frame. Compiled Lua and native code are refused, and unknown
+Playdate APIs raise a clear error.
+
+The C/Lua engine also builds on a computer, which gives the desktop player and the
+engine's test suite.
 
 ## hardware
 
