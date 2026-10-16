@@ -59,7 +59,11 @@ output, validate UF2 target/ranges, and rerun hardware checks before using it.
 version strings/build timestamps can change hashes. a rebuilt image is not
 automatically identical to the prebuilt, physically tested image.
 
-the complete historical firmware build succeeded, but these neutral relocated
-launchers were syntax/plan checked, not used for a fresh full firmware build in
-the package review. native helper builds and portable engine tests have their
-own fresh receipts. this distinction is intentional.
+**fresh rebuild, 2026-10-16:** these launchers were used for a full build from the
+pinned public sources on macOS arm64 with the recorded Arm GNU Toolchain
+15.3.Rel1. `prepare.py` now also fetches CircuitPython's release tags (the build
+stamps its version with `git describe`; without tags it stops with "Cannot
+determine version"). the rebuilt UF2 matches the shipped
+`firmware/crankfruit-fruit-jam.uf2` in size, layout and every code byte: only 12
+bytes differ, the build date in three copies of the version banner. details and
+hashes: `REBUILD-RESULTS.json`. the shipped, hardware-tested image is kept.

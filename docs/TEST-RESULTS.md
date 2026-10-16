@@ -378,3 +378,21 @@ outside the VM. earlier, opening `board.I2C()` with the encoder attached had rai
 board's `settings.toml` (string present in the installed firmware). after a hard
 reset with the setting, the app started on its own and the encoder read correctly.
 this also confirms the STEMMA QT I2C bus is shared with the HDMI DDC lines.
+
+## addendum: clean firmware rebuild from pinned sources (2026-10-16)
+
+`engine/firmware/prepare.py` fetched CircuitPython `eb49ac414192f75a81316906e78937e654f3f56e`
+and the Fruit Jam dependencies, applied the three byte-checked patches (28 outputs
+verified) and the link integration (`FIRMWARE_SOURCE_PASS`). the first build stopped
+at "Cannot determine version": the one-commit shallow clone has no release tags.
+after CircuitPython's `make fetch-tags` (now built into `prepare.py`), `build.py`
+completed with Arm GNU Toolchain 15.3.Rel1 (arm-15.149) on macOS arm64.
+
+result: 2,380,800-byte UF2, 4,650 blocks, family 0xe48bff59, flash 0x10000000 to
+0x10122a00, identical to the shipped image in every byte except 12: the build date
+in three copies of the version banner (`... on 2026-09-20` vs `... on 2026-10-16`).
+version banner, crankjam, HDMI audio methods and the CIRCUITPY_PICODVI_ENABLE
+setting all present; no local paths in the image. the shipped, hardware-tested UF2
+is kept; `engine/firmware/REBUILD-RESULTS.json` records hashes. not flashed, as
+the code is byte-identical.
+

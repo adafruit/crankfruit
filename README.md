@@ -147,8 +147,9 @@ READMEs. Hardware results are in [docs/TEST-RESULTS.md](docs/TEST-RESULTS.md).
   supported.
 - **Untested:** the analog potentiometer crank and D6/D7 encoder wiring.
 - **The 1.6x and 2-bit modes and HDMI audio** are tested on one TV; other displays
-  may differ. The firmware is a patched CircuitPython build; its full rebuild from
-  source has not been re-run since packaging.
+  may differ. The firmware is a patched CircuitPython 10.3 build; a clean rebuild
+  from the pinned public sources reproduces the shipped UF2 except for its build
+  date (see `engine/firmware/REBUILD-RESULTS.json`).
 
 ## credits and license
 
