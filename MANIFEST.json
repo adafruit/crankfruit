@@ -595,6 +595,11 @@
     "sha256": "e6f95264cf2ec9cd8fe3449ec71fe63ad0177cfea3cd9ac8344154ca6ff294d5"
   },
   {
+    "path": "engine/firmware/REBUILD-RESULTS.json",
+    "bytes": 1352,
+    "sha256": "b1373e9e8acfff47599734c219319a5dcd83c7224fa7101745e5622abbe7e3a1"
+  },
+  {
     "path": "engine/firmware/build-integration.patch",
     "bytes": 891,
     "sha256": "70e08721de2587950a7c14bb087b2c74cb34cb0f8cb004a57f6ea4841c9adab4"
@@ -631,8 +636,8 @@
   },
   {
     "path": "engine/firmware/prepare.py",
-    "bytes": 3091,
-    "sha256": "cbfed3a757a4a5000eb8b792ef6208a5da1cf9d79d49af7e96a73005e9052dae"
+    "bytes": 3658,
+    "sha256": "13f39297ddc120779ad2bd532ad78a267f20596d7350e6cc40f568ebf48c95d8"
   },
   {
     "path": "engine/firmware/requirements-lock.txt",

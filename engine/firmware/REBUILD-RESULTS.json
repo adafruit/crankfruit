@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-16",
+  "recipe": "engine/firmware: prepare.py (with release-tag fetch) then build.py --jobs 8",
+  "circuitpython_commit": "eb49ac414192f75a81316906e78937e654f3f56e",
+  "prepare_result": "FIRMWARE_SOURCE_PASS exact public pin, 3 complete patches, 28 byte-verified outputs, link integration",
+  "host": "macOS 15.8.1 arm64",
+  "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 15.3.Rel1 (Build arm-15.149)) 15.3.1 20260627",
+  "python": "3.14.7 with requirements-lock.txt",
+  "shipped_uf2": {
+    "path": "firmware/crankfruit-fruit-jam.uf2",
+    "bytes": 2380800,
+    "sha256": "fe3f629d83609e900fe12d5e8f183ab59a6b708918abed26bcc9b506b57f49af"
+  },
+  "rebuilt_uf2": {
+    "bytes": 2380800,
+    "sha256": "29b55576f0c65b27569bec1b3dd203fac147128e5f53b2a0b884538e7fcaa642",
+    "not_committed": "identical except build date"
+  },
+  "uf2_format": {
+    "blocks": 4650,
+    "family_id": "0xe48bff59",
+    "flash_range": "0x10000000-0x10122a00"
+  },
+  "differences": "12 bytes: the build date in three copies of the version banner ('10.3.0-55-geb49ac4141-dirty on 2026-09-20' vs '... on 2026-10-16'); all code identical",
+  "decision": "keep the shipped, hardware-tested UF2; this rebuild reproduces it from public pinned sources",
+  "local_path_leaks": "none (/Users, /Volumes, /home and build-directory names absent from the image)"
+}

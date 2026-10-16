@@ -32,6 +32,13 @@ def main():
         call([a.git,'-C',cp,'fetch','--depth=1','origin',receipt['source_head']])
         call([a.git,'-C',cp,'checkout','--detach',receipt['source_head']])
     if git('rev-parse','HEAD',cwd=cp)!=receipt['source_head']:raise SystemExit('source commit differs from pinned firmware')
+    # The build stamps its version with `git describe`, which needs release tags;
+    # a one-commit shallow clone has none. Same fetch as CircuitPython's
+    # `make fetch-tags`. With these tags the 2026-10-16 rebuild produced the same
+    # version banner as the shipped image, 10.3.0-55-geb49ac4141-dirty.
+    if subprocess.run([a.git,'describe','--tags'],cwd=cp,capture_output=True).returncode:
+        call([a.git,'-C',cp,'fetch','--tags','--recurse-submodules=no','--shallow-since=2023-02-01',
+              'https://github.com/adafruit/circuitpython','HEAD'])
     call([sys.executable,'tools/ci_fetch_deps.py','adafruit_fruit_jam'],cwd=cp)
     roots={g['name']:cp/g['root'] for g in receipt['groups']}
     def apply(root,patch):
