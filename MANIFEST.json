@@ -291,23 +291,13 @@
   },
   {
     "path": "docs/README.md",
-    "bytes": 765,
-    "sha256": "3788eb4da39e8e4bc024382ae4c4e67f66d0cd11c764543ce39375faa13f64d2"
+    "bytes": 602,
+    "sha256": "1dc39ce01d087f345d53a7da0d214ce784ded0faf794539483e97061edc22063"
   },
   {
     "path": "docs/RESULTS.md",
     "bytes": 6761,
     "sha256": "9e0191f60eba9221e82822a31e966d146d26803002c9fef5b8dfd560c10fa459"
-  },
-  {
-    "path": "docs/START-HERE.md",
-    "bytes": 4164,
-    "sha256": "75325164dcb7143fc8700e2dc4eadddfd0424748adbc38afe4d97872b2cf2975"
-  },
-  {
-    "path": "docs/TEST-RESULTS-TEMPLATE.md",
-    "bytes": 1155,
-    "sha256": "aa57946dd5aa72a812f52e312da40c1249bc4cb385b0e4f7391355be19e0f4f5"
   },
   {
     "path": "docs/TEST-RESULTS.md",
