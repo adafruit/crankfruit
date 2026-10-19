@@ -156,8 +156,8 @@ class CrankInput:
             self.sensor = analogio.AnalogIn(getattr(board, pin_name))
         elif self.kind == 'rotaryio':
             # Quadrature encoder counted by the chip's PIO (no bus transfers).
-            # The two pins must be consecutive GPIOs on RP2350, e.g. STEMMA QT
-            # SDA/SCL (GPIO20/21) for a 3.3V encoder, or D6/D7.
+            # The two pins must be consecutive GPIOs on RP2350, e.g. A1/A2
+            # (GPIO41/42) for a 3.3V encoder powered from the 3V pin.
             pin_a = _name(config, 'pin_a')
             pin_b = _name(config, 'pin_b')
             self.counts = _integer(config, 'counts_per_revolution', 1, 1048576)

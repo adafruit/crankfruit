@@ -188,14 +188,14 @@ class CrankTests(unittest.TestCase):
             def deinit(self):
                 self.closed = True
         sys.modules['rotaryio'] = types.SimpleNamespace(IncrementalEncoder=Encoder)
-        sys.modules['board'] = types.SimpleNamespace(SDA='gpio20', SCL='gpio21', D6='gpio6', D7='gpio7')
-        config = dict(enabled=True, kind='rotaryio', pin_a='SDA', pin_b='SCL', counts_per_revolution=100)
+        sys.modules['board'] = types.SimpleNamespace(A1='gpio41', A2='gpio42', D6='gpio6', D7='gpio7')
+        config = dict(enabled=True, kind='rotaryio', pin_a='A1', pin_b='A2', counts_per_revolution=100)
         config.update(kw)
         return CrankInput(config), made
     def test_rotaryio_100_ppr_handwheel(self):
         # measured on the Fruit Jam: 10 clockwise clicks read -10, one turn -100
         crank, made = self.rotary(direction=-1)
-        self.assertEqual(made, [('gpio20', 'gpio21', 4)])
+        self.assertEqual(made, [('gpio41', 'gpio42', 4)])
         self.assertEqual(crank.kind, 'rotaryio')
         self.assertEqual(crank.read(), (0, 0))
         crank.sensor.position = -10                 # 10 clicks clockwise

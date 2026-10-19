@@ -100,47 +100,19 @@ GPIOs on RP2350) and `counts_per_revolution`; optional `divisor` 1, 2 or 4
 (default 4 = one count per full quadrature cycle), direction and zero_degrees as
 above. the encoder is deinitialised on close.
 
-**recommended wiring: 3V, GND, A1, A2** (a row on the Fruit Jam header; A1/A2 are
-GPIO41/42, consecutive). tested 2026-10-19 with a 100-pulse handwheel
-(MBL600/800-100P, line-driver outputs) powered from 3V: 10 clockwise clicks -10, 10
-back +10; after a hard reset the app started normally with no `settings.toml`
-setting, and the STEMMA QT port stays free for I2C. A1-A5 are not 5V tolerant:
-power such an encoder from 3V only.
+**wiring: 3V, GND, A1, A2** (a row on the Fruit Jam header; A1/A2 are GPIO41/42,
+consecutive). A1-A5 are not 5V tolerant: power the encoder from 3V. the STEMMA QT
+port is an I2C bus; use it for I2C devices such as the seesaw breakout above.
+
+tested 2026-10-19 with a 100-pulse handwheel (MBL600/800-100P, line-driver
+outputs) powered from 3V: 10 clockwise clicks read -10, 10 back +10, one turn
+-100; fast spinning never moved more than 1 count between 5ms reads. after a hard
+reset the app started normally with the crank enabled. configuration:
 
 ```json
 {"enabled": true, "kind": "rotaryio", "pin_a": "A1", "pin_b": "A2",
  "counts_per_revolution": 100, "direction": -1, "step_degrees": 3.6}
 ```
-
-first tested on the Fruit Jam (2026-10-13) powered at 3.3V from the STEMMA QT port,
-A/B on SDA/SCL (GPIO20/21): 10 clockwise clicks read -10, 10 back read +10, one turn -100; 587
-position changes over fast spinning with no step larger than 1 between 5ms reads.
-while it drives SDA/SCL the I2C bus cannot be opened ("No pull up found"), so it
-replaces the seesaw breakout on that port. only power such an encoder from 3.3V
-on these pins: at 5V its outputs would put 5V on the shared I2C bus (onboard audio
-chip). for 5V operation use D6/D7 with resistor dividers instead. configuration:
-
-```json
-{"enabled": true, "kind": "rotaryio", "pin_a": "SDA", "pin_b": "SCL",
- "counts_per_revolution": 100, "direction": -1, "step_degrees": 3.6}
-```
-
-**required on SDA/SCL: disable the boot-time HDMI probe.** at power-on the Fruit
-Jam firmware's `picodvi_autoconstruct()` opens I2C on SDA/SCL (shared with the HDMI
-DDC lines) and probes the TV's EDID at 0x50, before Python runs. if the encoder is
-holding a line low at that moment (it depends on where the wheel rests), the I2C
-setup fails ("No pull up found") outside the VM and CircuitPython boots into safe
-mode (yellow blinking; `supervisor.runtime.safe_mode_reason` reports
-`GC_ALLOC_OUTSIDE_VM`). add to the board's `/settings.toml`:
-
-```toml
-CIRCUITPY_PICODVI_ENABLE = "never"
-```
-
-Crankfruit builds its own HDMI framebuffer when the app starts, so only the
-CircuitPython console on HDMI at boot is lost. a soft reload never runs the probe,
-which is why the problem only appears at a real power-on or reset. alternatively
-put the encoder on D6/D7, away from the shared bus.
 
 ## analog potentiometer
 

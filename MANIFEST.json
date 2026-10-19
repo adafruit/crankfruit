@@ -16,8 +16,8 @@
   },
   {
     "path": "README.md",
-    "bytes": 12471,
-    "sha256": "1066bb8bea7c9e16cbeea642125f9d1e0dd60c7b01f500f5c27dd724ad34bc8d"
+    "bytes": 11871,
+    "sha256": "65408d97ce06b02b1f1b2bd708bf348f6f4c771e4fe33ab3ee6ec2de19197ef2"
   },
   {
     "path": "TOOLS-README.md",
@@ -27,7 +27,7 @@
   {
     "path": "app-manifest.json",
     "bytes": 6321,
-    "sha256": "dd27d7be93172dd380db4e8b6a0604f701c2e8f43cdcb584e68cf67e3f675863"
+    "sha256": "8a6beb226e5dc5a692cb9d2b94dde5fe80cd11519862e94e65a9b036549c90e8"
   },
   {
     "path": "app/_crankfruit_blit.mpy",
@@ -81,8 +81,8 @@
   },
   {
     "path": "app/crank_input.py",
-    "bytes": 10180,
-    "sha256": "4b82c409e191a751b08eba7d7a1c202e1aab72307eadaad4716f02a3ddd62502"
+    "bytes": 10182,
+    "sha256": "b8d65469356b0273d395c165601de8794111a80108eeb1a033ed3a445961c829"
   },
   {
     "path": "app/crankfruit.py",
@@ -1656,8 +1656,8 @@
   },
   {
     "path": "tools/crank/README.md",
-    "bytes": 11143,
-    "sha256": "7c7068e85bbfb5d7e0d9eae868df4f814d33228306b2927a05ebad0c493c5a4c"
+    "bytes": 9639,
+    "sha256": "dddaaefd1e3a29145bf92f8ab7239fdd6d5d9d7e1e753366713010c8d3381e03"
   },
   {
     "path": "tools/crank/crank-config.json",
@@ -1666,8 +1666,8 @@
   },
   {
     "path": "tools/crank/crank_input.py",
-    "bytes": 10180,
-    "sha256": "4b82c409e191a751b08eba7d7a1c202e1aab72307eadaad4716f02a3ddd62502"
+    "bytes": 10182,
+    "sha256": "b8d65469356b0273d395c165601de8794111a80108eeb1a033ed3a445961c829"
   },
   {
     "path": "tools/crank/crank_settings.py",
@@ -1676,8 +1676,8 @@
   },
   {
     "path": "tools/crank/test_crank_input.py",
-    "bytes": 13459,
-    "sha256": "3c631e8a9911f74fee1152ea117791c2357ec5371bf4030a9b06898a5974c758"
+    "bytes": 13455,
+    "sha256": "513f7f160708c12eda4771cb0d3c85987d5b12832a161d6a5b6ca3bc2bbe2180"
   },
   {
     "path": "tools/crank/test_scheduler.py",

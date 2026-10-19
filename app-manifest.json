@@ -51,8 +51,8 @@
   },
   {
     "path": "crank_input.py",
-    "bytes": 10180,
-    "sha256": "4b82c409e191a751b08eba7d7a1c202e1aab72307eadaad4716f02a3ddd62502"
+    "bytes": 10182,
+    "sha256": "b8d65469356b0273d395c165601de8794111a80108eeb1a033ed3a445961c829"
   },
   {
     "path": "crankfruit.py",

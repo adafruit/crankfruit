@@ -148,7 +148,6 @@ one stops startup with an error so mistakes are visible.
 | `/gamepad.json` | `tools/gamepad/gamepad-config.json` | enables the DualShock 4; `"crank": true` makes the right stick a crank (`crank_scale` sets its speed) |
 | `/crank.json` | see `tools/crank/README.md` | a hardware crank: `seesaw` (I2C breakout), `rotaryio` (quadrature encoder) or `analog`; `step_degrees` sets degrees per library/Sound Explorer step. A hardware crank takes priority over the stick |
 | `/display.json` | `tools/display/display-config.json` | 2-bit greyscale output with three modes (1x, 1.6x sharp, 1.6x smooth); `"white": "playdate"` (default, the Playdate-like light grey) or `"bright"` |
-| `/settings.toml` | - | only if an encoder is wired straight to the STEMMA QT SDA/SCL pins: `CIRCUITPY_PICODVI_ENABLE = "never"` (see known limitations); not needed for A1/A2 |
 
 Example for a 100-pulse handwheel on A1/A2 (encoder Vcc to 3V, 0V to GND, A to
 A1, B to A2):
@@ -187,15 +186,10 @@ READMEs. Hardware results are in [docs/TEST-RESULTS.md](docs/TEST-RESULTS.md).
   flash (for example an editor closing a file on the drive) pauses the board for
   up to a few hundred ms, which can cause an audio dropout. The library recovers by
   itself. For play, eject the drive or use standalone power.
-- **Wire quadrature encoders to A1/A2, not the STEMMA QT pins.** The STEMMA QT
-  SDA/SCL pins are an I2C bus shared with the onboard audio chip and HDMI's data
-  lines. An encoder wired straight to them needs `CIRCUITPY_PICODVI_ENABLE =
-  "never"` in `settings.toml` (otherwise the firmware's boot-time I2C probe can
-  send the board into safe mode, blinking yellow) and blocks I2C on that port.
-  (Adafruit's I2C seesaw encoder breakout is a proper I2C device and is fine there.)
-- **3.3V encoders only.** Power encoders from the 3V pin. A1-A5 are not 5V tolerant,
-  and a 5V encoder on the STEMMA QT pins would put 5V on the shared bus. For a 5V
-  encoder, use resistor dividers (not yet tested).
+- **Quadrature encoders: A1/A2 and 3.3V only.** Wire them to the 3V, GND, A1 and
+  A2 header pins; A1-A5 are not 5V tolerant. The STEMMA QT port is an I2C bus, for
+  I2C devices such as the seesaw encoder breakout. A 5V encoder would need
+  resistor dividers (not yet tested).
 - **Heavy games are close to the frame budget in 1.6x smooth.** Almost Tennis's
   busiest frames can run late; the audio buffer has absorbed it in testing. Use
   1.6x sharp for the most headroom.
