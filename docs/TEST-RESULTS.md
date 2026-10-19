@@ -396,3 +396,13 @@ setting all present; no local paths in the image. the shipped, hardware-tested U
 is kept; `engine/firmware/REBUILD-RESULTS.json` records hashes. not flashed, as
 the code is byte-identical.
 
+## addendum: handwheel moved to A1/A2 (2026-10-19)
+
+the 100-pulse handwheel was rewired to the 3V, GND, A1 and A2 header pins (A1/A2 =
+GPIO41/42), off the shared STEMMA QT I2C bus. `rotaryio` opened the pins without
+issue (PIO on the RP2350B's upper GPIO range). calibration: 10 clockwise clicks -10,
+10 back +10, same direction as on SDA/SCL. `/crank.json` now uses `pin_a: "A1"`,
+`pin_b: "A2"`; the `CIRCUITPY_PICODVI_ENABLE` workaround was removed from
+`settings.toml`, and after a hard reset the app started on its own with the crank
+enabled. A1/A2 is now the recommended wiring.
+

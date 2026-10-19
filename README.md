@@ -89,7 +89,7 @@ engine's test suite.
 - optional crank:
   - Adafruit I2C STEMMA QT Rotary Encoder breakout (product 4991), or
   - a quadrature encoder on two consecutive GPIOs, e.g. a 100-pulse CNC handwheel
-    powered at 3.3V from the STEMMA QT port (see [crank notes](tools/crank/README.md))
+    wired to the 3V, GND, A1 and A2 header pins (see [crank notes](tools/crank/README.md))
 
 ## setup
 
@@ -148,12 +148,13 @@ one stops startup with an error so mistakes are visible.
 | `/gamepad.json` | `tools/gamepad/gamepad-config.json` | enables the DualShock 4; `"crank": true` makes the right stick a crank (`crank_scale` sets its speed) |
 | `/crank.json` | see `tools/crank/README.md` | a hardware crank: `seesaw` (I2C breakout), `rotaryio` (quadrature encoder) or `analog`; `step_degrees` sets degrees per library/Sound Explorer step. A hardware crank takes priority over the stick |
 | `/display.json` | `tools/display/display-config.json` | 2-bit greyscale output with three modes (1x, 1.6x sharp, 1.6x smooth); `"white": "playdate"` (default, the Playdate-like light grey) or `"bright"` |
-| `/settings.toml` | - | **required for an encoder on STEMMA QT SDA/SCL:** `CIRCUITPY_PICODVI_ENABLE = "never"` (see known limitations) |
+| `/settings.toml` | - | only if an encoder is wired straight to the STEMMA QT SDA/SCL pins: `CIRCUITPY_PICODVI_ENABLE = "never"` (see known limitations); not needed for A1/A2 |
 
-Example for a 100-pulse handwheel on STEMMA QT:
+Example for a 100-pulse handwheel on A1/A2 (encoder Vcc to 3V, 0V to GND, A to
+A1, B to A2):
 
 ```json
-{"enabled": true, "kind": "rotaryio", "pin_a": "SDA", "pin_b": "SCL",
+{"enabled": true, "kind": "rotaryio", "pin_a": "A1", "pin_b": "A2",
  "counts_per_revolution": 100, "direction": -1, "step_degrees": 3.6}
 ```
 
@@ -186,20 +187,22 @@ READMEs. Hardware results are in [docs/TEST-RESULTS.md](docs/TEST-RESULTS.md).
   flash (for example an editor closing a file on the drive) pauses the board for
   up to a few hundred ms, which can cause an audio dropout. The library recovers by
   itself. For play, eject the drive or use standalone power.
-- **Encoder on STEMMA QT needs `settings.toml`.** At power-on the firmware probes
-  the TV over I2C on the STEMMA QT pins (shared with HDMI's data lines). An encoder
-  holding a line low then sends the board into safe mode (blinking yellow). Add
-  `CIRCUITPY_PICODVI_ENABLE = "never"` to `settings.toml`.
-- **Only 3.3V devices on STEMMA QT.** Never power a 5V encoder there: its outputs
-  would put 5V on the shared bus. Use D6/D7 with resistor dividers instead (not yet
-  tested).
+- **Wire quadrature encoders to A1/A2, not the STEMMA QT pins.** The STEMMA QT
+  SDA/SCL pins are an I2C bus shared with the onboard audio chip and HDMI's data
+  lines. An encoder wired straight to them needs `CIRCUITPY_PICODVI_ENABLE =
+  "never"` in `settings.toml` (otherwise the firmware's boot-time I2C probe can
+  send the board into safe mode, blinking yellow) and blocks I2C on that port.
+  (Adafruit's I2C seesaw encoder breakout is a proper I2C device and is fine there.)
+- **3.3V encoders only.** Power encoders from the 3V pin. A1-A5 are not 5V tolerant,
+  and a 5V encoder on the STEMMA QT pins would put 5V on the shared bus. For a 5V
+  encoder, use resistor dividers (not yet tested).
 - **Heavy games are close to the frame budget in 1.6x smooth.** Almost Tennis's
   busiest frames can run late; the audio buffer has absorbed it in testing. Use
   1.6x sharp for the most headroom.
 - **Fixed 30 fps, 64KB Lua heap by default (256KB maximum), no save data.**
 - **Wired DualShock 4 only.** Other USB controllers, Bluetooth and touch are not
   supported.
-- **Untested:** the analog potentiometer crank and D6/D7 encoder wiring.
+- **Untested:** the analog potentiometer crank and 5V encoders with dividers.
 - **The 1.6x and 2-bit modes and HDMI audio** are tested on one TV; other displays
   may differ. The firmware is a patched CircuitPython 10.3 build; a clean rebuild
   from the pinned public sources reproduces the shipped UF2 except for its build

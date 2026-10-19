@@ -100,9 +100,20 @@ GPIOs on RP2350) and `counts_per_revolution`; optional `divisor` 1, 2 or 4
 (default 4 = one count per full quadrature cycle), direction and zero_degrees as
 above. the encoder is deinitialised on close.
 
-tested on the Fruit Jam (2026-10-13) with a 100-pulse handwheel (MBL600/800-100P,
-line-driver outputs) powered at 3.3V from the STEMMA QT port, A/B on SDA/SCL
-(GPIO20/21): 10 clockwise clicks read -10, 10 back read +10, one turn -100; 587
+**recommended wiring: 3V, GND, A1, A2** (a row on the Fruit Jam header; A1/A2 are
+GPIO41/42, consecutive). tested 2026-10-19 with a 100-pulse handwheel
+(MBL600/800-100P, line-driver outputs) powered from 3V: 10 clockwise clicks -10, 10
+back +10; after a hard reset the app started normally with no `settings.toml`
+setting, and the STEMMA QT port stays free for I2C. A1-A5 are not 5V tolerant:
+power such an encoder from 3V only.
+
+```json
+{"enabled": true, "kind": "rotaryio", "pin_a": "A1", "pin_b": "A2",
+ "counts_per_revolution": 100, "direction": -1, "step_degrees": 3.6}
+```
+
+first tested on the Fruit Jam (2026-10-13) powered at 3.3V from the STEMMA QT port,
+A/B on SDA/SCL (GPIO20/21): 10 clockwise clicks read -10, 10 back read +10, one turn -100; 587
 position changes over fast spinning with no step larger than 1 between 5ms reads.
 while it drives SDA/SCL the I2C bus cannot be opened ("No pull up found"), so it
 replaces the seesaw breakout on that port. only power such an encoder from 3.3V
